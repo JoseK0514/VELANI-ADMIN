@@ -1,0 +1,594 @@
+{
+  "date": "2026-11-10",
+  "timezone": "America/Puerto_Rico",
+  "mode": "investigation_only",
+  "confirmedRequirements": {
+    "sections": [
+      "NEVORA customers",
+      "Velani clients/projects/support requests"
+    ],
+    "initialOperators": [
+      "Jose"
+    ],
+    "unifiedAdmin": "Proposed and explained as one private login with separate sections; final design approval pending",
+    "closurePolicy": "Selected for the plan: Inactive closes the internal client relationship and starts the proposed12-month period; reactivation requires new confirmed work; original request/prospect deadlines remain fixed; NEVORA workplace retention unchanged."
+  },
+  "sourceCheckouts": [
+    {
+      "path": "/Users/josek0514/.codex/worktrees/nevora-signup-backend-launch-20261110",
+      "sha": "0c414ae65b9119f1d03c84b6933d10cb40276670",
+      "applicationSha": "3922df940deef009b3a357ed2788cc7bb28e3fed",
+      "status": "clean detached"
+    },
+    {
+      "path": "/Users/josek0514/Documents/Codex/2026-11-04/https-www-thevelani-com-preview-theme-2/work/velani-client-hub",
+      "sha": "ef9dbe2943e722b92f8ff14de0b935d4d069c678",
+      "deployedAppSha": "d89350bd4019bc2746373bba8b75ff70d05039c8",
+      "status": "clean"
+    },
+    {
+      "path": "/Users/josek0514/Desktop/VELANI-SHOPIFY-WEBSITE",
+      "sha": "6bb6dd5eb198290b2a90c0e300cbdf99761ef677",
+      "status": "untracked evidence directories; read only"
+    }
+  ],
+  "schemas": [
+    {
+      "source": "production_control",
+      "rows": [
+        {
+          "schema": "nevora_onboarding",
+          "table": "admission_counters",
+          "columns": [
+            "environment",
+            "kind",
+            "subject_digest",
+            "bucket_start",
+            "attempts"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "email_subjects",
+          "columns": [
+            "environment",
+            "email_digest",
+            "last_sent_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "owner_grant_requests",
+          "columns": [
+            "operation_id",
+            "registration_id",
+            "workspace_id",
+            "incarnation",
+            "token_digest",
+            "token_ciphertext",
+            "state",
+            "expires_at",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "provisioning_attempts",
+          "columns": [
+            "id",
+            "operation_id",
+            "attempt",
+            "outcome",
+            "resource",
+            "http_status",
+            "dispatched_at",
+            "acknowledged_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "provisioning_operations",
+          "columns": [
+            "operation_id",
+            "registration_id",
+            "workspace_id",
+            "environment",
+            "incarnation",
+            "command_hash",
+            "payload_ciphertext",
+            "verified_terms_version",
+            "verified_privacy_version",
+            "account_ref",
+            "region",
+            "resource_policy_version",
+            "resource_name",
+            "state",
+            "version",
+            "lease_token",
+            "lease_expires_at",
+            "not_before",
+            "resource",
+            "manifest_hash",
+            "reason_code",
+            "created_at",
+            "updated_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "provisioning_private",
+          "columns": [
+            "operation_id",
+            "credentials_ciphertext",
+            "bootstrap_ciphertext",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "registration_requests",
+          "columns": [
+            "operation_id",
+            "registration_id",
+            "command_hash",
+            "response_kind",
+            "terms_version",
+            "privacy_version",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "registrations",
+          "columns": [
+            "id",
+            "environment",
+            "email_digest",
+            "email_ciphertext",
+            "locale",
+            "state",
+            "version",
+            "terms_version",
+            "privacy_version",
+            "consent_at",
+            "verification_digest",
+            "verification_expires_at",
+            "verification_retired_at",
+            "verification_consumed_at",
+            "verified_at",
+            "expires_at",
+            "created_at",
+            "verified_terms_version",
+            "verified_privacy_version"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "signup_sessions",
+          "columns": [
+            "id",
+            "registration_id",
+            "environment",
+            "token_digest",
+            "expires_at",
+            "revoked_at",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "verification_claim_receipts",
+          "columns": [
+            "operation_id",
+            "proof_digest",
+            "registration_id",
+            "session_id",
+            "session_ciphertext",
+            "expires_at",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "verification_deliveries",
+          "columns": [
+            "operation_id",
+            "payload_ciphertext",
+            "delivery_state",
+            "claimed_at",
+            "completed_at",
+            "expires_at",
+            "attempts"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "worker_runtime_enrollments",
+          "columns": [
+            "id",
+            "workspace_id",
+            "environment",
+            "incarnation",
+            "registry_revision",
+            "source_secret_ref",
+            "login_role",
+            "canonical_origin",
+            "provider_project_id",
+            "recipient_public_key",
+            "recipient_fingerprint",
+            "issuer_source_sha",
+            "request_hash",
+            "created_at",
+            "request_expires_at",
+            "expires_at",
+            "status",
+            "key_envelope",
+            "ciphertext",
+            "issued_at",
+            "revoked_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "workspace_registry",
+          "columns": [
+            "id",
+            "registration_id",
+            "canonical_origin",
+            "environment",
+            "incarnation",
+            "revision",
+            "lifecycle",
+            "provider_project_id",
+            "app_secret_ref",
+            "app_role_name",
+            "worker_secret_ref",
+            "worker_role_name",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "nevora_onboarding",
+          "table": "workspace_secrets",
+          "columns": [
+            "id",
+            "workspace_id",
+            "environment",
+            "incarnation",
+            "role_kind",
+            "login_role",
+            "ciphertext",
+            "active",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "nevora_operations",
+          "table": "monitor_attempts",
+          "columns": [
+            "id",
+            "scope_key",
+            "notice_id",
+            "attempt_number",
+            "status",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "nevora_operations",
+          "table": "monitor_notices",
+          "columns": [
+            "id",
+            "scope_key",
+            "incident_id",
+            "kind",
+            "status",
+            "attempts",
+            "next_attempt_at",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "nevora_operations",
+          "table": "monitor_state",
+          "columns": [
+            "scope_key",
+            "condition",
+            "incident_id",
+            "updated_at"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "production_catalog",
+      "rows": [
+        {
+          "schema": "commerce",
+          "table": "accounts",
+          "columns": [
+            "id",
+            "email",
+            "password_hash",
+            "profile",
+            "setup_fingerprint",
+            "verified_at",
+            "created_at",
+            "enrollment_source"
+          ]
+        },
+        {
+          "schema": "commerce",
+          "table": "audit",
+          "columns": [
+            "id",
+            "business_id",
+            "event",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "commerce",
+          "table": "businesses",
+          "columns": [
+            "id",
+            "state",
+            "trial_started_at",
+            "trial_ends_at",
+            "stripe_customer_id",
+            "stripe_subscription_id",
+            "subscription_status",
+            "paid_through",
+            "past_due_since",
+            "plan_key",
+            "checkout_id",
+            "checkout_url",
+            "checkout_expires_at",
+            "sync_at",
+            "employee_count"
+          ]
+        },
+        {
+          "schema": "commerce",
+          "table": "checkout_intents",
+          "columns": [
+            "business_id",
+            "operation",
+            "previous_subscription_id",
+            "params_secret",
+            "employee_count",
+            "plan_key",
+            "expires_at",
+            "session_id",
+            "result_secret",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "commerce",
+          "table": "external_installations",
+          "columns": [
+            "business_id",
+            "id",
+            "origin",
+            "environment",
+            "incarnation",
+            "provider_project_id",
+            "manifest_hash",
+            "identity_hash",
+            "worker_secret_hash",
+            "instance_secret_hash",
+            "instance_secret"
+          ]
+        },
+        {
+          "schema": "commerce",
+          "table": "jobs",
+          "columns": [
+            "id",
+            "dedupe_key",
+            "kind",
+            "payload",
+            "state",
+            "attempts",
+            "available_at",
+            "lease_id",
+            "lease_until",
+            "last_error"
+          ]
+        },
+        {
+          "schema": "commerce",
+          "table": "rate_limits",
+          "columns": [
+            "key",
+            "count",
+            "expires_at"
+          ]
+        },
+        {
+          "schema": "commerce",
+          "table": "slots",
+          "columns": [
+            "id",
+            "origin",
+            "database_fingerprint",
+            "database_secret",
+            "instance_secret_hash",
+            "instance_secret",
+            "business_id",
+            "approved_at"
+          ]
+        },
+        {
+          "schema": "commerce",
+          "table": "tokens",
+          "columns": [
+            "hash",
+            "account_id",
+            "purpose",
+            "expires_at",
+            "owner_binding",
+            "used_at"
+          ]
+        },
+        {
+          "schema": "commerce",
+          "table": "webhooks",
+          "columns": [
+            "id",
+            "received_at"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "velani_requests",
+      "rows": [
+        {
+          "schema": "public",
+          "table": "client_hub_counters",
+          "columns": [
+            "period",
+            "value"
+          ]
+        },
+        {
+          "schema": "public",
+          "table": "client_hub_limits",
+          "columns": [
+            "key",
+            "hits",
+            "expires_at"
+          ]
+        },
+        {
+          "schema": "public",
+          "table": "client_hub_outbox",
+          "columns": [
+            "id",
+            "request_id",
+            "kind",
+            "payload",
+            "status",
+            "attempts",
+            "first_attempt_at",
+            "submission_uncertain",
+            "next_attempt_at",
+            "lease_token",
+            "lease_expires_at",
+            "provider_id",
+            "failure_code",
+            "created_at"
+          ]
+        },
+        {
+          "schema": "public",
+          "table": "client_hub_requests",
+          "columns": [
+            "id",
+            "reference",
+            "key_hash",
+            "request_hash",
+            "email_quota_hash",
+            "fields",
+            "created_at",
+            "expires_at"
+          ]
+        },
+        {
+          "schema": "public",
+          "table": "leads",
+          "columns": [
+            "id",
+            "session_id",
+            "origin_session_id",
+            "request_id",
+            "request_hash",
+            "name",
+            "email",
+            "company",
+            "team_size",
+            "locations",
+            "message",
+            "consent",
+            "consent_version",
+            "created_at",
+            "plan_snapshot"
+          ]
+        },
+        {
+          "schema": "public",
+          "table": "sessions",
+          "columns": [
+            "id",
+            "token_hash",
+            "locale",
+            "expires_at",
+            "created_at",
+            "updated_at"
+          ]
+        }
+      ]
+    }
+  ],
+  "aggregates": {
+    "velaniRequests": 0,
+    "velaniEmailJobs": 0,
+    "rondoLeads": 0,
+    "projectCrmAdminTablesMatchingNames": 0,
+    "meaning": "Observed source rows only; not a count of all business relationships or inbox requests."
+  },
+  "stripe": {
+    "availableConnections": [
+      {
+        "name": "Velani LLC sandbox",
+        "livemode": false
+      }
+    ],
+    "liveConnectionVerified": false,
+    "financialRecordsRead": false
+  },
+  "vercel": {
+    "nativeConnectorProjectRead": "404 not_found; not treated as project absence",
+    "fallback": "Existing authenticated Vercel CLI, exact project/team IDs, read-only metadata",
+    "teamId": "team_Lzbw410WwXGWHTuUXuamRI1N",
+    "teamSlug": "josekarlo-5933s-projects",
+    "billingPlan": "hobby",
+    "signupDeployment": "dpl_5WsYDzYbdFnXwUZtBDfcQNNgigSX",
+    "commerceDeployment": "dpl_H3xmxmSd3Ghi9rKi3njpZSPpDSC4",
+    "hubActiveAliasDeployment": "dpl_8ChbePq8yvGTPJxi3LAspPyCtwnG",
+    "hubLatestAttempt": "dpl_DTkDuYc9KHXCg6RM76mSSurfKS9J",
+    "hubLatestAttemptState": "BLOCKED",
+    "hubActiveAliasState": "READY"
+  },
+  "http": [
+    {
+      "url": "https://velani-ai.vercel.app/v1/client-hub/config",
+      "status": 200,
+      "enabled": true
+    },
+    {
+      "url": "https://signup.nevora.team/api/onboarding/config",
+      "status": 200,
+      "signupEnabled": false
+    },
+    {
+      "url": "https://commerce.nevora.team/ready",
+      "status": 200,
+      "state": "ready"
+    }
+  ],
+  "accessLimits": {
+    "productionCustomerRowsRead": false,
+    "personalMessagesRead": false,
+    "secretValuesRetrieved": false,
+    "sourceOrSchemaMutations": false,
+    "emailsSent": false,
+    "paymentsMade": false,
+    "newInfrastructure": false,
+    "newDependencies": false,
+    "applicationTestsRun": false
+  },
+  "memoryUse": "Prior scope and separation guidance only; present-source and provider facts verified above."
+}

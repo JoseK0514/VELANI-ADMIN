@@ -1,0 +1,10 @@
+node_modules/
+.next/
+dist/
+.env*
+!.env.example
+.superpowers/
+.omo/
+.vercel/
+coverage/
+*.log

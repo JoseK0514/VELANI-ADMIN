@@ -1,0 +1,20 @@
+{
+  "review": "Bounded builder design check; not implementation or live certification",
+  "scenario": "Read all five supplied documents and compare first-release workflow, permissions, source authority, metrics, retention and linking rules",
+  "invocations": [
+    "Python numbered reads of README.md and api-contract-draft.md",
+    "nl -ba delivery-plan.md and sources.md",
+    "cat observations.json",
+    "omo-agent-toolkit ulw-loop status --json"
+  ],
+  "observable": "One material contract question remains: retention lifecycle transitions are not tied to explicit command/state semantics. Setup/headcount/health and live-revenue limitations are consistently deferred and not represented as verified current metrics.",
+  "question": "What exact internal event promotes a prospect into engaged-client retention and what event constitutes explicit relationship closure? Does relationshipState=inactive start the 12-month clock, what happens on reactivation, and do linked request cases still expire on their original source schedule? README lines 177-184 and API lines 75-86 allow status changes but do not define these transitions. This changes the schema, command preconditions and purge behavior; it is separate from approving the proposed retention durations.",
+  "limits": "No source application edits, tests, customer reads, live validation or service activation. Only review evidence recorded, as required by execution instructions. Documents only; observations.json provider facts are reported inputs, not independently reverified.",
+  "documents": {
+    "README.md": "be5ce632bfce4dbb572bf84204a8e7c4a2715d84f41d5d8209b63f61a871a76e",
+    "api-contract-draft.md": "c16bb88a926f7331be2d886262f0c4271831e246300bd1506a71d8b4c43c6c3c",
+    "delivery-plan.md": "ea4b073d7ba19ee73b129f1bbe3d379c20061258099929c754ac36eae2a021ad",
+    "sources.md": "2177d703dbc0182cebbb51bfb9993ea0d166a13fe9e8038603a3913546515d60",
+    "observations.json": "4c98aa50372b5d99e497d6a99ff66ae2fa3578e5eaba46e45c6c9c0870781c3d"
+  }
+}
