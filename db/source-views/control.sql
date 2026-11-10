@@ -11,6 +11,6 @@ CREATE VIEW velani_admin_projection.workplace_details WITH(security_barrier=true
 CREATE VIEW velani_admin_projection.registrations WITH(security_barrier=true) AS
  SELECT r.id,r.created_at,NULL::text AS search_text,NULL::text AS search_email,
  jsonb_build_object('id',r.id,'stage',r.state,'language',r.locale,'version',r.version::text,'verifiedAt',r.verified_at,'expiresAt',r.expires_at,'createdAt',r.created_at) AS data
- FROM nevora_onboarding.registrations r JOIN velani_admin_projection.binding b ON r.environment=CASE b.environment WHEN 'staging' THEN 'development' ELSE b.environment END WHERE r.expires_at>statement_timestamp();
+ FROM nevora_onboarding.registrations r JOIN velani_admin_projection.binding b ON r.environment=CASE b.environment WHEN 'staging' THEN 'development' ELSE b.environment END WHERE r.state<>'READY' AND r.expires_at>statement_timestamp();
 REVOKE ALL ON ALL TABLES IN SCHEMA velani_admin_projection FROM PUBLIC;
 COMMIT;

@@ -1,9 +1,95 @@
-import {it,expect} from 'vitest';
-import {authFixture} from './helpers/auth';
-import {reviewIdentity,recoverOwner} from '../src/server/auth/operator';
-import {Pool} from 'pg';
-import {randomBytes} from 'node:crypto';
-it('binds only a current privately reviewed verified identity and does not renew an identical replay',async()=>{const f=await authFixture();try{await f.db.pool.query('UPDATE admin.actors SET google_subject=NULL');const p=await f.pending();const result=reviewIdentity(f.db.pool,f.config.ownerEmail,p.identityRequestId!);await expect(result).resolves.toMatchObject({state:'identity_bound'});const first=(await f.db.pool.query('SELECT google_subject,enrollment_until FROM admin.actors')).rows[0];expect(first.google_subject).toBe('owned-google-subject');await reviewIdentity(f.db.pool,f.config.ownerEmail,p.identityRequestId!);expect((await f.db.pool.query('SELECT enrollment_until FROM admin.actors')).rows[0].enrollment_until).toEqual(first.enrollment_until);}finally{await f.close();}});
-it('rejects stale or mismatched private identity approval',async()=>{const f=await authFixture();try{await f.db.pool.query('UPDATE admin.actors SET google_subject=NULL');const p=await f.pending();await f.db.pool.query("UPDATE admin.actors SET pending_identity_expires_at=clock_timestamp()-interval '1 second'");await expect(reviewIdentity(f.db.pool,f.config.ownerEmail,p.identityRequestId!)).rejects.toMatchObject({status:409});}finally{await f.close();}});
-it('private recovery invalidates sessions, pending challenges and old passkeys while preserving the pinned Google subject',async()=>{const f=await authFixture();try{const {session}=await f.login();await recoverOwner(f.db.pool,f.config.ownerEmail);await expect(f.auth.authenticate(session.token)).rejects.toMatchObject({status:401});const row=(await f.db.pool.query('SELECT google_subject,generation::text FROM admin.actors')).rows[0];expect(row).toEqual({google_subject:'owned-google-subject',generation:'2'});expect((await f.db.pool.query('SELECT count(*)::integer n FROM admin.credentials WHERE revoked_at IS NULL')).rows[0].n).toBe(0);}finally{await f.close();}});
-it('rejects the real unprivileged database login before private recovery can touch identity',async()=>{const f=await authFixture(),role='admin_intruder_'+randomBytes(6).toString('hex');let other:Pool|undefined;try{await f.db.pool.query('CREATE ROLE '+role+' LOGIN');const u=new URL(f.db.url);u.username=role;other=new Pool({connectionString:u.href});await expect(recoverOwner(other,f.config.ownerEmail)).rejects.toMatchObject({status:403});expect((await f.db.pool.query('SELECT generation::text FROM admin.actors')).rows[0].generation).toBe('1');}finally{await other?.end();await f.close();}});
+import { it, expect } from "vitest";
+import { authFixture } from "./helpers/auth";
+import { reviewIdentity, recoverOwner } from "../src/server/auth/operator";
+import { Pool } from "pg";
+import { randomBytes } from "node:crypto";
+it("binds only a current privately reviewed verified identity and does not renew an identical replay", async () => {
+  const f = await authFixture();
+  try {
+    await f.db.pool.query("UPDATE admin.actors SET google_subject=NULL");
+    const p = await f.pending();
+    const result = reviewIdentity(
+      f.db.pool,
+      f.config.ownerEmail,
+      p.identityRequestId!,
+    );
+    await expect(result).resolves.toMatchObject({ state: "identity_bound" });
+    const first = (
+      await f.db.pool.query(
+        "SELECT google_subject,enrollment_until FROM admin.actors",
+      )
+    ).rows[0];
+    expect(first.google_subject).toBe("owned-google-subject");
+    await reviewIdentity(f.db.pool, f.config.ownerEmail, p.identityRequestId!);
+    expect(
+      (await f.db.pool.query("SELECT enrollment_until FROM admin.actors"))
+        .rows[0].enrollment_until,
+    ).toEqual(first.enrollment_until);
+  } finally {
+    await f.close();
+  }
+});
+it("rejects stale or mismatched private identity approval", async () => {
+  const f = await authFixture();
+  try {
+    await f.db.pool.query("UPDATE admin.actors SET google_subject=NULL");
+    const p = await f.pending();
+    await f.db.pool.query(
+      "UPDATE admin.actors SET pending_identity_expires_at=clock_timestamp()-interval '1 second'",
+    );
+    await expect(
+      reviewIdentity(f.db.pool, f.config.ownerEmail, p.identityRequestId!),
+    ).rejects.toMatchObject({ status: 409 });
+  } finally {
+    await f.close();
+  }
+});
+it("private recovery invalidates sessions, pending challenges and old passkeys while preserving the pinned Google subject", async () => {
+  const f = await authFixture();
+  try {
+    const { session } = await f.login();
+    await recoverOwner(f.db.pool, f.config.ownerEmail);
+    await expect(f.auth.authenticate(session.token)).rejects.toMatchObject({
+      status: 401,
+    });
+    const row = (
+      await f.db.pool.query(
+        "SELECT google_subject,generation::text FROM admin.actors",
+      )
+    ).rows[0];
+    expect(row).toEqual({
+      google_subject: "owned-google-subject",
+      generation: "2",
+    });
+    expect(
+      (
+        await f.db.pool.query(
+          "SELECT count(*)::integer n FROM admin.credentials WHERE revoked_at IS NULL",
+        )
+      ).rows[0].n,
+    ).toBe(0);
+  } finally {
+    await f.close();
+  }
+});
+it("rejects the real unprivileged database login before private recovery can touch identity", async () => {
+  const f = await authFixture(),
+    role = "admin_intruder_" + randomBytes(6).toString("hex");
+  let other: Pool | undefined;
+  try {
+    await f.db.pool.query("CREATE ROLE " + role + " LOGIN");
+    const u = new URL(f.db.url);
+    u.username = role;
+    other = new Pool({ connectionString: u.href });
+    await expect(
+      recoverOwner(other, f.config.ownerEmail),
+    ).rejects.toMatchObject({ status: 403 });
+    expect(
+      (await f.db.pool.query("SELECT generation::text FROM admin.actors"))
+        .rows[0].generation,
+    ).toBe("1");
+  } finally {
+    await other?.end();
+    await f.close();
+  }
+});

@@ -1,8 +1,127 @@
-import {it,expect} from 'vitest';
-import {authFixture} from './helpers/auth';
-it.each(["UPDATE admin.actors SET enabled=false","UPDATE admin.actors SET generation=generation+1","UPDATE admin.sessions SET idle_expires_at=clock_timestamp()-interval '1 second'","UPDATE admin.sessions SET expires_at=clock_timestamp()-interval '1 second'"] )('rejects current authority after %s',async sql=>{const f=await authFixture();try{const {session}=await f.login();await f.db.pool.query(sql);await expect(f.auth.authenticate(session.token)).rejects.toMatchObject({status:401});}finally{await f.close();}});
-it.each(['http://foreign.example.invalid','http://127.0.0.1:4000'])('rejects an actual signed assertion from the wrong origin %s',async origin=>{const f=await authFixture();try{const {session,key}=await f.login(),actor=await f.auth.authenticate(session.token),o=await f.auth.stepUpOptions(actor);await expect(f.auth.stepUp(actor,o.challengeId,key.assert(o.options.challenge,origin))).rejects.toMatchObject({status:400});}finally{await f.close();}});
-it('requires user verification for step-up and consumes a rejected challenge',async()=>{const f=await authFixture();try{const {actor,key}=await f.login(),o=await f.auth.stepUpOptions(actor);await expect(f.auth.stepUp(actor,o.challengeId,key.assert(o.options.challenge,f.config.origin,false))).rejects.toMatchObject({status:400});await expect(f.auth.stepUp(actor,o.challengeId,key.assert(o.options.challenge,f.config.origin))).rejects.toMatchObject({status:401});}finally{await f.close();}});
-it('fresh passkey verification advances the authoritative factor time and cannot be replayed',async()=>{const f=await authFixture();try{const {actor,key,session}=await f.login();await f.db.pool.query("UPDATE admin.sessions SET factor_at=clock_timestamp()-interval '10 minutes'");const o=await f.auth.stepUpOptions(actor);await f.auth.stepUp(actor,o.challengeId,key.assert(o.options.challenge,f.config.origin));const current=await f.auth.authenticate(session.token);expect(Date.now()-current.factorAt).toBeLessThan(5000);await expect(f.auth.stepUp(actor,o.challengeId,key.assert(o.options.challenge,f.config.origin))).rejects.toMatchObject({status:401});}finally{await f.close();}});
-it('keeps a first verified Google subject pending private approval rather than binding it automatically',async()=>{const f=await authFixture();try{await f.db.pool.query('UPDATE admin.actors SET google_subject=NULL');const p=await f.pending();expect(p.state).toBe('identity_approval_required');expect(p.pendingToken).toBe('');const a=(await f.db.pool.query('SELECT google_subject,pending_google_subject FROM admin.actors')).rows[0];expect(a).toEqual({google_subject:null,pending_google_subject:'owned-google-subject'});}finally{await f.close();}});
-it('records logout while revoking the exact server session',async()=>{const f=await authFixture();try{const {actor,session}=await f.login();await f.auth.logout(actor);expect((await f.db.pool.query("SELECT count(*)::integer n FROM admin.audit WHERE action='signed_out'")).rows[0].n).toBe(1);await expect(f.auth.authenticate(session.token)).rejects.toMatchObject({status:401});}finally{await f.close();}});
+import { it, expect } from "vitest";
+import { authFixture } from "./helpers/auth";
+it.each([
+  "UPDATE admin.actors SET enabled=false",
+  "UPDATE admin.actors SET generation=generation+1",
+  "UPDATE admin.sessions SET idle_expires_at=clock_timestamp()-interval '1 second'",
+  "UPDATE admin.sessions SET expires_at=clock_timestamp()-interval '1 second'",
+])("rejects current authority after %s", async (sql) => {
+  const f = await authFixture();
+  try {
+    const { session } = await f.login();
+    await f.db.pool.query(sql);
+    await expect(f.auth.authenticate(session.token)).rejects.toMatchObject({
+      status: 401,
+    });
+  } finally {
+    await f.close();
+  }
+});
+it.each(["http://foreign.example.invalid", "http://127.0.0.1:4000"])(
+  "rejects an actual signed assertion from the wrong origin %s",
+  async (origin) => {
+    const f = await authFixture();
+    try {
+      const { session, key } = await f.login(),
+        actor = await f.auth.authenticate(session.token),
+        o = await f.auth.stepUpOptions(actor);
+      await expect(
+        f.auth.stepUp(
+          actor,
+          o.challengeId,
+          key.assert(o.options.challenge, origin),
+        ),
+      ).rejects.toMatchObject({ status: 400 });
+    } finally {
+      await f.close();
+    }
+  },
+);
+it("requires user verification for step-up and consumes a rejected challenge", async () => {
+  const f = await authFixture();
+  try {
+    const { actor, key } = await f.login(),
+      o = await f.auth.stepUpOptions(actor);
+    await expect(
+      f.auth.stepUp(
+        actor,
+        o.challengeId,
+        key.assert(o.options.challenge, f.config.origin, false),
+      ),
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      f.auth.stepUp(
+        actor,
+        o.challengeId,
+        key.assert(o.options.challenge, f.config.origin),
+      ),
+    ).rejects.toMatchObject({ status: 401 });
+  } finally {
+    await f.close();
+  }
+});
+it("fresh passkey verification advances the authoritative factor time and cannot be replayed", async () => {
+  const f = await authFixture();
+  try {
+    const { actor, key, session } = await f.login();
+    await f.db.pool.query(
+      "UPDATE admin.sessions SET factor_at=clock_timestamp()-interval '10 minutes'",
+    );
+    const o = await f.auth.stepUpOptions(actor);
+    await f.auth.stepUp(
+      actor,
+      o.challengeId,
+      key.assert(o.options.challenge, f.config.origin),
+    );
+    const current = await f.auth.authenticate(session.token);
+    expect(Date.now() - current.factorAt).toBeLessThan(5000);
+    await expect(
+      f.auth.stepUp(
+        actor,
+        o.challengeId,
+        key.assert(o.options.challenge, f.config.origin),
+      ),
+    ).rejects.toMatchObject({ status: 401 });
+  } finally {
+    await f.close();
+  }
+});
+it("keeps a first verified Google subject pending private approval rather than binding it automatically", async () => {
+  const f = await authFixture();
+  try {
+    await f.db.pool.query("UPDATE admin.actors SET google_subject=NULL");
+    const p = await f.pending();
+    expect(p.state).toBe("identity_approval_required");
+    expect(p.pendingToken).toBe("");
+    const a = (
+      await f.db.pool.query(
+        "SELECT google_subject,pending_google_subject FROM admin.actors",
+      )
+    ).rows[0];
+    expect(a).toEqual({
+      google_subject: null,
+      pending_google_subject: "owned-google-subject",
+    });
+  } finally {
+    await f.close();
+  }
+});
+it("records logout while revoking the exact server session", async () => {
+  const f = await authFixture();
+  try {
+    const { actor, session } = await f.login();
+    await f.auth.logout(actor);
+    expect(
+      (
+        await f.db.pool.query(
+          "SELECT count(*)::integer n FROM admin.audit WHERE action='signed_out'",
+        )
+      ).rows[0].n,
+    ).toBe(1);
+    await expect(f.auth.authenticate(session.token)).rejects.toMatchObject({
+      status: 401,
+    });
+  } finally {
+    await f.close();
+  }
+});

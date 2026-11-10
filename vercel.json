@@ -1,0 +1,8 @@
+{
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "src/app/api/admin/v1/[...path]/route.ts": { "maxDuration": 10 }
+  },
+  "git": { "deploymentEnabled": false }
+}
