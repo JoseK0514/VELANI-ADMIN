@@ -1,0 +1,12 @@
+import {randomUUID} from 'node:crypto';
+import {payloads} from './validation';
+import {AdminError} from '../errors';
+import {lockClient,lockCase,bump,root,type Context} from './context';
+export async function caseCommand(ctx:Context,kind:'case.create'|'case.update',id:string|undefined,raw:unknown){const {c,sources,expected}=ctx;
+ if(kind==='case.create'){root(expected);const p=payloads[kind].parse(raw),source=await sources.get('requests',p.sourceRequestId);if(!source||Date.parse(String(source.expiresAt))<=Date.now()||Date.parse(source.createdAt)+90*86400000<=Date.now())throw new AdminError(404,'not_found');const old=(await c.query('SELECT id FROM admin.cases WHERE source_request_id=$1',[p.sourceRequestId])).rows[0];if(old)throw new AdminError(409,'case_exists');const caseId=randomUUID();await c.query("INSERT INTO admin.cases(id,source_request_id,reference,source_created_at,source_expires_at,purge_by) VALUES($1,$2,$3,$4,least($5::timestamptz,$4::timestamptz+interval '90 days'),$4::timestamptz+interval '90 days')",[caseId,p.sourceRequestId,source.reference,source.createdAt,source.expiresAt]);return {entityType:'case',entityId:caseId,version:'1'};}
+ if(!id)throw new AdminError(422,'missing_target');const p=payloads[kind].parse(raw),peek=(await c.query('SELECT client_id FROM admin.cases WHERE id=$1',[id])).rows[0];if(!peek)throw new AdminError(404,'not_found');const ids=[...new Set([peek.client_id,p.clientId].filter((x):x is string=>typeof x==='string'))].sort();for(const clientId of ids)await lockClient(ctx,clientId);const row=await lockCase(ctx,id);if(row.client_id!==peek.client_id)throw new AdminError(409,'version_changed');
+ if(['resolved','closed'].includes(row.state)&&!['resolved','closed'].includes(p.state)&&p.reasonCode!=='reopened_work')throw new AdminError(422,'reopen_reason_required');
+ const clientId=p.clientId===undefined?row.client_id:p.clientId,projectId=p.projectId===undefined?row.project_id:p.projectId;if(projectId&&(!clientId||!(await c.query('SELECT 1 FROM admin.projects WHERE id=$1 AND client_id=$2',[projectId,clientId])).rowCount))throw new AdminError(422,'project_client_mismatch');
+ if((clientId!==row.client_id||projectId!==row.project_id)&&p.reasonCode!=='client_link_verified')throw new AdminError(422,'link_reason_required');
+ await c.query('UPDATE admin.cases SET state=$2,follow_up_at=$3,client_id=$4,project_id=$5 WHERE id=$1',[id,p.state,p.followUpAt===undefined?row.follow_up_at:p.followUpAt,clientId,projectId]);return {entityType:'case',entityId:id,version:await bump(c,'cases',id)};
+}
