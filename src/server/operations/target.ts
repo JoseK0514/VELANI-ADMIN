@@ -55,3 +55,24 @@ export function privateTarget(
     throw Error("invalid_journal_role");
   return database(u.href, 1);
 }
+export async function verifyPrivateBindings(
+  admin: import("pg").Pool,
+  journal: import("pg").Pool,
+  environment: string,
+) {
+  const a = (await admin.query("SELECT * FROM admin.deployment_binding")).rows,
+    j = (await journal.query("SELECT * FROM admin_journal.binding")).rows;
+  if (
+    a.length !== 1 ||
+    j.length !== 1 ||
+    a[0].environment !== environment ||
+    j[0].environment !== environment ||
+    a[0].project_id !== process.env.ADMIN_DATABASE_PROJECT_ID ||
+    a[0].branch_id !== process.env.ADMIN_DATABASE_BRANCH_ID ||
+    a[0].journal_project_id !== process.env.ADMIN_JOURNAL_PROJECT_ID ||
+    a[0].journal_branch_id !== process.env.ADMIN_JOURNAL_BRANCH_ID ||
+    j[0].project_id !== a[0].journal_project_id ||
+    j[0].branch_id !== a[0].journal_branch_id
+  )
+    throw Error("private_target_binding_mismatch");
+}

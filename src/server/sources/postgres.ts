@@ -115,7 +115,7 @@ const schemas = {
 };
 function item(raw: unknown, kind: SourceKind): Item {
   const result = schemas[kind].parse(raw);
-  return { ...result, createdAt: new Date(result.createdAt).toISOString() };
+  return result;
 }
 export class PostgresSources implements Sources {
   private pools: Partial<Record<SourceName, Pool>>;

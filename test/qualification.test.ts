@@ -3,13 +3,12 @@ import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { authFixture } from "./helpers/auth";
-import { journalFixture } from "./helpers/journal";
 import { sourceFixture } from "./helpers/source";
 import { PostgresSources } from "../src/server/sources/postgres";
 import { createHandler } from "../src/server/http";
 it("qualifies the private workflow using real source readers, cryptographic login, journal and HTTP commands", async () => {
   const f = await authFixture(),
-    j = await journalFixture(),
+    j = f.journal,
     v = await sourceFixture("velani"),
     c = await sourceFixture("control"),
     b = await sourceFixture("catalog");
@@ -192,7 +191,7 @@ it("qualifies the private workflow using real source readers, cryptographic logi
     }
   } finally {
     await f.close();
-    await j.close();
+
     await v.close();
     await c.close();
     await b.close();

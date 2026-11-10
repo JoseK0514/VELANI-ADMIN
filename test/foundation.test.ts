@@ -68,6 +68,7 @@ it("applies explicit migrations atomically with checksums and replays without re
       "0002_identity_review.sql",
       "0003_stable_creation_time.sql",
       "0004_deployment_binding.sql",
+      "0005_authorization_epoch.sql",
     ]);
   } finally {
     await db.close();
@@ -85,6 +86,30 @@ it("uses one creation instant for an exact prospect expiry without intermittent 
           "SELECT bool_and(prospect_expires_at=created_at+interval '90 days') exact FROM admin.clients",
         )
       ).rows[0].exact,
+    ).toBe(true);
+  } finally {
+    await db.close();
+  }
+});
+it("migrates the independent journal with immutable version checksums", async () => {
+  const db = await testDatabase(false);
+  try {
+    const { migrateJournal } = await import("../src/server/db");
+    await migrateJournal(db.pool);
+    await migrateJournal(db.pool);
+    expect(
+      (
+        await db.pool.query(
+          "SELECT version FROM admin_journal.schema_migrations ORDER BY version",
+        )
+      ).rows.map((x) => x.version),
+    ).toEqual(["0001_journal.sql", "0002_authorization_epoch.sql"]);
+    expect(
+      (
+        await db.pool.query(
+          "SELECT recovery_pending FROM admin_journal.authorization_state",
+        )
+      ).rows[0].recovery_pending,
     ).toBe(true);
   } finally {
     await db.close();

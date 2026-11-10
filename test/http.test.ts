@@ -1,7 +1,6 @@
 import { expect, it } from "vitest";
 import { randomUUID } from "node:crypto";
 import { authFixture } from "./helpers/auth";
-import { journalFixture } from "./helpers/journal";
 import { authenticator } from "./helpers/authenticator";
 import { createHandler } from "../src/server/http";
 import type { Sources } from "../src/server/sources/types";
@@ -13,7 +12,7 @@ const sources: Sources = {
 };
 async function fixture() {
   const f = await authFixture(),
-    journal = await journalFixture(),
+    journal = f.journal,
     handler = createHandler({
       config: f.config,
       pool: f.db.pool,
@@ -30,7 +29,6 @@ async function fixture() {
     journal,
     close: async () => {
       await f.close();
-      await journal.close();
     },
   };
 }

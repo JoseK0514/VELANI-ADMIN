@@ -13,12 +13,26 @@ export class Retention {
   guard: BusinessTransaction = async (work) =>
     transaction(this.journal, async (j) => {
       await j.query(`SELECT pg_advisory_xact_lock_shared(${lock})`);
+      const authority = (
+        await j.query(
+          "SELECT epoch::text,recovery_pending FROM admin_journal.authorization_state",
+        )
+      ).rows[0];
       const latest = (
         await j.query(
           "SELECT COALESCE(max(sequence),0)::text AS n FROM admin_journal.deletions",
         )
       ).rows[0].n;
       return transaction(this.admin, async (c) => {
+        const localAuthority = (
+          await c.query("SELECT epoch::text FROM admin.authorization_state")
+        ).rows[0];
+        if (
+          !authority ||
+          authority.recovery_pending ||
+          authority.epoch !== localAuthority?.epoch
+        )
+          throw new AdminError(503, "authorization_recovery_required");
         const local = (
           await c.query(
             "SELECT applied_sequence::text FROM admin.restore_barrier WHERE singleton",
@@ -100,6 +114,14 @@ export class Retention {
   }
   async purge() {
     return this.exclusive(async (j) => {
+      if (
+        (
+          await j.query(
+            "SELECT recovery_pending FROM admin_journal.authorization_state",
+          )
+        ).rows[0]?.recovery_pending
+      )
+        throw new AdminError(503, "authorization_recovery_required");
       await this.apply(j);
       const candidates = (
         await this.admin.query(

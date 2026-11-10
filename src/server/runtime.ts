@@ -1,3 +1,4 @@
+import { AuthorizationFence } from "./auth/fence";
 import { withinDeadline } from "./deadline";
 import { randomUUID } from "node:crypto";
 import { readConfig, type AdminConfig } from "./config";
@@ -11,7 +12,11 @@ function configured(config: AdminConfig) {
   const pool = database(config.databaseUrl),
     journal = database(config.journalUrl),
     sources = new PostgresSources(config.sources),
-    auth = new AuthService(pool, config);
+    auth = new AuthService(
+      pool,
+      config,
+      new AuthorizationFence(pool, journal, config),
+    );
   return { config, pool, journal, sources, auth };
 }
 function runtime() {
@@ -27,6 +32,7 @@ export async function verifyBinding(d: Dependencies) {
   ).rows.map((r) => r.version);
   if (JSON.stringify(versions) !== JSON.stringify(migrations))
     throw new AdminError(503, "schema_not_qualified");
+  await new AuthorizationFence(d.pool, d.journal, d.config).verify();
   if (d.config.environment === "test") return;
   const required = [
     "ADMIN_DATABASE_PROJECT_ID",

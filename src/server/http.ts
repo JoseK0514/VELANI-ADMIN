@@ -1,3 +1,4 @@
+import { AuthorizationFence } from "./auth/fence";
 import { withinDeadline } from "./deadline";
 import type { Pool } from "pg";
 import { randomUUID } from "node:crypto";
@@ -181,6 +182,7 @@ export function createHandler({
     let path = "";
     const work = async () => {
       try {
+        await new AuthorizationFence(pool, journal, config).verify();
         const url = new URL(request.url);
         if (url.origin !== config.origin)
           throw new AdminError(403, "origin_denied");

@@ -172,3 +172,35 @@ it("does not forward new fields if a source view accidentally broadens its JSON"
     await f.close();
   }
 });
+it("keeps source timestamp microseconds through full cursor traversal", async () => {
+  const f = await sourceFixture("control");
+  try {
+    const ids = [randomUUID(), randomUUID(), randomUUID()];
+    await f.db.pool.query(
+      "INSERT INTO nevora_onboarding.workspace_registry SELECT x.id,'https://owned.invalid','test',1,1,'ACTIVE',date_trunc('second',now())+x.delta,NULL FROM (VALUES($1::uuid,interval '0.123100 second'),($2::uuid,interval '0.123900 second'),($3::uuid,interval '0.123900 second')) x(id,delta)",
+      ids,
+    );
+    const s = new PostgresSources({ control: f.config }, { control: f.pool }),
+      key = Buffer.alloc(32, 9),
+      seen: string[] = [];
+    let after: ReturnType<typeof decodeCursor> | undefined;
+    for (let i = 0; i < 4; i++) {
+      const page = await s.list("workplaces", { limit: 1, after });
+      seen.push(...page.items.map((x) => x.id));
+      const last = page.items.at(-1);
+      if (!page.more || !last) break;
+      after = decodeCursor(
+        key,
+        "workplaces",
+        encodeCursor(key, "workplaces", {
+          id: last.id,
+          createdAt: last.createdAt,
+        }),
+      );
+    }
+    expect(new Set(seen)).toEqual(new Set(ids));
+    expect(seen).toHaveLength(3);
+  } finally {
+    await f.close();
+  }
+});

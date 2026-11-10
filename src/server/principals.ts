@@ -16,7 +16,7 @@ export function adminGrants(web: string, maintenance: string): string[] {
   return [
     `GRANT USAGE ON SCHEMA admin TO ${web},${maintenance}`,
     `GRANT SELECT ON ALL TABLES IN SCHEMA admin TO ${maintenance}`,
-    `GRANT SELECT ON admin.schema_migrations,admin.deployment_binding,admin.actors,admin.credentials,admin.sessions,admin.pending_logins,admin.challenges,admin.classifications,admin.retention_holds,admin.restore_barrier,admin.maintenance_state,admin.audit TO ${web}`,
+    `GRANT SELECT ON admin.authorization_state,admin.schema_migrations,admin.deployment_binding,admin.actors,admin.credentials,admin.sessions,admin.pending_logins,admin.challenges,admin.classifications,admin.retention_holds,admin.restore_barrier,admin.maintenance_state,admin.audit TO ${web}`,
     `GRANT SELECT,INSERT,UPDATE ON ${business.map((t) => "admin." + t).join(",")} TO ${web}`,
     `GRANT INSERT ON admin.audit,admin.sessions,admin.pending_logins,admin.challenges,admin.credentials TO ${web}`,
     `GRANT UPDATE(revoked_at,idle_expires_at,factor_at) ON admin.sessions TO ${web}`,
@@ -38,7 +38,7 @@ export function journalGrants(reader: string, writer: string): string[] {
     throw Error("invalid_journal_role");
   return [
     `GRANT USAGE ON SCHEMA admin_journal TO ${reader},${writer}`,
-    `GRANT SELECT ON admin_journal.binding,admin_journal.deletions TO ${reader},${writer}`,
+    `GRANT SELECT ON admin_journal.authorization_state,admin_journal.binding,admin_journal.deletions TO ${reader},${writer}`,
     `GRANT INSERT ON admin_journal.deletions TO ${writer}`,
     `GRANT USAGE ON SEQUENCE admin_journal.deletions_sequence_seq TO ${writer}`,
   ];

@@ -51,7 +51,13 @@ export function catalogAccess(c: Item | null, now = Date.now()): string {
     return "grace";
   return "restricted";
 }
-function safeCatalog(c: Item | null) {
+function safeCatalog(c: Item | null, workspace: Item) {
+  if (
+    c &&
+    (c.environment !== workspace.environment ||
+      c.incarnation !== workspace.incarnation)
+  )
+    return { access: "unknown", reason: "source_identity_mismatch" };
   return c
     ? {
         enrollmentName: c.enrollmentName,
@@ -197,7 +203,10 @@ export class ReadService {
               "unclassified";
             row.catalog = safeCatalog(
               catalog.find((x) => x.id === row.id) ?? null,
+              row,
             );
+            if ((row.catalog as { access: string }).access === "unknown")
+              state = "partial";
             row.currentHeadcount = { state: "not_supported" };
             row.setupReadiness = { state: "not_supported" };
             row.workerHealth = { state: "not_supported" };
@@ -215,6 +224,7 @@ export class ReadService {
         this.sources.count("registrations"),
         this.sources.count("requests"),
         this.sources.list("catalog", { limit: 100, excludeIds: exclude }),
+        this.sources.list("workplaces", { limit: 100, excludeIds: exclude }),
       ]);
     if (results.every((r) => r.status === "rejected"))
       throw new AdminError(503, "sources_unavailable");
@@ -230,9 +240,27 @@ export class ReadService {
       )
     ).rows[0];
     const catalog = results[3],
+      workplaces = results[4],
+      count = results[0],
       trials =
         catalog.status === "fulfilled" &&
         !catalog.value.more &&
+        workplaces.status === "fulfilled" &&
+        !workplaces.value.more &&
+        count.status === "fulfilled" &&
+        workplaces.value.items.length === count.value &&
+        catalog.value.items.length === workplaces.value.items.length &&
+        new Set(catalog.value.items.map((x) => x.id)).size ===
+          catalog.value.items.length &&
+        workplaces.value.items.every((w) =>
+          catalog.value.items.some(
+            (x) =>
+              x.id === w.id &&
+              x.environment === w.environment &&
+              x.environment === this.config.environment &&
+              x.incarnation === w.incarnation,
+          ),
+        ) &&
         catalog.value.items.every((x) => catalogAccess(x) !== "unknown")
           ? {
               value: catalog.value.items.filter(
@@ -262,7 +290,9 @@ export class ReadService {
         },
       },
       "combined",
-      results.some((r) => r.status === "rejected") ? "partial" : "ready",
+      results.some((r) => r.status === "rejected") || trials.value === null
+        ? "partial"
+        : "ready",
     );
   }
   private async integrations(c: PoolClient) {
@@ -438,7 +468,7 @@ export class ReadService {
           rows.length > p.limit && last
             ? encodeCursor(this.config.cursorKey, scope, {
                 id: last.id,
-                createdAt: new Date(last.createdAt).toISOString(),
+                createdAt: last.createdAt,
               })
             : null,
       },

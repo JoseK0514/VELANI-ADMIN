@@ -1,3 +1,4 @@
+import { AuthorizationFence } from "./fence";
 import type { Pool } from "pg";
 import { randomUUID } from "node:crypto";
 import {
@@ -25,12 +26,14 @@ export class AuthService {
   constructor(
     private pool: Pool,
     private config: AdminConfig,
+    private authority: AuthorizationFence,
     private oidc = new GoogleOidc(config),
   ) {}
   private hash(purpose: string, value: string) {
     return digest(this.config.sessionKey, purpose, value);
   }
   async start() {
+    await this.authority.verify();
     const { values, url } = await this.oidc.start(),
       flowToken = token(),
       id = randomUUID();
@@ -58,6 +61,7 @@ export class AuthService {
     return r.rows[0];
   }
   async callback(url: URL, flowToken: string) {
+    await this.authority.verify();
     const c = await this.take("oidc", this.hash("flow", flowToken)),
       identity = await this.oidc.complete(
         url,
@@ -107,6 +111,7 @@ export class AuthService {
     });
   }
   private async pending(value: string) {
+    await this.authority.verify();
     const r = await this.pool.query(
       "SELECT a.id,a.email,a.generation::text,a.enrollment_until FROM admin.pending_logins p JOIN admin.actors a ON a.id=p.actor_id WHERE p.hash=$1 AND p.expires_at>clock_timestamp() AND p.generation=a.generation AND a.enabled AND a.google_subject IS NOT NULL AND a.email=$2",
       [this.hash("pending", value), this.config.ownerEmail],
@@ -265,6 +270,7 @@ export class AuthService {
     );
   }
   async stepUpOptions(actor: Actor) {
+    await this.authority.verify();
     await transaction(this.pool, (c) => assertActor(c, actor, this.config));
     return this.options("step_up", actor.sessionHash, actor);
   }
@@ -338,6 +344,7 @@ export class AuthService {
     return { state: "authenticated", token: sessionToken };
   }
   async authenticate(value: string): Promise<Actor> {
+    await this.authority.verify();
     if (!/^[A-Za-z0-9_-]{43}$/.test(value))
       throw new AdminError(401, "authentication_required");
     const hash = this.hash("session", value),
@@ -357,6 +364,7 @@ export class AuthService {
     };
   }
   async stepUp(actor: Actor, id: string, response: AuthenticationResponseJSON) {
+    await this.authority.verify();
     const c = await this.take("step_up", actor.sessionHash, id);
     if (c.actor_id !== actor.id || c.generation !== actor.generation)
       throw new AdminError(401, "challenge_expired");
@@ -377,6 +385,7 @@ export class AuthService {
     return { state: "verified" };
   }
   async logout(actor: Actor) {
+    await this.authority.verify();
     const r = await this.pool.query(
       "UPDATE admin.sessions SET revoked_at=clock_timestamp() WHERE hash=$1 AND actor_id=$2 AND revoked_at IS NULL",
       [actor.sessionHash, actor.id],

@@ -1,5 +1,4 @@
-import { readFile } from "node:fs/promises";
-import { migrate } from "../src/server/db";
+import { migrate, migrateJournal } from "../src/server/db";
 import { privateTarget } from "../src/server/operations/target";
 const args = process.argv.slice(2),
   environment = args[args.indexOf("--environment") + 1];
@@ -15,13 +14,8 @@ const journal = args.includes("--journal"),
     environment,
   );
 try {
-  if (journal) {
-    const exists = (
-      await pool.query("SELECT to_regclass('admin_journal.deletions') AS t")
-    ).rows[0].t;
-    if (!exists)
-      await pool.query(await readFile("db/journal/0001_journal.sql", "utf8"));
-  } else await migrate(pool);
+  if (journal) await migrateJournal(pool);
+  else await migrate(pool);
   console.log(
     JSON.stringify({
       state: "schema_applied",

@@ -5,7 +5,7 @@ import type { Page } from "./sources/types";
 const position = z
   .object({
     id: z.uuid().or(z.string().regex(/^[1-9][0-9]{0,18}$/)),
-    createdAt: z.iso.datetime(),
+    createdAt: z.iso.datetime({ offset: true }),
   })
   .strict();
 export function encodeCursor(

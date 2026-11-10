@@ -1,37 +1,10 @@
+import { authFixture } from "./helpers/auth";
 import { it, expect } from "vitest";
-import { randomUUID } from "node:crypto";
-import { testDatabase } from "./helpers/db";
-import { fixtureConfig } from "./helpers/config";
-import { oidcFixture } from "./helpers/oidc";
 import { authenticator } from "./helpers/authenticator";
-import { GoogleOidc } from "../src/server/auth/oidc";
-import { AuthService } from "../src/server/auth/service";
 async function setup(claims: Record<string, unknown> = {}) {
-  const db = await testDatabase(),
-    config = fixtureConfig(db.url),
-    issuer = await oidcFixture(claims),
-    id = randomUUID();
-  await db.pool.query(
-    "INSERT INTO admin.actors(id,email,google_subject,enabled,enrollment_until) VALUES($1,$2,$3,true,clock_timestamp()+interval '10 minutes')",
-    [id, config.ownerEmail, "owned-google-subject"],
-  );
-  const auth = new AuthService(
-    db.pool,
-    config,
-    new GoogleOidc(config, async () => issuer.configuration),
-  );
-  return {
-    db,
-    config,
-    issuer,
-    id,
-    auth,
-    close: async () => {
-      await issuer.close();
-      await db.close();
-    },
-  };
+  return authFixture(claims);
 }
+
 async function pending(s: Awaited<ReturnType<typeof setup>>) {
   const start = await s.auth.start();
   return s.auth.callback(await s.issuer.callback(start.url), start.flowToken);
