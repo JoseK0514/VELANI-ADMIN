@@ -1,0 +1,52 @@
+{
+  "createdAt": "2026-11-10T16:16:02.728Z",
+  "applicationSourceCommit": "91289f2ed1b3fc4d15a8c70b79a09e58046c481e",
+  "validationCommit": "ce252ab531cc4638426cd28d0e0a6d3f2eccf4b6",
+  "branch": "codex/admin-backend",
+  "runtime": "v24.19.0",
+  "checks": {
+    "ownedTests": {
+      "passed": 75,
+      "files": 14
+    },
+    "typecheck": "passed",
+    "lint": "passed",
+    "productionBuild": "passed for identical application source",
+    "dependencyVulnerabilities": 0
+  },
+  "review": {
+    "initialSource": "f30f11c27e19bb246e997c73ee69a845ca77c692",
+    "importantFixed": [
+      "R1",
+      "R2",
+      "R3",
+      "R5"
+    ],
+    "deferredMinor": [
+      "R4"
+    ],
+    "secondReviewerDispatched": false
+  },
+  "hosting": {
+    "projectId": "prj_c6aunTwnTZVBglfKUGTtPXhvmrJu",
+    "deploymentId": "dpl_y5Qt6HRutnhsMpTQrPy3X4jJmH1y",
+    "url": "https://velani-admin-h0mgtd0hu-josekarlo-5933s-projects.vercel.app",
+    "target": "preview",
+    "providerState": "READY",
+    "runtime": "nodejs24.x",
+    "publicApiStatus": 302,
+    "applicationEnvironmentKeys": 0,
+    "automationBypasses": 0,
+    "productionPauseConfirmed": false
+  },
+  "liveActivationQualified": false,
+  "gates": [
+    "Google confidential client and direct owner/passkey enrollment",
+    "isolated hosted stores and least-privilege source grants",
+    "hosting eligibility and aggregate budget headroom",
+    "custom domain DNS/TLS",
+    "privacy disclosure and observed scheduled maintenance",
+    "approved hosted restore drill",
+    "Claude UI/browser acceptance and explicit production release"
+  ]
+}
