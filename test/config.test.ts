@@ -35,3 +35,22 @@ it("fails closed on missing configuration, unsafe origin, reused roots and exter
 it("requires HTTPS and restricted runtime roles in non-test environments", () => {
   expect(readConfig({ ...env, ADMIN_ENVIRONMENT: "production" })).toBeNull();
 });
+it("requires an independent journal endpoint in hosted environments", () => {
+  const p = {
+    ...env,
+    ADMIN_ENVIRONMENT: "production",
+    ADMIN_ORIGIN: "https://admin.example.invalid",
+    ADMIN_DATABASE_URL:
+      "postgresql://velani_admin_web@ep-owned.neon.tech/admin?sslmode=require",
+    ADMIN_JOURNAL_DATABASE_URL:
+      "postgresql://velani_admin_journal_read@ep-owned-pooler.neon.tech/journal?sslmode=require",
+  };
+  expect(readConfig(p)).toBeNull();
+  expect(
+    readConfig({
+      ...p,
+      ADMIN_JOURNAL_DATABASE_URL:
+        "postgresql://velani_admin_journal_read@ep-independent.neon.tech/journal?sslmode=require",
+    }),
+  ).not.toBeNull();
+});

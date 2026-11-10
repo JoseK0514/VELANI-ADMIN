@@ -85,6 +85,12 @@ export function readConfig(
         "velani_admin_journal_read",
       );
     if (!app || !journal || app.href === journal.href) return null;
+    if (
+      environment !== "test" &&
+      app.hostname.replace("-pooler.", ".") ===
+        journal.hostname.replace("-pooler.", ".")
+    )
+      return null;
     const keys = [
       env.ADMIN_SESSION_KEY,
       env.ADMIN_AUTH_ENCRYPTION_KEY,

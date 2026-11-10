@@ -1,3 +1,4 @@
+import { withinDeadline } from "./deadline";
 import type { Pool } from "pg";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
@@ -479,7 +480,7 @@ export function createHandler({
     let timer: ReturnType<typeof setTimeout>;
     try {
       return await Promise.race([
-        work(),
+        withinDeadline(work),
         new Promise<Response>((resolve) => {
           timer = setTimeout(
             () =>

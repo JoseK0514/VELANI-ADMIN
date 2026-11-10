@@ -1,3 +1,4 @@
+import { assertDeadline } from "./deadline";
 import { Pool, type PoolClient } from "pg";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
@@ -25,8 +26,10 @@ export async function transaction<T>(
 ): Promise<T> {
   const c = await pool.connect();
   try {
+    assertDeadline();
     await c.query("BEGIN");
     const result = await work(c);
+    assertDeadline();
     await c.query("COMMIT");
     return result;
   } catch (e) {

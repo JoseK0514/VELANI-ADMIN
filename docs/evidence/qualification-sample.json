@@ -1,0 +1,244 @@
+{
+  "date": "2026-11-10",
+  "environment": "owned-loopback-test",
+  "containsRealCustomers": false,
+  "events": [
+    {
+      "path": "clients",
+      "method": "POST",
+      "status": 201,
+      "body": {
+        "schemaVersion": 1,
+        "state": "saved",
+        "receipt": {
+          "operationId": "bdbdb46b-44f4-4227-b6ea-b7afbb0ba8ac",
+          "entityType": "client",
+          "entityId": "550c6002-a279-411e-ac5b-bf69a38690e4",
+          "version": "1",
+          "replayed": false
+        },
+        "requestId": "e3affbfd-e261-400c-9e56-a05ae53571a3"
+      }
+    },
+    {
+      "path": "clients/550c6002-a279-411e-ac5b-bf69a38690e4/contacts",
+      "method": "POST",
+      "status": 201,
+      "body": {
+        "schemaVersion": 1,
+        "state": "saved",
+        "receipt": {
+          "operationId": "f92ad4f4-3e0d-4957-8a73-43a1ecd7c216",
+          "entityType": "contact",
+          "entityId": "3a55cab8-c40d-49eb-abfd-a474f7281382",
+          "version": "2",
+          "replayed": false
+        },
+        "requestId": "28203662-e69f-447c-8e29-9c808815799c"
+      }
+    },
+    {
+      "path": "clients/550c6002-a279-411e-ac5b-bf69a38690e4",
+      "method": "PATCH",
+      "status": 200,
+      "body": {
+        "schemaVersion": 1,
+        "state": "saved",
+        "receipt": {
+          "operationId": "3c150116-9137-4700-b141-5a942e77661c",
+          "entityType": "client",
+          "entityId": "550c6002-a279-411e-ac5b-bf69a38690e4",
+          "version": "3",
+          "replayed": false
+        },
+        "requestId": "139e202c-ebb9-4f8d-a6dd-8e9f4f14281a"
+      }
+    },
+    {
+      "path": "projects",
+      "method": "POST",
+      "status": 201,
+      "body": {
+        "schemaVersion": 1,
+        "state": "saved",
+        "receipt": {
+          "operationId": "d776818f-a5f4-4237-8d87-3cdbed4c083b",
+          "entityType": "project",
+          "entityId": "9a44ee3f-9e4c-44d7-ab87-cce9593c22e0",
+          "version": "1",
+          "replayed": false
+        },
+        "requestId": "3de3a67f-dffd-4d45-9693-e96975c824c6"
+      }
+    },
+    {
+      "path": "notes",
+      "method": "POST",
+      "status": 201,
+      "body": {
+        "schemaVersion": 1,
+        "state": "saved",
+        "receipt": {
+          "operationId": "09530cd4-a27a-43e2-b10c-5da650980e37",
+          "entityType": "note",
+          "entityId": "12ba718f-db8d-402d-b4d7-3c8ad15dfc3d",
+          "version": "2",
+          "replayed": false
+        },
+        "requestId": "50909874-2f04-4956-8d52-6d65d35a3935"
+      }
+    },
+    {
+      "path": "projects/9a44ee3f-9e4c-44d7-ab87-cce9593c22e0",
+      "method": "PATCH",
+      "status": 200,
+      "body": {
+        "schemaVersion": 1,
+        "state": "saved",
+        "receipt": {
+          "operationId": "926e488a-0c23-45b8-9f27-0d6d89848237",
+          "entityType": "project",
+          "entityId": "9a44ee3f-9e4c-44d7-ab87-cce9593c22e0",
+          "version": "3",
+          "replayed": false
+        },
+        "requestId": "5d2ef811-abeb-4f2a-8024-4517f1de2c22"
+      }
+    },
+    {
+      "path": "cases",
+      "method": "POST",
+      "status": 201,
+      "body": {
+        "schemaVersion": 1,
+        "state": "saved",
+        "receipt": {
+          "operationId": "58657448-ca23-4295-8d64-589d3a2ffb70",
+          "entityType": "case",
+          "entityId": "7adf1de6-c219-493c-9cab-209ffe7f2542",
+          "version": "1",
+          "replayed": false
+        },
+        "requestId": "ddc989e9-85bd-4b99-afd2-cdc5a9cbefd7"
+      }
+    },
+    {
+      "path": "clients/550c6002-a279-411e-ac5b-bf69a38690e4",
+      "method": "PATCH",
+      "status": 200,
+      "body": {
+        "schemaVersion": 1,
+        "state": "saved",
+        "receipt": {
+          "operationId": "d9a10833-f494-48d1-929d-676b28bfd60b",
+          "entityType": "client",
+          "entityId": "550c6002-a279-411e-ac5b-bf69a38690e4",
+          "version": "4",
+          "replayed": false
+        },
+        "requestId": "f8ee9c26-9fbf-4591-9cc3-1a17d3cb2020"
+      }
+    }
+  ],
+  "overview": {
+    "schemaVersion": 1,
+    "state": "ready",
+    "data": {
+      "trials": {
+        "value": 0,
+        "unit": "workplaces",
+        "reason": null
+      },
+      "workplaces": {
+        "schemaVersion": 1,
+        "state": "ready",
+        "data": {
+          "count": 0
+        },
+        "source": {
+          "system": "control",
+          "environment": "test",
+          "observedAt": "2026-11-10T15:49:05.204Z",
+          "freshness": "fresh",
+          "coverage": "complete"
+        }
+      },
+      "registrations": {
+        "schemaVersion": 1,
+        "state": "ready",
+        "data": {
+          "count": 0
+        },
+        "source": {
+          "system": "control",
+          "environment": "test",
+          "observedAt": "2026-11-10T15:49:05.204Z",
+          "freshness": "fresh",
+          "coverage": "complete"
+        }
+      },
+      "requests": {
+        "schemaVersion": 1,
+        "state": "ready",
+        "data": {
+          "count": 1
+        },
+        "source": {
+          "system": "velani",
+          "environment": "test",
+          "observedAt": "2026-11-10T15:49:05.204Z",
+          "freshness": "fresh",
+          "coverage": "complete"
+        }
+      },
+      "clients": 1,
+      "openProjects": 0,
+      "openCases": 1,
+      "revenue": {
+        "value": null,
+        "unit": "USD",
+        "reason": "live_billing_not_verified"
+      }
+    },
+    "source": {
+      "system": "combined",
+      "environment": "test",
+      "observedAt": "2026-11-10T15:49:05.204Z",
+      "freshness": "fresh",
+      "coverage": "complete"
+    },
+    "requestId": "c057115c-390d-4182-a4af-9d0518811d6a"
+  },
+  "profile": {
+    "schemaVersion": 1,
+    "state": "ready",
+    "data": {
+      "id": "550c6002-a279-411e-ac5b-bf69a38690e4",
+      "version": "4",
+      "closedAt": "2026-11-10T11:49:05.195413-04:00",
+      "createdAt": "2026-11-10T11:49:05.168107-04:00",
+      "engagedAt": "2026-11-10T11:49:05.174638-04:00",
+      "deleteAfter": "2027-11-10T11:49:05.195413-04:00",
+      "displayName": "Fictional Qualification Café",
+      "prospectExpiresAt": "2027-02-08T11:49:05.168107-04:00",
+      "relationshipState": "inactive",
+      "contacts": [
+        {
+          "id": "3a55cab8-c40d-49eb-abfd-a474f7281382",
+          "provenance": "asserted",
+          "contact": "fictional fixture omitted"
+        }
+      ],
+      "sourceLinks": [],
+      "notes": []
+    },
+    "source": {
+      "system": "admin",
+      "environment": "test",
+      "observedAt": "2026-11-10T15:49:05.206Z",
+      "freshness": "fresh",
+      "coverage": "complete"
+    },
+    "requestId": "f3970c4d-466b-45a3-ba77-c42647502662"
+  }
+}

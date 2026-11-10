@@ -1,3 +1,4 @@
+import { withinDeadline } from "./deadline";
 import { randomUUID } from "node:crypto";
 import { readConfig, type AdminConfig } from "./config";
 import { database, migrations } from "./db";
@@ -92,7 +93,7 @@ export async function handleRequest(request: Request) {
   };
   try {
     return await Promise.race([
-      work(),
+      withinDeadline(work),
       new Promise<Response>((resolve) => {
         timer = setTimeout(() => resolve(failure("request_timeout")), 5000);
       }),
