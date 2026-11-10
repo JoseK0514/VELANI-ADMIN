@@ -1,7 +1,7 @@
 import {Pool,type PoolClient} from 'pg';
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
-export const migrations=['0001_admin.sql'] as const;
+export const migrations=['0001_admin.sql','0002_identity_review.sql'] as const;
 export function database(url:string,max=3){const pool=new Pool({connectionString:url,max,connectionTimeoutMillis:3000,idleTimeoutMillis:10000,statement_timeout:3000,query_timeout:4000});pool.on('error',()=>{});return pool;}
 export async function transaction<T>(pool:Pool,work:(client:PoolClient)=>Promise<T>):Promise<T>{
  const c=await pool.connect();try{await c.query('BEGIN');const result=await work(c);await c.query('COMMIT');return result;}catch(e){await c.query('ROLLBACK').catch(()=>{});throw e;}finally{c.release();}

@@ -17,4 +17,4 @@ it('gives the web principal business writes but no audit deletion, owner enrollm
  expect(rows.rows[0]).toEqual({edit:true,erase_audit:false,enroll:false,create_schema:false});
  }finally{await db.close();}
 });
-it('applies explicit migrations atomically with checksums and replays without recreating tables',async()=>{const db=await testDatabase(false);try{await migrate(db.pool);await migrate(db.pool);const r=await db.pool.query('SELECT count(*)::integer n FROM admin.schema_migrations');expect(r.rows[0].n).toBe(1);}finally{await db.close();}});
+it('applies explicit migrations atomically with checksums and replays without recreating tables',async()=>{const db=await testDatabase(false);try{await migrate(db.pool);await migrate(db.pool);const r=await db.pool.query('SELECT version FROM admin.schema_migrations ORDER BY version');expect(r.rows.map(x=>x.version)).toEqual(['0001_admin.sql','0002_identity_review.sql']);}finally{await db.close();}});
