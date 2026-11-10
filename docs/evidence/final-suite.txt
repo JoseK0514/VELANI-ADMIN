@@ -8,7 +8,7 @@ Owned loopback PostgreSQL; no external database credentials.
 
 
  Test Files  14 passed (14)
-      Tests  74 passed (74)
-   Start at  12:10:51
-   Duration  13.06s (tests 94%, import 5%)
+      Tests  75 passed (75)
+   Start at  12:13:30
+   Duration  12.73s (tests 94%, import 6%)
 

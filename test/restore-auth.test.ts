@@ -151,3 +151,37 @@ it("requires two newly enrolled factors after restore and rejects the prior fact
     await f.close();
   }
 });
+it("binds initial authorization only through the private owner and refuses rebinding", async () => {
+  const { testDatabase } = await import("./helpers/db"),
+    { migrateJournal } = await import("../src/server/db"),
+    { fixtureConfig } = await import("./helpers/config"),
+    { bindAuthorization } = await import(
+      "../src/server/operations/authorization"
+    ),
+    { Pool } = await import("pg"),
+    db = await testDatabase(),
+    j = await testDatabase(false),
+    role = "velani_admin_web_1337133713371337";
+  let restricted: InstanceType<typeof Pool> | undefined;
+  try {
+    await migrateJournal(j.pool);
+    await db.pool.query("CREATE ROLE " + role + " LOGIN");
+    const url = new URL(db.url);
+    url.username = role;
+    restricted = new Pool({ connectionString: url.href });
+    const config = fixtureConfig(db.url);
+    await expect(
+      bindAuthorization(restricted, j.pool, config),
+    ).rejects.toMatchObject({ code: "private_operator_required" });
+    await bindAuthorization(db.pool, j.pool, config);
+    await new AuthorizationFence(db.pool, j.pool, config).verify();
+    await expect(
+      bindAuthorization(db.pool, j.pool, config),
+    ).rejects.toMatchObject({ code: "authorization_already_bound" });
+  } finally {
+    await restricted?.end();
+    await db.pool.query("DROP ROLE " + role);
+    await db.close();
+    await j.close();
+  }
+});

@@ -1,0 +1,126 @@
+
+> velani-admin@0.1.0 test
+> node scripts/test-owned.mjs test/reads.test.ts test/sources.test.ts
+
+Owned loopback PostgreSQL; no external database credentials.
+
+ RUN  v5.1.0 /Users/josek0514/.codex/worktrees/velani-admin-backend-20261110
+
+ ❯ test/reads.test.ts (12 tests | 7 failed) 1107ms
+   × traverses every row across sub-millisecond and equal-timestamp cursor boundaries 99ms
+   × treats a different catalog incarnation as unknown, even for fresh trial evidence 101ms
+   × treats a different catalog incarnation as unknown, even for fresh paid evidence 120ms
+   × qualifies trial metric coverage: missing 84ms
+   × qualifies trial metric coverage: subset 117ms
+   × qualifies trial metric coverage: orphan 82ms
+   × qualifies trial metric coverage: incarnation 81ms
+ ❯ test/sources.test.ts (7 tests | 1 failed) 339ms
+   × keeps source timestamp microseconds through full cursor traversal 57ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/reads.test.ts > traverses every row across sub-millisecond and equal-timestamp cursor boundaries
+AssertionError: expected [ …(2) ] to have a length of 3 but got 2
+
+- Expected
++ Received
+
+- 3
++ 2
+
+ ❯ test/reads.test.ts:115:1126
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  test/reads.test.ts > treats a different catalog incarnation as unknown, even for fresh trial evidence
+ FAIL  test/reads.test.ts > treats a different catalog incarnation as unknown, even for fresh paid evidence
+AssertionError: expected 'ready' to be 'partial' // Object.is equality
+
+Expected: "partial"
+Received: "ready"
+
+ ❯ test/reads.test.ts:116:718
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  test/reads.test.ts > qualifies trial metric coverage: missing
+AssertionError: expected +0 to be null // Object.is equality
+
+- Expected:
+null
+
++ Received:
+0
+
+ ❯ test/reads.test.ts:117:1005
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  test/reads.test.ts > qualifies trial metric coverage: subset
+AssertionError: expected 1 to be null // Object.is equality
+
+- Expected:
+null
+
++ Received:
+1
+
+ ❯ test/reads.test.ts:117:1005
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  test/reads.test.ts > qualifies trial metric coverage: orphan
+AssertionError: expected 3 to be null // Object.is equality
+
+- Expected:
+null
+
++ Received:
+3
+
+ ❯ test/reads.test.ts:117:1005
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  test/reads.test.ts > qualifies trial metric coverage: incarnation
+AssertionError: expected 2 to be null // Object.is equality
+
+- Expected:
+null
+
++ Received:
+2
+
+ ❯ test/reads.test.ts:117:1005
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  test/sources.test.ts > keeps source timestamp microseconds through full cursor traversal
+AssertionError: expected Set{ 'c2c52e3f-3f8f-44c4-800c-c08993…' } to deeply equal Set{ …(3) }
+
+- Expected
++ Received
+
+  Set {
+-   "79e03966-78d3-46dc-86b3-92bbf98eba15",
+    "c2c52e3f-3f8f-44c4-800c-c08993cd959b",
+-   "c7335bc2-73c3-406a-8c18-d8ddd2dc0ed1",
+  }
+
+ ❯ test/sources.test.ts:175:944
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  8 failed | 11 passed (19)
+   Start at  12:04:33
+   Duration  1.75s (tests 88%, import 10%, transform 2%)
+

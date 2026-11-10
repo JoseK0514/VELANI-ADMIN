@@ -1,0 +1,55 @@
+
+> velani-admin@0.1.0 test
+> node scripts/test-owned.mjs test/restore-auth.test.ts
+
+Owned loopback PostgreSQL; no external database credentials.
+
+ RUN  v5.1.0 /Users/josek0514/.codex/worktrees/velani-admin-backend-20261110
+
+ ❯ test/restore-auth.test.ts (3 tests | 3 failed) 568ms
+   × keeps restored pre-logout authentication closed while the deletion journal is unchanged 198ms
+   × keeps restored pre-owner_recovery authentication closed while the deletion journal is unchanged 190ms
+   × refuses recovery without fresh auth roots and invalidates all sessions, factors and proofs before reopening 178ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/restore-auth.test.ts > keeps restored pre-logout authentication closed while the deletion journal is unchanged
+ FAIL  test/restore-auth.test.ts > keeps restored pre-owner_recovery authentication closed while the deletion journal is unchanged
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ test/restore-auth.test.ts:8:849
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  test/restore-auth.test.ts > refuses recovery without fresh auth roots and invalidates all sessions, factors and proofs before reopening
+AssertionError: promise resolved "{ state: 'recovered' }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "state": "recovered",
+  }
+
+ ❯ test/restore-auth.test.ts:9:318
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  12:05:44
+   Duration  749ms (tests 82%, import 15%, transform 4%)
+

@@ -1,0 +1,14 @@
+
+> velani-admin@0.1.0 test
+> node scripts/test-owned.mjs test/restore-auth.test.ts
+
+Owned loopback PostgreSQL; no external database credentials.
+
+ RUN  v5.1.0 /Users/josek0514/.codex/worktrees/velani-admin-backend-20261110
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  12:09:37
+   Duration  962ms (tests 87%, import 10%, transform 2%)
+
