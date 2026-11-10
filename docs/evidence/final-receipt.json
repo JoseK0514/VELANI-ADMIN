@@ -37,7 +37,14 @@
     "publicApiStatus": 302,
     "applicationEnvironmentKeys": 0,
     "automationBypasses": 0,
-    "productionPauseConfirmed": false
+    "productionPauseConfirmed": true,
+    "productionPaused": true,
+    "pauseVerifiedAt": "2026-11-10T16:25:05.150240+00:00",
+    "pauseVerification": [
+      "Vercel dashboard: This project is paused",
+      "Vercel project API: paused=true"
+    ],
+    "pauseEvidence": "docs/evidence/vercel-admin-paused-20261110.png"
   },
   "liveActivationQualified": false,
   "gates": [

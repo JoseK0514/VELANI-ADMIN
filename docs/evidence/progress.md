@@ -21,3 +21,5 @@ Final: fixed R2 — fresh trial/paid facts with wrong incarnation become unknown
 Final: fixed R3 — missing/subset/orphan/old-incarnation coverage null/partial, verified-empty0 RED→GREEN; suite75/75.
 Final: fixed R5 — restored pre-logout/pre-recovery state remains fenced with unchanged deletion journal; old roots rejected, credentials/proofs reset and fresh factors verified RED→GREEN; suite75/75.
 Final integration: keep local codex/admin-backend branch/worktree for Claude; no merge/push. Corrected closed Preview READY, source91289f2, Node24.x. Application env keys0, bypasses0, public302. Production pausefalse awaiting direct confirmation. No live activation claimed.
+
+Authorized pause follow-up 2026-11-10T16:25:05.150240+00:00: Jose delegated the requested velani-admin Production pause. Completed the dashboard project-name confirmation, observed the paused banner and Resume Project control, and verified project API paused=true. Preview/data/settings unaffected. App env keys0 and automation bypasses0. Screenshot: vercel-admin-paused-20261110.png. No application source changed.
