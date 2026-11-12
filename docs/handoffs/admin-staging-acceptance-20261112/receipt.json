@@ -1,9 +1,9 @@
 {
   "date": "2026-11-12",
   "scope": "Hosted isolated admin staging acceptance and deferred main/production release preparation",
-  "state": "staging_accepted_release_packet_pending_independent_review",
+  "state": "staging_accepted_production_preparation_complete_activation_gated",
   "branch": "codex/admin-activation-20261112",
-  "applicationCodeChanged": false,
+  "applicationCodeChanged": true,
   "apiContractChanged": false,
   "migrationsChanged": false,
   "localQualification": {
@@ -17,7 +17,7 @@
     "ci": "not run; no Git remote configured"
   },
   "deployedSource": "9ec75c6c4c843a16eb9f35ffe3ed896d6304d032",
-  "runtimeDiffSinceQualification": "empty; only AGENTS.md/policy docs",
+  "runtimeDiffSinceQualification": "Initial web unchanged; final worker candidate separately RED/GREEN and full-suite qualified",
   "staging": {
     "origin": "https://admin-staging.thevelani.com",
     "project": "prj_98nylk5UDAg2bEvrBydfjxlKIKJd",
@@ -31,7 +31,21 @@
     "activeBusinessSessionsAfterLogout": 0,
     "authorizationEpoch": 3,
     "journalWatermark": "2",
-    "faultInjectionRestored": true
+    "faultInjectionRestored": true,
+    "worker": {
+      "source": "c528949376c65194337fe0d9c029365ff43b18a9",
+      "version": 3,
+      "status": "completed",
+      "deployedAt": "2026-11-12T15:02:25.958530Z",
+      "existingEnvironmentPreserved": true,
+      "heartbeatConfigured": false,
+      "externalTraffic": false,
+      "triggerEnabled": true,
+      "cron": "17 * * * *",
+      "anonymousPost": 401,
+      "forgedPlatformPost": 401,
+      "newVersionAutomaticTick": "not yet observed; provider next-run15:17UTC"
+    }
   },
   "hostedChecks": {
     "closed_write_baseline": "passed",
@@ -103,7 +117,9 @@
     "functions": 0,
     "triggers": 0,
     "hostingPlan": "hobby",
-    "monitoring": "No external maintenance failure/missed-run alert route connected or delivery-qualified"
+    "monitoring": "No external maintenance failure/missed-run alert route connected or delivery-qualified",
+    "monitoringAdapterPrepared": true,
+    "monitoringContract": "../admin-maintenance-monitoring.md"
   },
   "launchGates": [
     "Commercial hosting and aggregate billing headroom/spend controls",
@@ -114,7 +130,35 @@
     "Environment-specific final acceptance before real saves"
   ],
   "review": {
-    "status": "pending",
-    "artifact": null
+    "status": "one fresh review complete; two Important issues resolved in own single fix pass; no second review claimed",
+    "artifact": "review-resolution.md",
+    "newWorkerIndependentlyRereviewed": false
+  },
+  "changeScope": "worker-only optional heartbeat; web UI/API and migrations unchanged",
+  "developmentIntegration": {
+    "from": "7b2d173596b7c3253a6b10dd2a3ef103fb261eeb",
+    "qualifiedRuntime": "c528949376c65194337fe0d9c029365ff43b18a9",
+    "method": "local fast-forward; final docs-only receipt commits also included",
+    "remotePush": false,
+    "mainChanged": false,
+    "claudeBranchPreserved": true
+  },
+  "finalQualification": {
+    "source": "c528949376c65194337fe0d9c029365ff43b18a9",
+    "testsPassed": 157,
+    "testFiles": 20,
+    "targetedPassed": 11,
+    "typecheck": "exit0",
+    "lint": "exit0",
+    "build": "exit0",
+    "database": "owned_loopback_only",
+    "monitorHttp": "injected_offline_only",
+    "newMigration": false
+  },
+  "artifacts": {
+    "source": "c528949376c65194337fe0d9c029365ff43b18a9",
+    "manifest": "checksums-c528949.json",
+    "sourceSha256": "7f14ce7bb592cd3cbfe6c457316d4441fe10b3ce76673798caaf4b2b6548cd7d",
+    "workerSha256": "f07f44a3b5abf47e555b88f7fa209ae6f9f487c3b9d06f1589c5e7444ddf270e"
   }
 }

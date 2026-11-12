@@ -69,9 +69,10 @@
     "suspendSeconds": 300,
     "adminEnabled": false,
     "writesEnabled": false,
-    "sourcesConfigured": false,
+    "sourcesConfigured": true,
     "passkeysEnrolled": false,
-    "scope": "production; staging status is recorded separately"
+    "scope": "production; staging status is recorded separately",
+    "sourceBusinessAccessClosed": true
   },
   "google": {
     "projectId": "sound-psyche-514511-j5",
@@ -203,12 +204,12 @@
     "tlsVerified": true
   },
   "checks": {
-    "combinedOwnedPostgres": "150/150 passed",
+    "combinedOwnedPostgres": "Final worker candidate c528949:157/157 passed in20files; original web qualification150/150 retained",
     "typecheck": "passed",
     "lint": "passed",
     "build": "passed",
     "realNavigationLocal": "4/4 passed at1440/390; exact operation replay persisted; axe0",
-    "workerLocal": "6/6 passed including deadline and secret-safe logs",
+    "workerLocal": "11/11 heartbeat/trigger tests passed; RED/GREEN logs retained",
     "backups": "4 actual snapshot restores verified; temporary computes/branches deleted; original routing unchanged",
     "stagingWorker": "Automatic tick succeeded2026-11-12T12:42:09Z;1 expired client+1case+dependent note removed; independent journal/watermark2; anonymous+forged native requests401",
     "googleLive": {
@@ -236,9 +237,18 @@
     "triggerId": "trigger-e506bc2e-b76b-402e-8e9b-ef6a2fbb7c65",
     "cron": "17 * * * *",
     "productionWorker": "not deployed",
-    "sourceSha": "343e003f0d737aea5622020179176a03d230fdcb",
+    "sourceSha": "c528949376c65194337fe0d9c029365ff43b18a9",
     "credentials": "Neon function store; both injected URLs overridden with restricted maintenance role; independent journal write role; no web/operator/root secrets",
-    "lastSuccessRead": "2026-11-12T14:21:24.333Z"
+    "lastSuccessRead": "2026-11-12T14:21:24.333Z",
+    "deploymentVersion": 3,
+    "deploymentStatus": "completed",
+    "heartbeatConfigured": false,
+    "monitoringAdapterPrepared": true,
+    "newVersionAutomaticTick": "not yet observed at receipt; next provider run15:17UTC",
+    "latestPublicDenials": {
+      "anonymous": 401,
+      "forgedPlatformHeaders": 401
+    }
   },
   "clientHub": {
     "previewThemeId": "193374224698",
@@ -339,6 +349,16 @@
     "pausedResponse": true,
     "failureAlertsConnected": false,
     "productionActivated": false,
-    "independentReview": "pending"
+    "independentReview": "one review complete; Important findings fixed in own TDD pass; no second review",
+    "monitoringAdapterPrepared": true,
+    "monitoringContract": "../admin-maintenance-monitoring.md"
+  },
+  "developmentIntegration": {
+    "from": "7b2d173596b7c3253a6b10dd2a3ef103fb261eeb",
+    "qualifiedRuntime": "c528949376c65194337fe0d9c029365ff43b18a9",
+    "method": "local fast-forward; final docs-only receipt commits also included",
+    "remotePush": false,
+    "mainChanged": false,
+    "claudeBranchPreserved": true
   }
 }
