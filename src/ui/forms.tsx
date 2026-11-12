@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { newCommand, type Command, type UiState } from "./contract";
 import { codeText, fieldIssue, label, stateText } from "./copy";
@@ -198,6 +198,12 @@ export function CommandForm({
   const [status, setStatus] = useState<{ tone: "error" | "info"; text: string } | null>(null);
   const [stale, setStale] = useState(false);
   const specs = typeof fields === "function" ? fields(values) : fields;
+  // Opening a form moves keyboard focus into it.
+  useEffect(() => {
+    form.current
+      ?.querySelector<HTMLElement>("input:not([disabled]), select, textarea, button")
+      ?.focus();
+  }, []);
   const set = (name: string, value: Value) => setValues((v) => ({ ...v, [name]: value }));
 
   const focusFirstError = (errs: Record<string, string>) => {

@@ -318,5 +318,886 @@
     "landed": "/login"
    }
   }
- ]
+ ],
+ "views": [
+  {
+   "scenario": "view-overview",
+   "size": "1440",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-overview",
+   "size": "390",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-overview",
+   "size": "1024",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-overview-partial",
+   "size": "1440",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-overview-partial",
+   "size": "390",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-overview-loading",
+   "size": "1440",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-overview-loading",
+   "size": "390",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-overview-sources-unavailable",
+   "size": "1440",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-overview-sources-unavailable",
+   "size": "390",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-workplaces",
+   "size": "1440",
+   "heading": "Workplaces",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-workplaces",
+   "size": "390",
+   "heading": "Workplaces",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-workplaces-internal-labelled",
+   "size": "1440",
+   "heading": "Workplaces",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-workplaces-internal-labelled",
+   "size": "390",
+   "heading": "Workplaces",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-workplaces-partial",
+   "size": "1440",
+   "heading": "Workplaces",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-workplaces-partial",
+   "size": "390",
+   "heading": "Workplaces",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-workplace-detail",
+   "size": "1440",
+   "heading": "harbor-cafe.nevora.example",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-workplace-detail",
+   "size": "390",
+   "heading": "harbor-cafe.nevora.example",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-registrations",
+   "size": "1440",
+   "heading": "Registrations",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-registrations",
+   "size": "390",
+   "heading": "Registrations",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-registrations-empty",
+   "size": "1440",
+   "heading": "Registrations",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-registrations-empty",
+   "size": "390",
+   "heading": "Registrations",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-requests",
+   "size": "1440",
+   "heading": "Requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-requests",
+   "size": "390",
+   "heading": "Requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-requests-source-unavailable",
+   "size": "1440",
+   "heading": "Requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-requests-source-unavailable",
+   "size": "390",
+   "heading": "Requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-requests-stale",
+   "size": "1440",
+   "heading": "Requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-requests-stale",
+   "size": "390",
+   "heading": "Requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-request-detail",
+   "size": "1440",
+   "heading": "Request VH-2041",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-request-detail",
+   "size": "390",
+   "heading": "Request VH-2041",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-request-expired-404",
+   "size": "1440",
+   "heading": "Request",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-request-expired-404",
+   "size": "390",
+   "heading": "Request",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-clients",
+   "size": "1440",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-clients",
+   "size": "390",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-clients",
+   "size": "1024",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-clients-empty",
+   "size": "1440",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-clients-empty",
+   "size": "390",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-clients-search-no-match",
+   "size": "1440",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-clients-search-no-match",
+   "size": "390",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-clients-rate-limited",
+   "size": "1440",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-clients-rate-limited",
+   "size": "390",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-client-detail",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-client-detail",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-client-detail",
+   "size": "1024",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-projects",
+   "size": "1440",
+   "heading": "Projects",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-projects",
+   "size": "390",
+   "heading": "Projects",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-project-detail",
+   "size": "1440",
+   "heading": "Online ordering pageIn progress",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-project-detail",
+   "size": "390",
+   "heading": "Online ordering pageIn progress",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-cases",
+   "size": "1440",
+   "heading": "Cases",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-cases",
+   "size": "390",
+   "heading": "Cases",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-case-detail",
+   "size": "1440",
+   "heading": "Case VH-2041Reviewing",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-case-detail",
+   "size": "390",
+   "heading": "Case VH-2041Reviewing",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-activity",
+   "size": "1440",
+   "heading": "Activity",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-activity",
+   "size": "390",
+   "heading": "Activity",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-activity-more-failed",
+   "size": "1440",
+   "heading": "Activity",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-activity-more-failed",
+   "size": "390",
+   "heading": "Activity",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-integrations",
+   "size": "1440",
+   "heading": "Integrations",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-integrations",
+   "size": "390",
+   "heading": "Integrations",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-not-found-route",
+   "size": "1440",
+   "heading": "Page not found",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "view-not-found-route",
+   "size": "390",
+   "heading": "Page not found",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  }
+ ],
+ "forms": [
+  {
+   "scenario": "form-new-client",
+   "size": "1440",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-new-client",
+   "size": "390",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-new-client-required",
+   "size": "1440",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-new-client-required",
+   "size": "390",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-new-client-422-fields",
+   "size": "1440",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-new-client-422-fields",
+   "size": "390",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-lost-response-then-retry-same-operation",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "sends": 2,
+    "sameOperationAndBody": true
+   }
+  },
+  {
+   "scenario": "form-lost-response-then-retry-same-operation",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "sends": 2,
+    "sameOperationAndBody": true
+   }
+  },
+  {
+   "scenario": "form-stale-version-conflict",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-stale-version-conflict",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-reauth-step-up",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "dialogShown": true,
+    "sends": 3,
+    "sameOperationAndBodyAfterProof": true,
+    "verified": true
+   }
+  },
+  {
+   "scenario": "form-reauth-step-up",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "dialogShown": true,
+    "sends": 3,
+    "sameOperationAndBodyAfterProof": true,
+    "verified": true
+   }
+  },
+  {
+   "scenario": "form-rate-limited-write",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-rate-limited-write",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-business-conflict-open-projects",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-business-conflict-open-projects",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-add-contact",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-add-contact",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-correct-contact",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-correct-contact",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-saved-success",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-saved-success",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-open-case-exists",
+   "size": "1440",
+   "heading": "Request VH-2041",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-open-case-exists",
+   "size": "390",
+   "heading": "Request VH-2041",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-link-workplace-to-client",
+   "size": "1440",
+   "heading": "harbor-cafe.nevora.example",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-link-workplace-to-client",
+   "size": "390",
+   "heading": "harbor-cafe.nevora.example",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-case-link",
+   "size": "1440",
+   "heading": "Case VH-2041Reviewing",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-case-link",
+   "size": "390",
+   "heading": "Case VH-2041Reviewing",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-edit-project",
+   "size": "1440",
+   "heading": "Online ordering pageIn progress",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-edit-project",
+   "size": "390",
+   "heading": "Online ordering pageIn progress",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-writes-disabled",
+   "size": "1440",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-writes-disabled",
+   "size": "390",
+   "heading": "Harbor Cafe (fictional)Active",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  }
+ ],
+ "access": {
+  "desktopTabOrder": [
+   "Skip to content",
+   "Overview",
+   "Workplaces",
+   "Registrations",
+   "Requests",
+   "Clients",
+   "Projects",
+   "Cases",
+   "Activity",
+   "Integrations",
+   "Sign out",
+   "Workplaces2",
+   "Pending registrations2",
+   "Requests2",
+   "Clients2",
+   "Open projects1",
+   "Open cases2"
+  ],
+  "desktopEveryStopHasVisibleRing": true,
+  "keyboardCreateClient": {
+   "focusMovedIntoForm": true,
+   "landedOn": "/clients/00000000-0000-4000-8000-000000000401",
+   "focusOnHeading": true
+  },
+  "keyboardDetailForm": {
+   "focusMovedIntoForm": true,
+   "closedByKeyboard": true
+  },
+  "phoneMenu": {
+   "expandedAfterEnter": "true",
+   "firstStopInMenu": "Overview",
+   "closedByEscape": true,
+   "axeViolationsOpen": []
+  },
+  "phoneSmallestTargetPx": 44,
+  "skeletonAnimation:no-preference": "pulse",
+  "buttonTransition:no-preference": "0.15s, 0.15s",
+  "skeletonAnimation:reduce": "none",
+  "buttonTransition:reduce": "0s"
+ }
 }

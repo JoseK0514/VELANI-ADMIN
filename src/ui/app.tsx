@@ -231,6 +231,7 @@ function Shell({
       </header>
       <div className="frame">
         <nav id="rail" className={open ? "rail open" : "rail"} aria-label="Admin sections">
+          <div className="rail-in">
           <div className="rail-brand">
             <Wordmark />
             <span className="rail-sub">Admin</span>
@@ -274,6 +275,7 @@ function Shell({
                 <span className="muted small">Development fixtures only</span>
               </p>
             )}
+          </div>
           </div>
         </nav>
         <main className="content" id="main">

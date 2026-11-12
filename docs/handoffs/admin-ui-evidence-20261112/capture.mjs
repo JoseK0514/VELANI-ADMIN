@@ -182,10 +182,12 @@ const scenarios = {
         await page.getByRole("heading", { name: "Confirm with your passkey" }).waitFor();
         await page.getByRole("button", { name: "Use passkey" }).click();
         await page.getByRole("heading", { name: "Overview" }).waitFor();
+        await page.waitForURL("**/overview");
         note.result = { enrolled: note.n.factors, proofsHaveChallengeId: (note.n.proofs ?? []).every((x) => x.challengeId && x.response?.id), assertionSent: Boolean(note.n.assertion?.response?.response?.signature), landed: new URL(page.url()).pathname };
       },
     },
   ],
+  access: [],
   views: [
     { name: "view-overview", path: "/overview", wide: true },
     { name: "view-overview-partial", path: "/overview", mock: (m, p) => (p === "overview" ? env(overviewPartial, "combined", "partial") : undefined) },
@@ -245,16 +247,21 @@ const scenarios = {
       act: async (page, note, shot) => {
         await click("Change relationship")(page); await click("Save relationship")(page);
         await page.getByRole("heading", { name: "Confirm it is you" }).waitFor(); await shot("form-reauth-dialog");
-        note.result = { dialogShown: true, opsBeforeProof: note.n.ops.length };
         await page.keyboard.press("Escape");
-        await page.getByText("Not saved yet").waitFor();
+        await page.getByText("Not saved yet").waitFor(); await shot("form-reauth-declined-edits-kept");
+        await note.addCredential();
+        await click("Confirm and save")(page);
+        await page.getByRole("heading", { name: "Confirm it is you" }).waitFor();
+        await click("Use passkey")(page);
+        await page.getByText("Saved. The record below").first().waitFor();
+        note.result = { dialogShown: true, sends: note.n.ops.length, sameOperationAndBodyAfterProof: note.n.ops.every((o) => o === note.n.ops[0]), verified: note.n.verified === true };
       },
     },
-    { name: "form-rate-limited-write", path: "/clients/" + U(401), mock: (m, p) => (m === "POST" && p === "notes" ? err(429, "rate_limited", { retryAfterMs: 25000 }) : undefined), act: async (page) => { await click("Add note")(page); await page.getByLabel("Note").fill("Fictional note."); await click("Save note")(page); await page.getByRole("button", { name: /Retry in/ }).waitFor(); } },
+    { name: "form-rate-limited-write", path: "/clients/" + U(401), mock: (m, p) => (m === "POST" && p === "notes" ? err(429, "rate_limited", { retryAfterMs: 25000 }) : undefined), act: async (page) => { await click("Add note")(page); await page.getByRole("textbox", { name: "Note" }).fill("Fictional note."); await click("Save note")(page); await page.getByRole("button", { name: /Retry in/ }).waitFor(); } },
     { name: "form-business-conflict-open-projects", path: "/clients/" + U(401), mock: (m, p) => (m === "PATCH" && p === "clients/" + U(401) ? err(409, "open_projects") : undefined), act: async (page) => { await click("Change relationship")(page); await click("Save relationship")(page); await page.getByText("Finish or cancel").waitFor(); } },
     { name: "form-add-contact", path: "/clients/" + U(401), act: click("Add contact") },
     { name: "form-correct-contact", path: "/clients/" + U(401), act: async (page) => { await page.getByRole("button", { name: /^Correct/ }).first().click(); } },
-    { name: "form-saved-success", path: "/clients/" + U(401), act: async (page) => { await click("Add note")(page); await page.getByLabel("Note").fill("Fictional note."); await click("Save note")(page); await page.getByText("Saved. The record below").first().waitFor(); } },
+    { name: "form-saved-success", path: "/clients/" + U(401), act: async (page) => { await click("Add note")(page); await page.getByRole("textbox", { name: "Note" }).fill("Fictional note."); await click("Save note")(page); await page.getByText("Saved. The record below").first().waitFor(); } },
     { name: "form-open-case-exists", path: "/velani/requests/" + U(301), mock: (m, p) => (m === "POST" && p === "cases" ? err(409, "case_exists") : undefined), act: async (page) => { await click("Open a case")(page); await click("Open case")(page); await page.getByText("already open").waitFor(); } },
     { name: "form-link-workplace-to-client", path: "/nevora/workplaces/" + U(101), act: async (page) => { await click("Link to a client")(page); await page.getByRole("searchbox").fill("Harbor"); await click("Search")(page); await page.getByRole("button", { name: /^Choose Harbor/ }).click(); } },
     { name: "form-case-link", path: "/cases/" + U(601), act: click("Link client and project") },
@@ -290,6 +297,11 @@ async function runOne(sc, sizeName, viewport) {
     await cdp.send("WebAuthn.enable");
     const options = { protocol: "ctap2", transport: "internal", hasResidentKey: true, hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true };
     let current = (await cdp.send("WebAuthn.addVirtualAuthenticator", { options })).authenticatorId;
+    note.addCredential = async () => {
+      const { generateKeyPairSync } = await import("node:crypto");
+      const { privateKey } = generateKeyPairSync("ec", { namedCurve: "P-256" });
+      await cdp.send("WebAuthn.addCredential", { authenticatorId: current, credential: { credentialId: Buffer.from("fictional-credential").toString("base64"), isResidentCredential: true, rpId: "localhost", privateKey: privateKey.export({ type: "pkcs8", format: "der" }).toString("base64"), userHandle: Buffer.from("owner").toString("base64"), signCount: 0 } });
+    };
     note.swapAuthenticator = async () => {
       await cdp.send("WebAuthn.removeVirtualAuthenticator", { authenticatorId: current });
       current = (await cdp.send("WebAuthn.addVirtualAuthenticator", { options })).authenticatorId;
@@ -323,6 +335,93 @@ async function runOne(sc, sizeName, viewport) {
   await context.close();
 }
 
+async function access() {
+  const out = {};
+  const mock = async (page, extra) =>
+    page.route("**/api/admin/v1/**", async (route) => {
+      const req = route.request();
+      const url = new URL(req.url());
+      const path = url.pathname.slice("/api/admin/v1/".length) + url.search;
+      let body;
+      try { body = req.postDataJSON(); } catch { body = undefined; }
+      const r = extra?.(req.method(), path) ?? baseline(req.method(), path, body);
+      if (r.delay) await new Promise((res) => setTimeout(res, r.delay));
+      await route.fulfill({ status: r.status, headers: { "content-type": "application/json" }, body: JSON.stringify(r.body) }).catch(() => {});
+    });
+  const focused = (page) => page.evaluate(() => { const e = document.activeElement; const c = getComputedStyle(e); return { tag: e.tagName.toLowerCase(), text: (e.getAttribute("aria-label") || e.textContent || e.getAttribute("placeholder") || "").trim().slice(0, 40), outline: `${c.outlineStyle} ${c.outlineWidth}`, ringVisible: c.outlineStyle !== "none" && parseFloat(c.outlineWidth) >= 2 }; });
+  // 1. Desktop: Tab order through skip link, rail and content, with a visible ring on each stop.
+  let ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  let page = await ctx.newPage();
+  await mock(page);
+  await page.goto(base + "/overview");
+  await page.getByRole("link", { name: "Workplaces", exact: true }).first().waitFor();
+  await page.locator(".tile").first().waitFor();
+  // Tab forward to the first stop of the app (the skip link), then record one full pass.
+  for (let i = 0; i < 40; i++) { await page.keyboard.press("Tab"); if ((await focused(page)).text === "Skip to content") break; }
+  const order = [await focused(page)];
+  for (let i = 0; i < 16; i++) { await page.keyboard.press("Tab"); order.push(await focused(page)); if (i === 2) await page.screenshot({ path: join(shots, "access-focus-ring-rail-1440.png") }); }
+  out.desktopTabOrder = order.map((o) => o.text);
+  out.desktopEveryStopHasVisibleRing = order.every((o) => o.ringVisible);
+  // 2. Keyboard only: create a client from the list and land on its record.
+  await page.goto(base + "/clients");
+  await page.getByRole("button", { name: "New client" }).waitFor();
+  await page.getByRole("button", { name: "New client" }).focus();
+  await page.keyboard.press("Enter");
+  const inForm = await focused(page);
+  await page.keyboard.type("Keyboard Test Client (fictional)");
+  await page.keyboard.press("Enter");
+  await page.waitForURL("**/clients/" + U(401));
+  await page.getByRole("heading", { level: 1, name: /Harbor Cafe/ }).waitFor();
+  out.keyboardCreateClient = { focusMovedIntoForm: inForm.tag === "input", landedOn: new URL(page.url()).pathname, focusOnHeading: (await focused(page)).tag === "h1" };
+  // 3. Keyboard only: open a detail form, cancel with the keyboard.
+  await page.getByRole("button", { name: "Add note" }).focus();
+  await page.keyboard.press("Enter");
+  const noteFocus = await focused(page);
+  await page.keyboard.press("Tab"); await page.keyboard.press("Enter");
+  out.keyboardDetailForm = { focusMovedIntoForm: noteFocus.tag === "textarea", closedByKeyboard: (await page.getByRole("form").count()) === 0 };
+  await ctx.close();
+  // 4. Phone: menu opens and closes by keyboard, reports its state.
+  ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  page = await ctx.newPage();
+  await mock(page);
+  await page.goto(base + "/overview");
+  const menu = page.getByRole("button", { name: "Menu", exact: true });
+  await menu.waitFor(); await menu.focus(); await page.keyboard.press("Enter");
+  const expanded = await page.locator("button[aria-controls=rail]").getAttribute("aria-expanded");
+  await page.screenshot({ path: join(shots, "access-menu-open-390.png") });
+  const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
+  await page.keyboard.press("Tab");
+  const firstInMenu = await focused(page);
+  await page.keyboard.press("Escape");
+  out.phoneMenu = { expandedAfterEnter: expanded, firstStopInMenu: firstInMenu.text, closedByEscape: (await page.locator("button[aria-controls=rail]").getAttribute("aria-expanded")) === "false", axeViolationsOpen: axe.violations.map((v) => v.id) };
+  // Touch targets on the phone layout.
+  await page.goto(base + "/clients/" + U(401));
+  await page.getByRole("button", { name: "Add note" }).waitFor();
+  out.phoneSmallestTargetPx = await page.evaluate(() => Math.min(...[...document.querySelectorAll("main button, main a.btn, .topbar button")].map((e) => e.getBoundingClientRect().height)));
+  await ctx.close();
+  // 5. Reduced motion.
+  for (const pref of ["no-preference", "reduce"]) {
+    ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: pref });
+    page = await ctx.newPage();
+    await mock(page, (m, p) => (p === "overview" ? { delay: 3000, ...env(overview, "combined") } : undefined));
+    await page.goto(base + "/overview");
+    await page.locator(".skeleton").first().waitFor();
+    out["skeletonAnimation:" + pref] = await page.evaluate(() => getComputedStyle(document.querySelector(".skeleton")).animationName);
+    out["buttonTransition:" + pref] = await page.evaluate(() => getComputedStyle(document.querySelector(".btn")).transitionDuration);
+    await ctx.close();
+  }
+  return out;
+}
+if (group === "access") {
+  const out = await access();
+  await browser.close();
+  const file = join(here, "results.json");
+  const all = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : {};
+  all.access = out;
+  writeFileSync(file, JSON.stringify(all, null, 1));
+  console.log(JSON.stringify(out, null, 1));
+  process.exit(0);
+}
 for (const sc of scenarios[group] ?? []) {
   const list = sc.wide ? [...sizes, ["1024", { width: 1024, height: 768 }]] : sizes;
   for (const [sizeName, viewport] of list) {

@@ -383,19 +383,20 @@ fieldset.picker legend {
   min-height: 100dvh;
 }
 .rail {
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+}
+.rail-in {
   position: sticky;
   top: 0;
-  align-self: start;
   height: 100dvh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 28px 16px 20px;
-  background: var(--surface);
-  border-right: 1px solid var(--line);
 }
-.fixture-banner ~ .frame .rail {
+.fixture-banner ~ .frame .rail-in {
   top: 44px;
   height: calc(100dvh - 44px);
 }
@@ -789,18 +790,23 @@ a.tile:hover {
   .frame {
     display: block;
   }
-  .rail,
-  .fixture-banner ~ .frame .rail {
+  .rail {
     display: none;
     position: fixed;
     inset: 60px 0 0 0;
     z-index: 14;
-    height: auto;
     border-right: 0;
-    padding-top: 20px;
+    overflow-y: auto;
   }
   .rail.open {
-    display: flex;
+    display: block;
+  }
+  .rail-in,
+  .fixture-banner ~ .frame .rail-in {
+    position: static;
+    height: auto;
+    min-height: 100%;
+    padding-top: 20px;
   }
   .rail-brand {
     display: none;
@@ -872,6 +878,10 @@ a.tile:hover {
   }
   .row.end .btn {
     flex: 1 1 auto;
+  }
+  .btn.small {
+    min-height: 44px;
+    padding: 0 14px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
