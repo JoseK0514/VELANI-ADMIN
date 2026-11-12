@@ -1,6 +1,6 @@
 {
   "date": "2026-11-12",
-  "state": "Isolated staging/production stores, OAuth configuration and restricted production source readers ready; closed staging UI deployed. Real owner/passkey and production activation pending.",
+  "state": "Backend and isolated staging deployed; Google identity callback/private approval verified. Real passkey enrollment, authenticated acceptance and commercial production rollout remain pending.",
   "stores": [
     {
       "key": "staging_admin",
@@ -80,7 +80,13 @@
     "stagingClientId": "205691198434-ikf61oamv4se217iqrvt00jv1dif40q0.apps.googleusercontent.com",
     "productionClientId": "205691198434-2veph20vgrfdomvjftd565829sr36h18.apps.googleusercontent.com",
     "secretLocation": "Matching Vercel project / Production / sensitive ADMIN_OIDC_CLIENT_SECRET",
-    "unusedFirstStagingClient": "Deleted before use"
+    "unusedFirstStagingClient": "Deleted before use",
+    "stagingVerifiedCallback": true,
+    "stagingIdentityPrivatelyApproved": true,
+    "primaryRegistered": false,
+    "backupRegistered": false,
+    "initialEnrollmentExpiredAt": "2026-11-12T13:14:22.545Z",
+    "resumption": "Use the approved owner-recovery procedure if the initial window expired; never extend/bypass the gate using ad hoc SQL. Wait until Jose is ready before opening a fresh short window."
   },
   "sourceProjections": [
     {
@@ -189,13 +195,14 @@
     "passkeys": "not yet enrolled"
   },
   "stagingDeployment": {
-    "id": "dpl_HSvdj2hHSeHEc5qokVw7TMK5H1yD",
-    "sourceSha": "c89489f4d93db35a3146dd2aa01748aa36c2ad29",
+    "id": "dpl_5SmbAaaG5zn9T3u9gDpvbxRFtCyQ",
+    "sourceSha": "4fdf1b44b954155cefb5e365701639948d006105",
     "origin": "https://admin-staging.thevelani.com",
     "ready": true,
-    "applicationEnabled": false,
+    "applicationEnabled": true,
     "writesEnabled": false,
-    "providerProtection": "all"
+    "providerProtection": "all",
+    "sourceData": "Separate synthetic staging databases; no production credentials or customer data"
   },
   "worker": {
     "slug": "adminretention",
@@ -219,7 +226,7 @@
     "inbox": "Existing business mailbox received support@thevelani.com deliveries",
     "duplicateClickAcceptance": "One row perlanguage andonejobperkind, oneproviderattempt each",
     "themePublished": false,
-    "previewRealSubmissionsSetting": "Enabled only onacceptancecopy; disableafteracceptance"
+    "previewRealSubmissionsSetting": "Disabled after acceptance; exact readback verified, other settings unchanged; theme remains UNPUBLISHED"
   },
   "restoreChecks": [
     {
@@ -260,9 +267,35 @@
     }
   ],
   "productionGates": [
-    "Vercel commercial plan decision/payment pending; Hobby remains active",
-    "Explicit production rollout approval after remaining hosted auth checks",
-    "Jose direct primary+independentbackup passkey enrollment",
-    "Production retention schedule and failure/spending alerts qualification"
+    "Hobby remains active; $20/month Pro checkout prepared but no purchase completed. User asked whether necessary; business-use requirement verified with current Vercel docs.",
+    "Explicit reviewed production rollout approval; production project remains paused, ADMIN_ENABLED/WRITES false",
+    "Jose directly enrolls primary and independent backup passkeys; production RP requires its own enrollment",
+    "Production retention schedule, failure/spending alerts and final authenticated acceptance"
+  ],
+  "stagingSources": [
+    {
+      "system": "control",
+      "database": "velani_admin_acceptance_control",
+      "projectId": "empty-mountain-07008969",
+      "branchId": "br-royal-leaf-bc9ahq9h",
+      "syntheticOnly": true,
+      "role": "velani_admin_control_reader"
+    },
+    {
+      "system": "catalog",
+      "database": "velani_admin_acceptance_catalog",
+      "projectId": "empty-mountain-07008969",
+      "branchId": "br-royal-leaf-bc9ahq9h",
+      "syntheticOnly": true,
+      "role": "velani_admin_catalog_reader"
+    },
+    {
+      "system": "velani",
+      "database": "velani_admin_acceptance_velani",
+      "projectId": "empty-mountain-07008969",
+      "branchId": "br-royal-leaf-bc9ahq9h",
+      "syntheticOnly": true,
+      "role": "velani_admin_velani_reader"
+    }
   ]
 }
