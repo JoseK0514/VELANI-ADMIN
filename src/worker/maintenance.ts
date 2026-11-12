@@ -26,8 +26,13 @@ export function maintenanceHandler(run: () => Promise<Batch>, triggerName: strin
         if (!result.morePossible)
           return Response.json({ state: "maintenance_complete", invocationId: parsed.invocation.invocationId, batches, clients, cases }, { headers });
       }
-    } catch {
-      // Provider retries and alerts see a failure; no SQL, DSNs or record data leave the worker.
+    } catch (error) {
+      // Only reviewed operational codes enter private logs; never raw SQL/DSNs/data.
+      const allowed = ["private_worker_binding_required", "private_target_binding_mismatch", "authorization_recovery_required", "journal_rollback_detected", "request_timeout", "invalid_maintenance_role", "invalid_journal_role"];
+      const message = error instanceof Error ? error.message : "";
+      const sql = error && typeof error === "object" && "code" in error ? String(error.code) : "";
+      const code = allowed.includes(message) ? message : ["42501", "3F000", "42P01", "23505", "08006", "08001", "57014", "53300", "40001", "40P01", "28P01"].includes(sql) ? sql : "operation_failed";
+      console.error("admin_maintenance_failed", code);
     }
     return Response.json({ state: "maintenance_unavailable" }, { status: 503, headers: { ...headers, "Retry-After": "60" } });
     }, 60_000);
