@@ -34,6 +34,8 @@ import { fixturesAllowed } from "./fixtures-flag";
 import { Login } from "./login";
 import {
   AdminContext,
+  createOpsStore,
+  makeCommand,
   Screen,
   StartLink,
   useCountdown,
@@ -287,10 +289,11 @@ function Shell({
 }
 
 function StepUpDialog({
-  raw,
+  api,
   onDone,
 }: {
-  raw: Admin["raw"];
+  /** The gated business call: a 401 or a closed backend moves the whole app. */
+  api: Admin["api"];
   onDone: (ok: boolean) => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -303,7 +306,7 @@ function StepUpDialog({
   const confirm = async () => {
     setBusy(true);
     setProblem(null);
-    const options = await raw({ method: "POST", path: "auth/step-up/options", body: {} });
+    const options = await api({ method: "POST", path: "auth/step-up/options", body: {} });
     if (options.kind !== "ok") {
       setBusy(false);
       return setProblem(stateText(options));
@@ -319,7 +322,7 @@ function StepUpDialog({
       setBusy(false);
       return setProblem("The passkey prompt was closed. Nothing was sent.");
     }
-    const verified = await raw({
+    const verified = await api({
       method: "POST",
       path: "auth/step-up/verify",
       body: { challengeId: options.body.challengeId, response },
@@ -369,6 +372,18 @@ export function AdminApp() {
   const transport = useRef<Transport>(httpTransport);
   const csrf = useRef<string | undefined>(undefined);
   const stepUpResolve = useRef<((ok: boolean) => void) | null>(null);
+  const ops = useRef(createOpsStore()).current;
+  /** Leaving the signed-in app ends any passkey prompt that was waiting. */
+  const endStepUp = useCallback(() => {
+    setStepUpOpen(false);
+    stepUpResolve.current?.(false);
+    stepUpResolve.current = null;
+  }, []);
+  /** Recovery, restore or sign-out: drop lists, edits and pending operations. */
+  const clearLocal = useCallback(() => {
+    ops.clearAll();
+    setEpoch((e) => e + 1);
+  }, [ops]);
 
   const raw = useCallback(
     (request: Request) =>
@@ -383,16 +398,18 @@ export function AdminApp() {
       const state = await raw(request);
       if (state.kind === "signed_out" && state.code === "authentication_required") {
         csrf.current = undefined;
+        endStepUp();
         setGate({ k: "out", state });
       }
       if (state.kind === "closed") {
         csrf.current = undefined;
-        setEpoch((e) => e + 1);
+        endStepUp();
+        clearLocal();
         setGate({ k: "out", state });
       }
       return state;
     },
-    [raw],
+    [raw, endStepUp, clearLocal],
   );
 
   const check = useCallback(async () => {
@@ -425,14 +442,14 @@ export function AdminApp() {
       setGate({ k: "in", session });
     } else {
       csrf.current = undefined;
-      if (state.kind === "closed") setEpoch((e) => e + 1);
+      if (state.kind === "closed") clearLocal();
       setGate({
         k: "out",
         state:
           state.kind === "ok" ? { kind: "unavailable", code: "unexpected_response" } : state,
       });
     }
-  }, [raw]);
+  }, [raw, clearLocal]);
 
   useEffect(() => {
     void check();
@@ -448,7 +465,8 @@ export function AdminApp() {
     const state = await raw({ method: "POST", path: "logout", body: {} });
     setSigningOut(false);
     csrf.current = undefined;
-    setEpoch((e) => e + 1);
+    endStepUp();
+    clearLocal();
     // The server revokes the session even if its audit write fails. Anything
     // other than a clear answer is shown as it is and rechecked on retry.
     setGate(
@@ -456,7 +474,7 @@ export function AdminApp() {
         ? { k: "out", state: null, reason: "logout" }
         : { k: "out", state },
     );
-  }, [raw]);
+  }, [raw, endStepUp, clearLocal]);
 
   const stepUp = useCallback(
     () =>
@@ -478,8 +496,10 @@ export function AdminApp() {
         gate.k === "in" && gate.session.capabilities.viewInternalFixtures === true,
       stepUp,
       epoch,
+      command: makeCommand(api, stepUp),
+      ops,
     }),
-    [api, raw, gate, stepUp, epoch],
+    [api, raw, gate, stepUp, epoch, ops],
   );
 
   if (gate.k === "loading")
@@ -517,7 +537,7 @@ export function AdminApp() {
       </Shell>
       {stepUpOpen ? (
         <StepUpDialog
-          raw={raw}
+          api={api}
           onDone={(ok) => {
             setStepUpOpen(false);
             stepUpResolve.current?.(ok);

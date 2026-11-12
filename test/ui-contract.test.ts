@@ -11,7 +11,6 @@ import {
   readView,
   type ReadEnvelope,
 } from "../src/ui/contract";
-import { call, type Transport } from "../src/ui/client";
 
 const err = (code: string, extra: object = {}) => ({
   schemaVersion: 1,
@@ -182,29 +181,19 @@ describe("admin UI: commands", () => {
       payload: { displayName: "A", relationshipState: "prospect" },
     });
   });
-  it("keeps the operation after lost responses, 503, 429 and reauth only", () => {
+  it("keeps an operation only while its outcome is open", () => {
     expect(mustKeepOperation({ kind: "uncertain" })).toBe(true);
     expect(mustKeepOperation(classify(503, err("request_timeout")))).toBe(true);
-    expect(mustKeepOperation(classify(503, err("authorization_recovery_required")))).toBe(true);
     expect(mustKeepOperation(classify(429, err("rate_limited")))).toBe(true);
     expect(mustKeepOperation(classify(403, err("reauth_required")))).toBe(true);
-    expect(mustKeepOperation(classify(409, err("version_changed")))).toBe(false);
-    expect(mustKeepOperation(classify(422, err("invalid_fields")))).toBe(false);
-    expect(mustKeepOperation(classify(404, err("not_found")))).toBe(false);
-  });
-  it("turns a thrown transport error into an uncertain outcome and resends the same body", async () => {
-    const seen: unknown[] = [];
-    let fail = true;
-    const transport: Transport = async (r) => {
-      seen.push(r.body);
-      if (fail) throw new TypeError("network");
-      return { status: 200, body: sample.events[2].body, retryAfter: null };
-    };
-    const command = newCommand("2", { displayName: "B" });
-    const request = { method: "PATCH" as const, path: "clients/x", body: command, csrf: "t" };
-    expect(await call(transport, request)).toEqual({ kind: "uncertain" });
-    fail = false;
-    expect((await call(transport, request)).kind).toBe("ok");
-    expect(seen[0]).toBe(seen[1]);
+    for (const definitive of [
+      classify(503, err("writes_disabled")),
+      classify(503, err("authorization_recovery_required")),
+      classify(409, err("version_changed")),
+      classify(422, err("invalid_fields")),
+      classify(404, err("not_found")),
+      classify(401, err("authentication_required")),
+    ])
+      expect(mustKeepOperation(definitive)).toBe(false);
   });
 });

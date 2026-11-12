@@ -233,6 +233,31 @@ const scenarios = {
       },
     },
     {
+      name: "form-unknown-close-reload-review-retry", path: "/clients/" + U(401),
+      mock: (m, p, b, n) => { if (m === "POST" && p === "projects") { n.ops = [...(n.ops ?? []), JSON.stringify(b)]; return n.ops.length === 1 ? "abort" : receipt("project", U(501), "1", true); } },
+      act: async (page, note, shot) => {
+        await click("New project")(page); await page.getByLabel("Project name").fill("Online ordering page"); await click("Create project")(page);
+        await click("Close and reload the record")(page);
+        await page.getByText("has no answer yet").waitFor(); await shot("form-unknown-pending-notice");
+        await page.getByRole("button", { name: /^Review/ }).click();
+        await page.getByRole("button", { name: "Retry the same save" }).waitFor(); await shot("form-unknown-reopened-same-command");
+        await click("Retry the same save")(page);
+        await page.waitForURL("**/projects/" + U(501));
+        await page.getByRole("heading", { level: 1, name: "Online ordering page" }).waitFor();
+        note.result = { sends: note.n.ops.length, sameOperationAndBody: note.n.ops[0] === note.n.ops[1], landed: new URL(page.url()).pathname };
+      },
+    },
+    {
+      name: "form-404-after-save-clears-record", path: "/clients/" + U(401),
+      mock: (m, p, b, n) => { if (m === "POST" && p === "notes") { n.gone = true; return undefined; } if (m === "GET" && p === "clients/" + U(401) && n.gone) return err(404, "not_found"); },
+      act: async (page, note) => { await click("Add note")(page); await page.getByRole("textbox", { name: "Note" }).fill("Fictional note."); await click("Save note")(page); await page.getByRole("heading", { name: "Not found" }).waitFor(); note.result = { oldRecordShown: await page.getByText("Harbor Cafe (fictional)").count(), editButtons: await page.getByRole("button", { name: "Rename" }).count() }; },
+    },
+    {
+      name: "form-stepup-recovery-fence-closes-app", path: "/clients/" + U(401),
+      mock: (m, p) => (m === "PATCH" && p === "clients/" + U(401) ? err(403, "reauth_required") : p === "auth/step-up/options" ? err(503, "authorization_recovery_required") : undefined),
+      act: async (page) => { await click("Change relationship")(page); await click("Save relationship")(page); await click("Use passkey")(page); await page.getByRole("heading", { name: "The admin is not open" }).waitFor(); },
+    },
+    {
       name: "form-stale-version-conflict", path: "/clients/" + U(401),
       mock: (m, p) => (m === "PATCH" && p === "clients/" + U(401) ? err(409, "version_changed") : undefined),
       act: async (page) => { await click("Rename")(page); await page.getByLabel("Client name").fill("Harbor Cafe and Bakery (fictional)"); await click("Save name")(page); await page.getByRole("button", { name: "Reload record" }).waitFor(); },

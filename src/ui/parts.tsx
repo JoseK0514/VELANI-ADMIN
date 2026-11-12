@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { ArrowClockwise, Info, Warning } from "@phosphor-icons/react";
 import { readView, type ReadEnvelope, type UiState } from "./contract";
 import { label, stateText, when } from "./copy";
-import { useAdmin, useCountdown } from "./shared";
+import { useAdmin, useCountdown, usePendingOps } from "./shared";
 
 export type Row = Record<string, unknown>;
 
@@ -201,8 +201,15 @@ export function useRead(path: string | null) {
       if (!path) return;
       if (!soft) setState({ status: "loading" });
       const result = await api({ method: "GET", path });
+      // What is on screen is kept only through a transient failure. A
+      // definitive answer (404 expired or removed, 403, 400) replaces it, so
+      // an expired record is never left displayed or editable.
+      const transient =
+        result.kind === "uncertain" ||
+        result.kind === "unavailable" ||
+        result.kind === "rate_limited";
       setState((prev) =>
-        soft && result.kind !== "ok" && prev.status === "done" && prev.result.kind === "ok"
+        soft && transient && prev.status === "done" && prev.result.kind === "ok"
           ? { ...prev, refreshError: result }
           : { status: "done", result },
       );
@@ -217,6 +224,30 @@ export function useRead(path: string | null) {
     reload: useCallback(() => load(true), [load]),
     retry: useCallback(() => load(false), [load]),
   };
+}
+
+/** Commands on this page that still have no definitive answer. */
+export function PendingOps({ scope, onOpen }: { scope: string; onOpen: (form: string) => void }) {
+  const { ops } = useAdmin();
+  const pending = usePendingOps(ops, scope);
+  return (
+    <>
+      {pending.map((op) => (
+        <Notice
+          key={op.key}
+          tone="warn"
+          action={
+            <button className="btn outline small" onClick={() => onOpen(op.form)}>
+              Review<span className="sr"> {op.title}</span>
+            </button>
+          }
+        >
+          <strong>{op.title}</strong> has no answer yet. It may or may not have been saved. Review it to
+          send the same save again and find out. It cannot be applied twice.
+        </Notice>
+      ))}
+    </>
+  );
 }
 
 export function envelopeOf<T>(state: ReadState): ReadEnvelope<T> | null {

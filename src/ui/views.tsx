@@ -23,6 +23,7 @@ import {
   Loading,
   Notice,
   PageHead,
+  PendingOps,
   Problem,
   Section,
   SourceNote,
@@ -259,6 +260,9 @@ function ListView({ config }: { config: ListConfig }) {
       ) : null}
       {creating ? (
         <CommandForm
+          opKey="clients#create"
+          scope="clients"
+          formKey="create"
           title="New client"
           submit="Create client"
           intro={
@@ -279,6 +283,7 @@ function ListView({ config }: { config: ListConfig }) {
           onSaved={(receipt) => router.push(`/clients/${receipt.entityId}`)}
         />
       ) : null}
+      {config.create && !creating ? <PendingOps scope="clients" onOpen={() => setCreating(true)} /> : null}
       {config.search || config.states || (config.internal && canViewInternal) ? (
         <div className="toolbar">
           {config.search ? (

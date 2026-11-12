@@ -167,18 +167,21 @@ export function newCommand(
 }
 
 /**
- * After these outcomes the server may or may not have committed the command,
- * or asked for the very same command again. The operation ID and body must be
- * kept and resent exactly; the form stays locked until that resolves.
+ * Whether a command must keep its operation ID and exact body after this
+ * answer. True whenever the server may have committed it (no answer, 503) or
+ * asked for the very same command again (passkey check, rate limit). Only a
+ * definitive answer ends an operation. Used by CommandForm, and exercised
+ * through the real form in test/ui-form-lifecycle.test.ts.
  */
 export function mustKeepOperation(state: UiState): boolean {
-  return (
-    state.kind === "uncertain" ||
-    state.kind === "unavailable" ||
-    state.kind === "reauth" ||
-    state.kind === "rate_limited" ||
-    state.kind === "closed"
-  );
+  if (state.kind === "unavailable") return state.code !== "writes_disabled";
+  // A closed backend is not kept: the gate clears all local state for it.
+  return state.kind === "uncertain" || state.kind === "reauth" || state.kind === "rate_limited";
+}
+
+/** True only when the server said clearly that the command did not run. */
+export function notExecuted(state: UiState): boolean {
+  return state.kind === "reauth" || state.kind === "rate_limited";
 }
 
 const LIST_PARAMS = ["limit", "cursor", "state", "classification"] as const;

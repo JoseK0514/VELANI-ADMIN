@@ -21,6 +21,7 @@ import {
   Loading,
   Notice,
   PageHead,
+  PendingOps,
   Problem,
   Section,
   SourceNote,
@@ -61,7 +62,15 @@ function useDetail<T>(path: string) {
     );
     await read.reload();
   };
-  const formProps = { onSaved, onCancel: () => setOpen(null), onReload: read.reload };
+  /** Props for the form the page opens under this name. One command slot each. */
+  const form = (formKey: string) => ({
+    opKey: `${path}#${formKey}`,
+    scope: path,
+    formKey,
+    onSaved,
+    onCancel: () => setOpen(null),
+    onReload: read.reload,
+  });
   const actions = (items: [string, string][]) => (
     <div className="actions" role="group" aria-label="Changes">
       {items.map(([key, name]) => (
@@ -113,6 +122,7 @@ function useDetail<T>(path: string) {
   const banners = (
     <>
       {saved ? <Notice tone="ok">{saved}</Notice> : null}
+      {open === null ? <PendingOps scope={path} onOpen={setOpen} /> : null}
       {read.state.status === "done" && read.state.refreshError ? (
         <Notice
           tone="warn"
@@ -128,7 +138,7 @@ function useDetail<T>(path: string) {
       ) : null}
     </>
   );
-  return { admin, read, open, setOpen, envelope, formProps, actions, frame, banners };
+  return { admin, read, open, setOpen, envelope, form, actions, frame, banners };
 }
 
 function Notes({ notes }: { notes: unknown }) {
@@ -160,7 +170,14 @@ function NoteForm({
   targetType: "client" | "project" | "case";
   targetId: string;
   version: string;
-  props: { onSaved: (r: Receipt) => void; onCancel: () => void; onReload: () => Promise<void> };
+  props: {
+    opKey: string;
+    scope: string;
+    formKey: string;
+    onSaved: (r: Receipt) => void;
+    onCancel: () => void;
+    onReload: () => Promise<void>;
+  };
 }) {
   return (
     <CommandForm
@@ -204,7 +221,7 @@ export function WorkplaceDetail({ id }: { id: string }) {
         {d.actions([["link", "Link to a client"]])}
         {d.open === "link" ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("link")}
             title="Link this workplace to a client"
             submit="Link workplace"
             intro={
@@ -339,7 +356,7 @@ export function RequestDetail({ id }: { id: string }) {
         </Notice>
         {d.open === "case" ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("case")}
             title="Open a case for this request"
             submit="Open case"
             intro={
@@ -515,7 +532,7 @@ export function ClientDetail({ id }: { id: string }) {
         ])}
         {d.open === "project" ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("project")}
             title="New project"
             submit="Create project"
             fields={[
@@ -540,7 +557,7 @@ export function ClientDetail({ id }: { id: string }) {
         ) : null}
         {d.open === "contact" ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("contact")}
             title="Add contact"
             submit="Save contact"
             fields={contactFields(links, false)}
@@ -555,7 +572,7 @@ export function ClientDetail({ id }: { id: string }) {
         ) : null}
         {editing ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("contact:" + editing.id)}
             key={editing.id}
             title={`Correct contact ${text(editing.name, "")}`}
             submit="Save correction"
@@ -579,10 +596,10 @@ export function ClientDetail({ id }: { id: string }) {
             })}
           />
         ) : null}
-        {d.open === "note" ? <NoteForm targetType="client" targetId={id} version={version} props={d.formProps} /> : null}
+        {d.open === "note" ? <NoteForm targetType="client" targetId={id} version={version} props={d.form("note")} /> : null}
         {d.open === "rename" ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("rename")}
             title="Rename client"
             submit="Save name"
             fields={[{ name: "displayName", label: "Client name", type: "text", required: true, max: 160 }]}
@@ -597,7 +614,7 @@ export function ClientDetail({ id }: { id: string }) {
         ) : null}
         {d.open === "relationship" ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("relationship")}
             title="Change relationship"
             submit="Save relationship"
             intro={
@@ -730,7 +747,7 @@ export function ProjectDetail({ id }: { id: string }) {
         ])}
         {d.open === "edit" ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("edit")}
             title="Edit project"
             submit="Save project"
             intro={
@@ -759,7 +776,7 @@ export function ProjectDetail({ id }: { id: string }) {
             })}
           />
         ) : null}
-        {d.open === "note" ? <NoteForm targetType="project" targetId={id} version={version} props={d.formProps} /> : null}
+        {d.open === "note" ? <NoteForm targetType="project" targetId={id} version={version} props={d.form("note")} /> : null}
         <Section title="Project">
           <Facts
             items={[
@@ -802,7 +819,7 @@ export function CaseDetail({ id }: { id: string }) {
         ])}
         {d.open === "update" ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("update")}
             title="Update case"
             submit="Save case"
             intro={
@@ -829,7 +846,7 @@ export function CaseDetail({ id }: { id: string }) {
         ) : null}
         {d.open === "link" ? (
           <CommandForm
-            {...d.formProps}
+            {...d.form("link")}
             title="Link client and project"
             submit="Save links"
             intro={
@@ -863,7 +880,7 @@ export function CaseDetail({ id }: { id: string }) {
             }}
           />
         ) : null}
-        {d.open === "note" ? <NoteForm targetType="case" targetId={id} version={version} props={d.formProps} /> : null}
+        {d.open === "note" ? <NoteForm targetType="case" targetId={id} version={version} props={d.form("note")} /> : null}
         <Section title="Case">
           <Facts
             items={[

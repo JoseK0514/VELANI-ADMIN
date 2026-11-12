@@ -2,9 +2,9 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { MagnifyingGlass } from "@phosphor-icons/react";
-import { newCommand, type Command, type UiState } from "./contract";
+import { mustKeepOperation, newCommand, notExecuted, type UiState } from "./contract";
 import { codeText, fieldIssue, label, stateText } from "./copy";
-import { useAdmin, useCountdown } from "./shared";
+import { useAdmin, useCountdown, type PendingOp } from "./shared";
 
 export type Picked = { id: string; text: string; version?: string; clientId?: string };
 export type Value = string | boolean | Picked | null;
@@ -34,8 +34,6 @@ export type Built =
       payload: Record<string, unknown>;
     }
   | { errors: Record<string, string> };
-
-type Pending = { method: "POST" | "PATCH"; path: string; command: Command };
 
 function Picker({
   spec,
@@ -159,13 +157,26 @@ function RetryButton({
   );
 }
 
+const LOCKED_TEXT =
+  " The save may or may not have gone through. Retry sends the exact same save, so it cannot be applied twice.";
+
 /**
- * One command, following the fixed operationId and expectedVersion rules:
- * the operation and its body are kept and resent exactly after a lost
- * response, 503, 429 or a passkey check, and only replaced after the server
- * clearly rejected the command.
+ * One command, following the fixed operationId and expectedVersion rules.
+ *
+ * The operation (ID, expected version, exact body) lives in the app-level
+ * pending store under opKey, not in this component. It is created once per
+ * submit and stays there, with what the user typed, until the server gives a
+ * definitive answer. Closing the form, reloading the record or leaving the
+ * page does not end it: reopening the form shows the same command and
+ * "Retry the same save" resends it unchanged, so the server's replay receipt
+ * settles whether it was saved. A new ID is only made after a definitive
+ * rejection, or after the user chooses to edit a command the server clearly
+ * did not run (passkey check declined, rate limit).
  */
 export function CommandForm({
+  opKey,
+  scope,
+  formKey,
   title,
   submit,
   fields,
@@ -176,6 +187,12 @@ export function CommandForm({
   onReload,
   intro,
 }: {
+  /** Identity of this command slot in the pending store. */
+  opKey: string;
+  /** The page this form belongs to. */
+  scope: string;
+  /** The name the page uses to reopen this form. */
+  formKey: string;
   title: string;
   submit: string;
   fields: FieldSpec[] | ((values: Values) => FieldSpec[]);
@@ -187,22 +204,31 @@ export function CommandForm({
   onReload?: () => Promise<void> | void;
   intro?: ReactNode;
 }) {
-  const { api, stepUp } = useAdmin();
+  const { command, ops } = useAdmin();
   const formId = useId();
   const form = useRef<HTMLFormElement>(null);
-  const pending = useRef<Pending | null>(null);
-  const [values, setValues] = useState<Values>(initial);
+  const mounted = useRef(true);
+  const unresolved = useRef(ops.get(opKey)).current;
+  const [values, setValues] = useState<Values>((unresolved?.values as Values) ?? initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
-  const [locked, setLocked] = useState<UiState | null>(null);
-  const [status, setStatus] = useState<{ tone: "error" | "info"; text: string } | null>(null);
+  const [locked, setLocked] = useState<UiState | null>(unresolved?.state ?? null);
+  const [status, setStatus] = useState<{ tone: "error" | "info"; text: string } | null>(
+    unresolved
+      ? { tone: "error", text: "This save has no answer yet." + LOCKED_TEXT }
+      : null,
+  );
   const [stale, setStale] = useState(false);
   const specs = typeof fields === "function" ? fields(values) : fields;
   // Opening a form moves keyboard focus into it.
   useEffect(() => {
+    mounted.current = true;
     form.current
       ?.querySelector<HTMLElement>("input:not([disabled]), select, textarea, button")
       ?.focus();
+    return () => {
+      mounted.current = false;
+    };
   }, []);
   const set = (name: string, value: Value) => setValues((v) => ({ ...v, [name]: value }));
 
@@ -214,52 +240,41 @@ export function CommandForm({
       );
   };
 
-  const send = async (op: Pending) => {
+  const send = async (op: PendingOp) => {
+    // Until an answer arrives the outcome is unknown, wherever the user goes.
+    const generation = ops.generation();
+    ops.set({ ...op, state: { kind: "uncertain" } });
     setBusy(true);
     setStatus({ tone: "info", text: "Saving" });
-    const state = await api({ method: op.method, path: op.path, body: op.command });
+    // command() owns the passkey step-up and resends this same request after it.
+    const state = await command({ method: op.method, path: op.path, body: op.command });
+    // If local state was cleared meanwhile (recovery, restore, sign-out),
+    // this command is gone with it and must not come back.
+    if (ops.generation() !== generation) return;
+    if (mustKeepOperation(state)) ops.set({ ...op, state });
+    else ops.clear(op.key);
+    if (!mounted.current) return;
     setBusy(false);
     if (state.kind === "ok") {
-      pending.current = null;
       setLocked(null);
       return onSaved(state.body.receipt as Receipt);
     }
-    if (state.kind === "reauth") {
+    if (mustKeepOperation(state)) {
       setLocked(state);
-      setStatus({ tone: "info", text: stateText(state) });
-      if (await stepUp()) return send(op);
-      return setStatus({
-        tone: "info",
-        text: "Not saved yet. This change needs a passkey check. Your edits are kept.",
-      });
+      return setStatus(
+        state.kind === "reauth"
+          ? { tone: "info", text: "Not saved yet. This change needs a passkey check. Your edits are kept." }
+          : { tone: "error", text: stateText(state) + (notExecuted(state) ? "" : LOCKED_TEXT) },
+      );
     }
-    if (state.kind === "rate_limited") {
-      setLocked(state);
-      return setStatus({ tone: "error", text: stateText(state) });
-    }
-    if (
-      state.kind === "uncertain" ||
-      (state.kind === "unavailable" && state.code !== "writes_disabled")
-    ) {
-      setLocked(state);
-      return setStatus({
-        tone: "error",
-        text:
-          stateText(state) +
-          " The save may or may not have gone through. Retry sends the exact same save, so it cannot be applied twice.",
-      });
-    }
-    if (state.kind === "signed_out" || state.kind === "closed") return;
-    // A clear rejection: nothing was committed, so the next save is a new operation.
-    pending.current = null;
+    // A definitive answer: nothing was committed, so the next save is a new operation.
     setLocked(null);
+    if (state.kind === "signed_out") return;
     if (state.kind === "invalid") {
       const errs: Record<string, string> = {};
-      const loose: string[] = [];
       for (const [path, codes] of Object.entries(state.fields)) {
         const name = path.split(".")[0];
         if (specs.some((s) => s.name === name)) errs[name] = fieldIssue(codes) ?? "Check this field.";
-        else loose.push(path);
       }
       setErrors(errs);
       focusFirstError(errs);
@@ -269,10 +284,15 @@ export function CommandForm({
     setStatus({ tone: "error", text: stateText(state) });
   };
 
+  const retry = () => {
+    const op = ops.get(opKey);
+    if (op) void send(op);
+  };
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (busy) return;
-    if (locked && pending.current) return void send(pending.current);
+    if (ops.get(opKey)) return retry();
     const errs: Record<string, string> = {};
     for (const s of specs) {
       const v = values[s.name];
@@ -288,15 +308,20 @@ export function CommandForm({
       return focusFirstError(built.errors);
     }
     setErrors({});
-    pending.current = {
+    void send({
+      key: opKey,
+      scope,
+      form: formKey,
+      title,
       method: built.method,
       path: built.path,
       command: newCommand(built.expectedVersion, built.payload),
-    };
-    void send(pending.current);
+      values,
+      state: { kind: "uncertain" },
+    });
   };
 
-  const canEditAgain = locked?.kind === "reauth" || locked?.kind === "rate_limited";
+  const canEditAgain = locked !== null && notExecuted(locked);
   const disabled = busy || locked !== null;
 
   return (
@@ -400,7 +425,8 @@ export function CommandForm({
                 className="btn outline"
                 disabled={busy}
                 onClick={() => {
-                  pending.current = null;
+                  // The server said clearly that this command did not run.
+                  ops.clear(opKey);
                   setLocked(null);
                   setStatus(null);
                 }}
@@ -417,7 +443,7 @@ export function CommandForm({
                   onCancel();
                 }}
               >
-                Stop and reload the record
+                Close and reload the record
               </button>
             ) : null}
             {locked.kind === "rate_limited" ? (
@@ -425,7 +451,7 @@ export function CommandForm({
                 ms={locked.retryAfterMs}
                 busy={busy}
                 text="Retry the same save"
-                onRetry={() => pending.current && void send(pending.current)}
+                onRetry={retry}
               />
             ) : (
               <button type="submit" className="btn primary" disabled={busy}>
