@@ -1,6 +1,6 @@
 {
   "date": "2026-11-12",
-  "state": "Backend and isolated staging deployed; Google identity and primary passkey verified. Independent backup, authenticated acceptance and commercial production rollout remain pending.",
+  "state": "Isolated staging owner has two distinct passkeys and a real authenticated business session, verified through Safari and SQL. Authenticated write acceptance and commercial production rollout remain pending.",
   "stores": [
     {
       "key": "staging_admin",
@@ -48,9 +48,9 @@
   "roots": {
     "fingerprints": {
       "staging": {
-        "session": "5b3ad7c2503352773b3120047dca76b295b0ac2ecb25b15ae7ecf75b5352b6c8",
-        "encryption": "4f99b85373eb8c35ae99c9bec109594c3f83d130e95a34d64834fe65adc8a9ed",
-        "cursor": "f8a8e88038a4d885d94bc8842f0c9f1b8aa0648e01c078cbb79d79e66c389d98"
+        "session": "b79d491a7d80a7932028083a6b479b8c86afbb19422ee19da2fd3583b305c805",
+        "encryption": "978e836555576936cb0d0aa7be59746b0d05f291eeaf30b868ce691fea50c1d9",
+        "cursor": "3c08f7c1b1f8af7a61cb9e40d0972eaccce701257b37c06a77f2f579ae783054"
       },
       "production": {
         "session": "6d157bc78ec6e23905b8b1140bf29b30604d2602d2cf14c637900ea255193670",
@@ -70,7 +70,8 @@
     "adminEnabled": false,
     "writesEnabled": false,
     "sourcesConfigured": false,
-    "passkeysEnrolled": false
+    "passkeysEnrolled": false,
+    "scope": "production; staging status is recorded separately"
   },
   "google": {
     "projectId": "sound-psyche-514511-j5",
@@ -84,17 +85,23 @@
     "stagingVerifiedCallback": true,
     "stagingIdentityPrivatelyApproved": true,
     "primaryRegistered": true,
-    "backupRegistered": false,
+    "backupRegistered": true,
     "initialEnrollmentExpiredAt": "2026-11-12T13:14:22.545Z",
-    "resumption": "Use the approved owner-recovery procedure if the initial window expired; never extend/bypass the gate using ad hoc SQL. Wait until Jose is ready before opening a fresh short window.",
-    "stagingAuthorizationEpoch": 2,
-    "stagingOwnerGeneration": 2,
-    "renewedEnrollmentUntil": "2026-11-12T13:42:21.418Z",
+    "resumption": "Staging enrollment is complete and the partial earlier factor was revoked under explicit approval. Use the supported owner-recovery procedure only for an actual recovery; do not reset this working enrollment. Production requires separate registration.",
+    "stagingAuthorizationEpoch": 3,
+    "stagingOwnerGeneration": 3,
+    "renewedEnrollmentUntil": "2026-11-12T14:07:00.627Z",
     "passkeyReceipt": "2026-11-12-admin-passkey-enrollment.md",
-    "renewedEnrollmentExpired": true,
-    "lastPasskeyCheck": "2026-11-12T13:42:16.038Z",
-    "activeStagingFactors": 1,
-    "activeStagingBusinessSessions": 0
+    "renewedEnrollmentExpired": false,
+    "lastPasskeyCheck": "2026-11-12T13:57:46.832Z",
+    "activeStagingFactors": 2,
+    "activeStagingBusinessSessions": 1,
+    "stagingSignedInAt": "2026-11-12T13:56:58.792Z",
+    "providers": [
+      "Bitwarden new free vault",
+      "Apple Passwords"
+    ],
+    "stagingEnrollmentComplete": true
   },
   "sourceProjections": [
     {
@@ -200,17 +207,18 @@
     "backups": "4 actual snapshot restores verified; temporary computes/branches deleted; original routing unchanged",
     "stagingWorker": "Automatic tick succeeded2026-11-12T12:42:09Z;1 expired client+1case+dependent note removed; independent journal/watermark2; anonymous+forged native requests401",
     "googleLive": "not yet verified",
-    "passkeys": "One primary registered by Jose and verified through Safari plus SQL; independent backup and authenticated sign-in pending; renewed enrollment expired."
+    "passkeys": "Two active distinct staging factors; Safari authenticated Overview; one signed-in audit receipt and one current business session. Separate per-factor and cross-device assertions were not independently exercised."
   },
   "stagingDeployment": {
-    "id": "dpl_GvN3yUjMwMGQ7AbYL1mW129b4Zx2",
-    "sourceSha": "e63e828ccf552f620ac4e7a3b421a50c170c7e9e",
+    "id": "dpl_2TSErQebj3tgQf3iPDiqMr5rnkW5",
+    "sourceSha": "74c9fbc2fe3a991ccf6b7c0d917aad878e7f3ea4",
     "origin": "https://admin-staging.thevelani.com",
     "ready": true,
     "applicationEnabled": true,
     "writesEnabled": false,
     "providerProtection": "all",
-    "sourceData": "Separate synthetic staging databases; no production credentials or customer data"
+    "sourceData": "Separate synthetic staging databases; no production credentials or customer data",
+    "sourceProof": "Vercel meta.gitCommitSha; custom meta.sourceSha contains the typo 74c9fbcb"
   },
   "worker": {
     "slug": "adminretention",
