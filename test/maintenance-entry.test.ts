@@ -13,7 +13,8 @@ async function worker(over: Record<string, string> = {}) {
 afterEach(() => { vi.unstubAllEnvs(); vi.clearAllMocks(); });
 
 it("refuses inherited branch credentials and unoverridden owner URLs before connecting", async () => {
-  for (const over of [{ NEON_BRANCH_ID: "br-clone" }, { DATABASE_URL: "postgresql://owner:fictional@ep-staging.neon.tech/db" }, { DATABASE_URL_UNPOOLED: "postgresql://owner:fictional@ep-staging.neon.tech/db" }, { ADMIN_ENVIRONMENT: "test" }]) {
+  const invalid: Array<Record<string, string>> = [{ NEON_BRANCH_ID: "br-clone" }, { DATABASE_URL: "postgresql://owner:fictional@ep-staging.neon.tech/db" }, { DATABASE_URL_UNPOOLED: "postgresql://owner:fictional@ep-staging.neon.tech/db" }, { ADMIN_ENVIRONMENT: "test" }];
+  for (const over of invalid) {
     expect((await (await worker(over)).fetch(delivery(`velani-admin-${over.ADMIN_ENVIRONMENT ?? "staging"}-retention`))).status).toBe(503);
   }
   expect(mocks.target).not.toHaveBeenCalled();

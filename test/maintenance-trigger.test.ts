@@ -1,4 +1,4 @@
-import { expect, it, vi } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import { maintenanceHandler } from "../src/worker/maintenance";
 
 const request = (over: { method?: string; path?: string; header?: string; type?: string; name?: string; id?: string } = {}) =>
@@ -7,6 +7,7 @@ const request = (over: { method?: string; path?: string; header?: string; type?:
     headers: { "content-type": "application/json", ...(over.header === "" ? {} : { "x-neon-trigger-invocation-id": over.header ?? "tick-1" }) },
     ...((over.method ?? "POST") === "GET" ? {} : { body: JSON.stringify({ version: 1, invocation_id: over.id ?? "tick-1", trigger: { type: over.type ?? "schedule", id: "trigger-1", name: over.name ?? "velani-admin-staging-retention" }, data: { scheduled_at: "2026-11-12T12:00:00Z" } }) }),
   });
+afterEach(() => { vi.useRealTimers(); });
 
 it("rejects anonymous, mismatched and unexpected deliveries before opening a database", async () => {
   const run = vi.fn();
@@ -37,4 +38,14 @@ it("returns retryable failure without database errors or secrets, including a sa
   const saturated = vi.fn().mockResolvedValue({ clients: 100, cases: 0, morePossible: true });
   expect((await maintenanceHandler(saturated, "velani-admin-staging-retention")(request())).status).toBe(503);
   expect(saturated).toHaveBeenCalledTimes(10);
+});
+
+it("stops draining when the shared deadline expires, leaving provider retry to resume safely", async () => {
+  vi.useFakeTimers();
+  const run = vi.fn(async () => {
+    vi.setSystemTime(Date.now() + 60_001);
+    return { clients: 1, cases: 0, morePossible: true };
+  });
+  expect((await maintenanceHandler(run, "velani-admin-staging-retention")(request())).status).toBe(503);
+  expect(run).toHaveBeenCalledOnce();
 });
