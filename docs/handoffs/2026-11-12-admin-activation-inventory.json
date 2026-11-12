@@ -1,0 +1,184 @@
+{
+  "date": "2026-11-12",
+  "state": "Configured stores; app disabled; OAuth and UI qualification pending",
+  "stores": [
+    {
+      "key": "staging_admin",
+      "projectId": "empty-mountain-07008969",
+      "branchId": "br-royal-leaf-bc9ahq9h",
+      "host": "ep-noisy-recipe-bceq873e.c-16.us-east-1.aws.neon.tech",
+      "endpointId": "ep-noisy-recipe-bceq873e",
+      "database": "velani_admin",
+      "environment": "staging"
+    },
+    {
+      "key": "staging_journal",
+      "projectId": "proud-heart-87708393",
+      "branchId": "br-sparkling-breeze-bb03i3bj",
+      "host": "ep-autumn-forest-bbufjfma.c-15.us-east-1.aws.neon.tech",
+      "endpointId": "ep-autumn-forest-bbufjfma",
+      "database": "velani_admin_journal",
+      "environment": "staging"
+    },
+    {
+      "key": "production_admin",
+      "projectId": "frosty-rain-97705509",
+      "branchId": "br-jolly-pine-bbhpie8b",
+      "host": "ep-green-smoke-bbttkl94.c-15.us-east-1.aws.neon.tech",
+      "endpointId": "ep-green-smoke-bbttkl94",
+      "database": "velani_admin",
+      "environment": "production"
+    },
+    {
+      "key": "production_journal",
+      "projectId": "gentle-lab-30905964",
+      "branchId": "br-snowy-rice-bb09nuyv",
+      "host": "ep-curly-glade-bbdnp12q.c-15.us-east-1.aws.neon.tech",
+      "endpointId": "ep-curly-glade-bbdnp12q",
+      "database": "velani_admin_journal",
+      "environment": "production"
+    }
+  ],
+  "vercel": {
+    "staging": "prj_98nylk5UDAg2bEvrBydfjxlKIKJd",
+    "production": "prj_c6aunTwnTZVBglfKUGTtPXhvmrJu",
+    "team": "team_Lzbw410WwXGWHTuUXuamRI1N",
+    "productionPaused": true
+  },
+  "roots": {
+    "fingerprints": {
+      "staging": {
+        "session": "148c99dcd876fbc3bc7925721db9118fd44ac50362d4847b1179794d2c5a6bf8",
+        "encryption": "42fbd02e3fcbef490eb8a40984892eb16e5ce9eca485a24900ab274a9ef4c4bc",
+        "cursor": "4bb517182bb87720d74b040cc6f89b01f0f29a7aca4435574c47a5ba07fe67c1"
+      },
+      "production": {
+        "session": "6d157bc78ec6e23905b8b1140bf29b30604d2602d2cf14c637900ea255193670",
+        "encryption": "7f42148cb91399d962aeb374ba44f79d0553dc42e2d3f06c471befc2b373fccc",
+        "cursor": "45d7a9698c59923917387e7e4a32aa55d3056d7dbdc159251e25d71782859ac8"
+      }
+    },
+    "rawSecretsDisplayed": false
+  },
+  "owner": "support@furbrandpr.com",
+  "googleProject": "sound-psyche-514511-j5",
+  "controls": {
+    "historySeconds": 604800,
+    "computeMinCU": 0.25,
+    "computeMaxCU": 0.25,
+    "suspendSeconds": 300,
+    "adminEnabled": false,
+    "writesEnabled": false,
+    "sourcesConfigured": false,
+    "passkeysEnrolled": false
+  },
+  "google": {
+    "projectId": "sound-psyche-514511-j5",
+    "testUsers": [
+      "support@furbrandpr.com"
+    ],
+    "stagingClientId": "205691198434-ikf61oamv4se217iqrvt00jv1dif40q0.apps.googleusercontent.com",
+    "productionClientId": "205691198434-2veph20vgrfdomvjftd565829sr36h18.apps.googleusercontent.com",
+    "secretLocation": "Matching Vercel project / Production / sensitive ADMIN_OIDC_CLIENT_SECRET",
+    "unusedFirstStagingClient": "Deleted before use"
+  },
+  "sourceProjections": [
+    {
+      "system": "control",
+      "projectId": "broad-wildflower-15946455",
+      "branchId": "br-aged-poetry-bbiszwjc",
+      "database": "nevora_onboarding_control",
+      "checksum": "b58f6f91813112df9df022e35a90e5c4078d9c7247d957318a58f61f71d101c0",
+      "reader": "velani_admin_control_reader",
+      "qualification": [
+        {
+          "current_user": "velani_admin_control_reader",
+          "current_database": "nevora_onboarding_control",
+          "binding": {
+            "singleton": true,
+            "system": "control",
+            "environment": "production",
+            "project_id": "broad-wildflower-15946455",
+            "branch_id": "br-aged-poetry-bbiszwjc",
+            "version": 1
+          },
+          "memberships": "0",
+          "exposed_base_relations": null,
+          "executable_definers": null,
+          "projection_read_only": true
+        }
+      ]
+    },
+    {
+      "system": "catalog",
+      "projectId": "young-cloud-57498411",
+      "branchId": "br-royal-credit-bbczjvcw",
+      "database": "nevora_commerce_catalog",
+      "checksum": "e58d7794679ffa0134c4344fd72e914a88041dfdbc420f7fbaa752b4c107de91",
+      "reader": "velani_admin_catalog_reader",
+      "qualification": [
+        {
+          "current_user": "velani_admin_catalog_reader",
+          "current_database": "nevora_commerce_catalog",
+          "binding": {
+            "singleton": true,
+            "system": "catalog",
+            "environment": "production",
+            "project_id": "young-cloud-57498411",
+            "branch_id": "br-royal-credit-bbczjvcw",
+            "version": 1
+          },
+          "memberships": "0",
+          "exposed_base_relations": null,
+          "executable_definers": null,
+          "projection_read_only": true
+        }
+      ]
+    },
+    {
+      "system": "velani",
+      "projectId": "wild-leaf-57992989",
+      "branchId": "br-snowy-brook-bcc6b3zm",
+      "database": "velani_ai",
+      "checksum": "7364a9d94ed44cd3571e4600c65cdf5852e07760a478e67f3f07b37617e40ac4",
+      "reader": "velani_admin_velani_reader",
+      "qualification": [
+        {
+          "current_user": "velani_admin_velani_reader",
+          "current_database": "velani_ai",
+          "binding": {
+            "singleton": true,
+            "system": "velani",
+            "environment": "production",
+            "project_id": "wild-leaf-57992989",
+            "branch_id": "br-snowy-brook-bcc6b3zm",
+            "version": 1
+          },
+          "memberships": "0",
+          "exposed_base_relations": null,
+          "executable_definers": null,
+          "projection_read_only": true
+        }
+      ]
+    }
+  ],
+  "dns": {
+    "staging": {
+      "name": "admin-staging.thevelani.com",
+      "target": "d7cca8b3dd45cc2c.vercel-dns-017.com",
+      "saved": true
+    },
+    "production": {
+      "name": "admin.thevelani.com",
+      "target": "a293ec29dcb8c2a8.vercel-dns-017.com",
+      "saved": true
+    },
+    "provider": "Shopify",
+    "tlsVerified": false
+  },
+  "checks": {
+    "backendOwnedPostgres": "75/75 passing; 2026-11-12",
+    "uiReview": "Request changes: uncertain-command lifecycle / recovery-state / expired detail / edits during Turnstile",
+    "liveFlow": "Pending UI fixes, hosting, owner authentication and primary/backup enrollment"
+  }
+}
