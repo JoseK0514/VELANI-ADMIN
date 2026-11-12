@@ -3,8 +3,11 @@
 .omo
 .git
 test
-docs/*
-!docs/evidence/
+docs/handoffs
+docs/superpowers
+docs/api-v1.md
+docs/operations.md
 docs/evidence/*
 !docs/evidence/qualification-sample.json
 node_modules
+*.tsbuildinfo
