@@ -1,0 +1,322 @@
+{
+ "states": [
+  {
+   "scenario": "state-signed-out",
+   "size": "1440",
+   "heading": "Sign in to Velani admin",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-signed-out",
+   "size": "390",
+   "heading": "Sign in to Velani admin",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-closed-real-backend",
+   "size": "1440",
+   "heading": "The admin is not open",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-closed-real-backend",
+   "size": "390",
+   "heading": "The admin is not open",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-closed-recovery",
+   "size": "1440",
+   "heading": "The admin is not open",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-closed-recovery",
+   "size": "390",
+   "heading": "The admin is not open",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-unavailable",
+   "size": "1440",
+   "heading": "The admin is unavailable",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-unavailable",
+   "size": "390",
+   "heading": "The admin is unavailable",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-unavailable-not-contract-json",
+   "size": "1440",
+   "heading": "The admin is unavailable",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-unavailable-not-contract-json",
+   "size": "390",
+   "heading": "The admin is unavailable",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-forbidden",
+   "size": "1440",
+   "heading": "This account cannot open the admin",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-forbidden",
+   "size": "390",
+   "heading": "This account cannot open the admin",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-rate-limited",
+   "size": "1440",
+   "heading": "Too many requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-rate-limited",
+   "size": "390",
+   "heading": "Too many requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-signed-out-after-logout",
+   "size": "1440",
+   "heading": "You are signed out",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-signed-out-after-logout",
+   "size": "390",
+   "heading": "You are signed out",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-session-expired-mid-use",
+   "size": "1440",
+   "heading": "Sign in to Velani admin",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "state-session-expired-mid-use",
+   "size": "390",
+   "heading": "Sign in to Velani admin",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  }
+ ],
+ "login": [
+  {
+   "scenario": "login-pending-approval",
+   "size": "1440",
+   "heading": "Waiting for approval",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-pending-approval",
+   "size": "390",
+   "heading": "Waiting for approval",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-enroll-primary",
+   "size": "1440",
+   "heading": "Set up your primary passkey",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-enroll-primary",
+   "size": "390",
+   "heading": "Set up your primary passkey",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-enroll-backup-partial",
+   "size": "1440",
+   "heading": "Add your backup passkey",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-enroll-backup-partial",
+   "size": "390",
+   "heading": "Add your backup passkey",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-enroll-window-closed",
+   "size": "1440",
+   "heading": "Set up your primary passkey",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-enroll-window-closed",
+   "size": "390",
+   "heading": "Set up your primary passkey",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-passkey-required",
+   "size": "1440",
+   "heading": "Confirm with your passkey",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-passkey-required",
+   "size": "390",
+   "heading": "Confirm with your passkey",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-pending-expired",
+   "size": "1440",
+   "heading": "Sign-in expired",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-pending-expired",
+   "size": "390",
+   "heading": "Sign-in expired",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-rate-limited",
+   "size": "1440",
+   "heading": "Too many attempts",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-rate-limited",
+   "size": "390",
+   "heading": "Too many attempts",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "login-full-passkey-flow",
+   "size": "1440",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "enrolled": 2,
+    "proofsHaveChallengeId": true,
+    "assertionSent": true,
+    "landed": "/login"
+   }
+  },
+  {
+   "scenario": "login-full-passkey-flow",
+   "size": "390",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "enrolled": 2,
+    "proofsHaveChallengeId": true,
+    "assertionSent": true,
+    "landed": "/login"
+   }
+  }
+ ]
+}
