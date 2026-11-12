@@ -1,6 +1,6 @@
 {
   "date": "2026-11-12",
-  "state": "Configured stores; app disabled; OAuth and UI qualification pending",
+  "state": "Isolated staging/production stores, OAuth configuration and restricted production source readers ready; closed staging UI deployed. Real owner/passkey and production activation pending.",
   "stores": [
     {
       "key": "staging_admin",
@@ -174,11 +174,95 @@
       "saved": true
     },
     "provider": "Shopify",
-    "tlsVerified": false
+    "tlsVerified": true
   },
   "checks": {
-    "backendOwnedPostgres": "75/75 passing; 2026-11-12",
-    "uiReview": "Request changes: uncertain-command lifecycle / recovery-state / expired detail / edits during Turnstile",
-    "liveFlow": "Pending UI fixes, hosting, owner authentication and primary/backup enrollment"
-  }
+    "combinedOwnedPostgres": "150/150 passed",
+    "typecheck": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "realNavigationLocal": "4/4 passed at1440/390; exact operation replay persisted; axe0",
+    "workerLocal": "6/6 passed including deadline and secret-safe logs",
+    "backups": "4 actual snapshot restores verified; temporary computes/branches deleted; original routing unchanged",
+    "stagingWorker": "Automatic tick succeeded2026-11-12T12:42:09Z;1 expired client+1case+dependent note removed; independent journal/watermark2; anonymous+forged native requests401",
+    "googleLive": "not yet verified",
+    "passkeys": "not yet enrolled"
+  },
+  "stagingDeployment": {
+    "id": "dpl_HSvdj2hHSeHEc5qokVw7TMK5H1yD",
+    "sourceSha": "c89489f4d93db35a3146dd2aa01748aa36c2ad29",
+    "origin": "https://admin-staging.thevelani.com",
+    "ready": true,
+    "applicationEnabled": false,
+    "writesEnabled": false,
+    "providerProtection": "all"
+  },
+  "worker": {
+    "slug": "adminretention",
+    "projectId": "empty-mountain-07008969",
+    "branchId": "br-royal-leaf-bc9ahq9h",
+    "triggerId": "trigger-e506bc2e-b76b-402e-8e9b-ef6a2fbb7c65",
+    "cron": "17 * * * *",
+    "productionWorker": "not deployed",
+    "sourceSha": "343e003f0d737aea5622020179176a03d230fdcb",
+    "credentials": "Neon function store; both injected URLs overridden with restricted maintenance role; independent journal write role; no web/operator/root secrets"
+  },
+  "clientHub": {
+    "previewThemeId": "193374224698",
+    "uiCommit": "17d35c2",
+    "referenceEN": "VEL-2611-0001",
+    "referenceES": "VEL-2611-0002",
+    "requestRows": 2,
+    "outboxJobs": 4,
+    "providerDelivered": 4,
+    "actualInboxMessagesVerified": 4,
+    "inbox": "Existing business mailbox received support@thevelani.com deliveries",
+    "duplicateClickAcceptance": "One row perlanguage andonejobperkind, oneproviderattempt each",
+    "themePublished": false,
+    "previewRealSubmissionsSetting": "Enabled only onacceptancecopy; disableafteracceptance"
+  },
+  "restoreChecks": [
+    {
+      "key": "staging_admin",
+      "projectId": "empty-mountain-07008969",
+      "branchId": "br-fancy-glitter-bcy17c1z",
+      "endpoints": [
+        "ep-misty-moon-bc95bijx"
+      ],
+      "deleted": true
+    },
+    {
+      "key": "staging_journal",
+      "projectId": "proud-heart-87708393",
+      "branchId": "br-silent-violet-bbdq5zh4",
+      "endpoints": [
+        "ep-holy-hall-bb9k7dww"
+      ],
+      "deleted": true
+    },
+    {
+      "key": "production_admin",
+      "projectId": "frosty-rain-97705509",
+      "branchId": "br-nameless-voice-bb4km1ur",
+      "endpoints": [
+        "ep-still-bird-bbllzvuw"
+      ],
+      "deleted": true
+    },
+    {
+      "key": "production_journal",
+      "projectId": "gentle-lab-30905964",
+      "branchId": "br-muddy-mountain-bbub4r78",
+      "endpoints": [
+        "ep-quiet-mouse-bbh0o8we"
+      ],
+      "deleted": true
+    }
+  ],
+  "productionGates": [
+    "Vercel commercial plan decision/payment pending; Hobby remains active",
+    "Explicit production rollout approval after remaining hosted auth checks",
+    "Jose direct primary+independentbackup passkey enrollment",
+    "Production retention schedule and failure/spending alerts qualification"
+  ]
 }
