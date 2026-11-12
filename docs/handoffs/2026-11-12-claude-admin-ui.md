@@ -23,3 +23,24 @@ November 12, 2026. Worktree `/Users/josek0514/Documents/Codex/VELANI-ADMIN-ui`, 
 - `npm test`: 144 tests in 17 files pass (75 backend, 69 UI: ui-contract 54, ui-fixtures-guard 5, ui-form-lifecycle 10).
 - `NEXT_PUBLIC_ADMIN_DEV_FIXTURES=1 npm run build`: passes; fixture module and sample text absent from .next/static and .next/server.
 - Browser: see results.json for per-capture axe, overflow and console results at 1440 and 390 (1024 for overview, clients, client detail).
+
+## Real navigation evidence and the layout move (after Codex follow-up on fcfa23f)
+
+Test: `test/e2e/ui-navigation.e2e.mjs`, "pending operation survives real sidebar navigation". It runs the actual Next app in Chromium (Playwright), answers /api/admin/v1 in the browser with fictional responses, aborts the first `POST projects` (lost response), clicks the real sidebar Link to Integrations, clicks Clients, opens the client again, and compares both captured `POST projects` requests byte for byte. It also checks that no new GET session happened during navigation and that the document was not reloaded.
+
+| Structure | Mode | Result |
+|---|---|---|
+| fcfa23f (AdminApp inside the catch-all page) | next start (production build) | FAIL: after navigating away and back the "has no answer yet" notice was gone; the pending command was lost |
+| fcfa23f | next dev | FAIL: same |
+| AdminApp in the root layout | next start | PASS at 1440 and 390: 2 sends, identical operation ID and body (IDs dbc45a82-c7fd-465a-ae50-de76e2ac37c5 and 9d16bd8c-1cbe-4f3d-a872-e9d8a7adb9f2 in the recorded run), 0 session checks during navigation, axe 0 |
+| AdminApp in the root layout | next dev | PASS at 1440 and 390 |
+
+So the page under the catch-all is replaced on real navigation in Next 16.4.6 here, in both modes. Smallest fix: `src/app/layout.tsx` now renders `<AdminApp />` and `src/app/[[...view]]/page.tsx` returns null. No other app code changed. The gate, session and pending-operation store now live at the persistent root layout, which also removes a sign-in recheck on every navigation.
+
+Writes disabled: the contract exposes it as `capabilities.internalWrites: false` on GET /session (and 503 `writes_disabled` on a command). Second e2e test "writes disabled shows unavailable save controls with an explanation": New client and all five client actions are disabled with "Saving is turned off in this environment.", nothing is sent, axe 0, at 1440 and 390. Screens: screens/e2e-*.png.
+
+Run: `npm run build && npm run test:e2e` (production build) or `npm run test:e2e:dev`. Playwright is not a repo dependency; set ADMIN_E2E_PLAYWRIGHT (a package.json whose node_modules has playwright and @axe-core/playwright) and ADMIN_E2E_CHROMIUM, or use the local defaults in the script. ADMIN_E2E_SHOTS=<dir> saves screenshots.
+
+Correction noted: only Codex sends the two synthetic EN/ES client-hub submissions. The UI work sends no email of any kind.
+
+Checks after this change: typecheck and lint clean; `npm test` 144 tests in 17 files; e2e 4 of 4 in next start and 4 of 4 in next dev.
