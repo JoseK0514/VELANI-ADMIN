@@ -3,5 +3,8 @@
 .omo
 .git
 test
-docs
+docs/*
+!docs/evidence/
+docs/evidence/*
+!docs/evidence/qualification-sample.json
 node_modules
