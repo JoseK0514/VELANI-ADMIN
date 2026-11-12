@@ -932,6 +932,74 @@
    }
   },
   {
+   "scenario": "form-unknown-close-reload-review-retry",
+   "size": "1440",
+   "heading": "Online ordering pageIn progress",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "sends": 2,
+    "sameOperationAndBody": true,
+    "landed": "/projects/00000000-0000-4000-8000-000000000501"
+   }
+  },
+  {
+   "scenario": "form-unknown-close-reload-review-retry",
+   "size": "390",
+   "heading": "Online ordering pageIn progress",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "sends": 2,
+    "sameOperationAndBody": true,
+    "landed": "/projects/00000000-0000-4000-8000-000000000501"
+   }
+  },
+  {
+   "scenario": "form-404-after-save-clears-record",
+   "size": "1440",
+   "heading": "Client",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "oldRecordShown": 0,
+    "editButtons": 0
+   }
+  },
+  {
+   "scenario": "form-404-after-save-clears-record",
+   "size": "390",
+   "heading": "Client",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": {
+    "oldRecordShown": 0,
+    "editButtons": 0
+   }
+  },
+  {
+   "scenario": "form-stepup-recovery-fence-closes-app",
+   "size": "1440",
+   "heading": "The admin is not open",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "form-stepup-recovery-fence-closes-app",
+   "size": "390",
+   "heading": "The admin is not open",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
    "scenario": "form-stale-version-conflict",
    "size": "1440",
    "heading": "Harbor Cafe (fictional)Active",
@@ -1199,5 +1267,88 @@
   "buttonTransition:no-preference": "0.15s, 0.15s",
   "skeletonAnimation:reduce": "none",
   "buttonTransition:reduce": "0s"
- }
+ },
+ "fixtures": [
+  {
+   "scenario": "fixtures-overview",
+   "size": "1440",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "fixtures-overview",
+   "size": "390",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "fixtures-overview",
+   "size": "1024",
+   "heading": "Overview",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "fixtures-clients",
+   "size": "1440",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "fixtures-clients",
+   "size": "390",
+   "heading": "Clients",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "fixtures-client-profile",
+   "size": "1440",
+   "heading": "Fictional Qualification CaféInactive",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "fixtures-client-profile",
+   "size": "390",
+   "heading": "Fictional Qualification CaféInactive",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "fixtures-view-without-sample",
+   "size": "1440",
+   "heading": "Requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  },
+  {
+   "scenario": "fixtures-view-without-sample",
+   "size": "390",
+   "heading": "Requests",
+   "axeViolations": [],
+   "horizontalOverflowPx": 0,
+   "consoleErrors": [],
+   "check": null
+  }
+ ]
 }
