@@ -6,3 +6,4 @@ November 12, 2026. Worktree `/Users/josek0514/Documents/Codex/VELANI-ADMIN-ui`, 
 
 - Read AGENTS.md, docs/api-v1.md, the Codex handoff, qualification-sample.json, src/server/http.ts, reads.ts, commands/validation.ts and the source views to take exact shapes and error codes.
 - Stack: the handoff says to build in this Next application. Added two browser-only dependencies, both required by the contract or the approved style: `@simplewebauthn/browser@14.0.0` (the contract asks for maintained WebAuthn helpers matching SimpleWebAuthn 14) and `@phosphor-icons/react@2.1.10` (Phosphor is the approved icon family). No other framework or CSS library.
+- Built src/ui (contract.ts, client.ts, fixtures-flag.ts, dev-fixtures.ts, copy.ts, shared.tsx, app.tsx, login.tsx, forms.tsx, parts.tsx, views.tsx, details.tsx), src/app/layout.tsx, src/app/[[...view]]/page.tsx, src/app/admin.css. Typecheck and lint clean. Unit tests in test/ui-contract.test.ts and test/ui-fixtures-guard.test.ts.
