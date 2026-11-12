@@ -1,6 +1,6 @@
 {
   "date": "2026-11-12",
-  "state": "Isolated staging owner has two distinct passkeys and a real authenticated business session, verified through Safari and SQL. Authenticated write acceptance and commercial production rollout remain pending.",
+  "state": "Hosted isolated staging acceptance passed; development is primary working reference. Real production remains paused; prepared rollout has explicit commercial-hosting, alert-routing, owner-enrollment and activation gates.",
   "stores": [
     {
       "key": "staging_admin",
@@ -93,15 +93,21 @@
     "renewedEnrollmentUntil": "2026-11-12T14:07:00.627Z",
     "passkeyReceipt": "2026-11-12-admin-passkey-enrollment.md",
     "renewedEnrollmentExpired": false,
-    "lastPasskeyCheck": "2026-11-12T13:57:46.832Z",
+    "lastPasskeyCheck": "2026-11-12T14:31:19.174Z",
     "activeStagingFactors": 2,
-    "activeStagingBusinessSessions": 1,
+    "activeStagingBusinessSessions": 0,
     "stagingSignedInAt": "2026-11-12T13:56:58.792Z",
     "providers": [
       "Bitwarden new free vault",
       "Apple Passwords"
     ],
-    "stagingEnrollmentComplete": true
+    "stagingEnrollmentComplete": true,
+    "stagingSignedOutAt": "2026-11-12T14:31:19.174Z",
+    "stagingProvidersProved": [
+      "Bitwarden real step-up",
+      "Apple Passwords real step-up"
+    ],
+    "crossDeviceRecoveryVerified": false
   },
   "sourceProjections": [
     {
@@ -207,18 +213,19 @@
     "backups": "4 actual snapshot restores verified; temporary computes/branches deleted; original routing unchanged",
     "stagingWorker": "Automatic tick succeeded2026-11-12T12:42:09Z;1 expired client+1case+dependent note removed; independent journal/watermark2; anonymous+forged native requests401",
     "googleLive": "not yet verified",
-    "passkeys": "Two active distinct staging factors; Safari authenticated Overview; one signed-in audit receipt and one current business session. Separate per-factor and cross-device assertions were not independently exercised."
+    "passkeys": "Two active distinct staging factors; both providers performed real step-up; actual logout and guest HTTP401 verified. Cross-device recovery not exercised.",
+    "latestStagingAcceptance": "admin-staging-acceptance-20261112/receipt.json"
   },
   "stagingDeployment": {
-    "id": "dpl_2TSErQebj3tgQf3iPDiqMr5rnkW5",
-    "sourceSha": "74c9fbc2fe3a991ccf6b7c0d917aad878e7f3ea4",
+    "id": "dpl_53WDu4LT51VXQc96bD9Dd78F93Aw",
+    "sourceSha": "9ec75c6c4c843a16eb9f35ffe3ed896d6304d032",
     "origin": "https://admin-staging.thevelani.com",
     "ready": true,
     "applicationEnabled": true,
     "writesEnabled": false,
     "providerProtection": "all",
     "sourceData": "Separate synthetic staging databases; no production credentials or customer data",
-    "sourceProof": "Vercel meta.gitCommitSha; custom meta.sourceSha contains the typo 74c9fbcb"
+    "sourceProof": "Explicit full sourceSha and clean CLI source; runtime unchanged from local qualification"
   },
   "worker": {
     "slug": "adminretention",
@@ -228,7 +235,8 @@
     "cron": "17 * * * *",
     "productionWorker": "not deployed",
     "sourceSha": "343e003f0d737aea5622020179176a03d230fdcb",
-    "credentials": "Neon function store; both injected URLs overridden with restricted maintenance role; independent journal write role; no web/operator/root secrets"
+    "credentials": "Neon function store; both injected URLs overridden with restricted maintenance role; independent journal write role; no web/operator/root secrets",
+    "lastSuccessRead": "2026-11-12T14:21:24.333Z"
   },
   "clientHub": {
     "previewThemeId": "193374224698",
@@ -283,10 +291,12 @@
     }
   ],
   "productionGates": [
-    "Hobby remains active; $20/month Pro checkout prepared but no purchase completed. User asked whether necessary; business-use requirement verified with current Vercel docs.",
-    "Explicit reviewed production rollout approval; production project remains paused, ADMIN_ENABLED/WRITES false",
-    "Jose directly enrolls primary and independent backup passkeys; production RP requires its own enrollment",
-    "Production retention schedule, failure/spending alerts and final authenticated acceptance"
+    "Commercial hosting and aggregate billing headroom/spend controls",
+    "Owner-controlled external alert receiver and independent missed-run monitor, approved synthetic delivery acceptance",
+    "Explicit main/production deployment and unpause approval",
+    "Production-only worker secret configuration, schedule activation and automatic run acceptance",
+    "Production Google identity approval and owner independent passkeys",
+    "Environment-specific final acceptance before real saves"
   ],
   "stagingSources": [
     {
@@ -313,5 +323,20 @@
       "syntheticOnly": true,
       "role": "velani_admin_velani_reader"
     }
-  ]
+  ],
+  "productionPreparation": {
+    "handoff": "2026-11-12-admin-staging-acceptance-and-production-rollout.md",
+    "buildSettingsPrepared": {
+      "framework": "nextjs",
+      "node": "24.x",
+      "install": "npm ci --ignore-scripts",
+      "build": "npm run build"
+    },
+    "domainVerified": true,
+    "publicTlsStatus": 503,
+    "pausedResponse": true,
+    "failureAlertsConnected": false,
+    "productionActivated": false,
+    "independentReview": "pending"
+  }
 }
