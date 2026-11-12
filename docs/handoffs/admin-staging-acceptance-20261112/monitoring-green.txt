@@ -1,0 +1,9 @@
+Owned loopback PostgreSQL; no external database credentials.
+
+ RUN  v5.1.0 /Users/josek0514/.codex/worktrees/velani-admin-activation-20261112
+
+
+ Test Files  2 passed (2)
+      Tests  11 passed (11)
+   Start at  10:59:07
+   Duration  740ms (tests 95%, transform 3%, import 2%, worker 1%)

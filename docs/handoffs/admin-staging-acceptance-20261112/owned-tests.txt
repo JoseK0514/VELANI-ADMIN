@@ -14,4 +14,3 @@ Owned loopback PostgreSQL; no external database credentials.
 
     Isolate  19 workers spawned · ~67ms startup each (spawn + environment, per file)
              at least ~1.21s faster with isolate: false — reuses workers across files instead of one per file
-

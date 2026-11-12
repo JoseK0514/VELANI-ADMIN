@@ -1,9 +1,19 @@
+import { waitUntil } from "@neon/functions";
 import { parseTriggerDelivery } from "@neon/functions/triggers";
 import { assertDeadline, withinDeadline } from "../server/deadline";
+import type { MaintenanceReporter, MaintenanceOutcome } from "./heartbeat";
 
 type Batch = { clients: number; cases: number; morePossible: boolean };
 /** Only deploy behind Neon's proxy, which strips caller-supplied x-neon-* headers. */
-export function maintenanceHandler(run: () => Promise<Batch>, triggerName: string) {
+export function maintenanceHandler(run: () => Promise<Batch>, triggerName: string, report?: MaintenanceReporter) {
+  const notify = (outcome: MaintenanceOutcome) => {
+    if (!report) return;
+    const work = Promise.resolve().then(() => report(outcome)).catch(() => {
+      console.error("admin_maintenance_heartbeat_failed");
+    });
+    // Keep telemetry alive after the response, without blocking maintenance/retries.
+    try { waitUntil(work); } catch { console.error("admin_maintenance_heartbeat_failed"); }
+  };
   return async (request: Request): Promise<Response> => {
     const headers = { "Cache-Control": "no-store" };
     if (new URL(request.url).pathname !== "/maintenance")
@@ -23,8 +33,10 @@ export function maintenanceHandler(run: () => Promise<Batch>, triggerName: strin
         const result = await run();
         clients += result.clients;
         cases += result.cases;
-        if (!result.morePossible)
+        if (!result.morePossible) {
+          notify("success");
           return Response.json({ state: "maintenance_complete", invocationId: parsed.invocation.invocationId, batches, clients, cases }, { headers });
+        }
       }
     } catch (error) {
       // Only reviewed operational codes enter private logs; never raw SQL/DSNs/data.
@@ -34,6 +46,7 @@ export function maintenanceHandler(run: () => Promise<Batch>, triggerName: strin
       const code = allowed.includes(message) ? message : ["42501", "3F000", "42P01", "23505", "08006", "08001", "57014", "53300", "40001", "40P01", "28P01"].includes(sql) ? sql : "operation_failed";
       console.error("admin_maintenance_failed", code);
     }
+    notify("failure");
     return Response.json({ state: "maintenance_unavailable" }, { status: 503, headers: { ...headers, "Retry-After": "60" } });
     }, 60_000);
   };

@@ -52,3 +52,34 @@ it("stops draining when the shared deadline expires, leaving provider retry to r
   expect((await maintenanceHandler(run, "velani-admin-staging-retention")(request())).status).toBe(503);
   expect(run).toHaveBeenCalledOnce();
 });
+
+it("reports only authenticated completed maintenance, including failure and saturated drains", async () => {
+  const signals: string[] = [];
+  const report = async (outcome: "success" | "failure") => { signals.push(outcome); };
+  const successful = maintenanceHandler(async () => ({ clients: 0, cases: 0, morePossible: false }), "velani-admin-staging-retention", report);
+  expect((await successful(request({ header: "" }))).status).toBe(401);
+  expect(signals).toEqual([]);
+  expect((await successful(request())).status).toBe(200);
+  await vi.waitFor(() => expect(signals).toEqual(["success"]));
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  const failed = maintenanceHandler(async () => { throw Error("private-database-error"); }, "velani-admin-staging-retention", report);
+  expect((await failed(request())).status).toBe(503);
+  await vi.waitFor(() => expect(signals).toEqual(["success", "failure"]));
+  const saturated = maintenanceHandler(async () => ({ clients: 100, cases: 0, morePossible: true }), "velani-admin-staging-retention", report);
+  expect((await saturated(request())).status).toBe(503);
+  await vi.waitFor(() => expect(signals).toEqual(["success", "failure", "failure"]));
+});
+
+it("does not delay a completed cleanup or leak a failing heartbeat's secret", async () => {
+  let failReport!: (reason: Error) => void;
+  const pending = new Promise<void>((_resolve, reject) => { failReport = reject; });
+  const log = vi.spyOn(console, "error").mockImplementation(() => {});
+  let reporting = false;
+  const handle = maintenanceHandler(async () => ({ clients: 1, cases: 0, morePossible: false }), "velani-admin-staging-retention", async () => { reporting = true; await pending; });
+  const response = await handle(request());
+  expect(response.status).toBe(200);
+  await vi.waitFor(() => expect(reporting).toBe(true));
+  failReport(Error("https://hc-ping.com/private-check-secret"));
+  await vi.waitFor(() => expect(log).toHaveBeenCalledWith("admin_maintenance_heartbeat_failed"));
+  expect(JSON.stringify(log.mock.calls)).not.toContain("private-check-secret");
+});

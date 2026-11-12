@@ -1,0 +1,26 @@
+
+> velani-admin@0.1.0 build
+> next build
+
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.mjs took 8ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 216ms
+  Running TypeScript ...
+  Finished TypeScript in 2.4s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/2) ...
+✓ Generating static pages using 7 workers (2/2) in 214ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[[...view]]
+├ ƒ /api/admin/v1/[...path]
+├ ƒ /health
+└ ƒ /ready
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand

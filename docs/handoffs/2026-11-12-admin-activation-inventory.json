@@ -92,7 +92,6 @@
     "stagingOwnerGeneration": 3,
     "renewedEnrollmentUntil": "2026-11-12T14:07:00.627Z",
     "passkeyReceipt": "2026-11-12-admin-passkey-enrollment.md",
-    "renewedEnrollmentExpired": false,
     "lastPasskeyCheck": "2026-11-12T14:31:19.174Z",
     "activeStagingFactors": 2,
     "activeStagingBusinessSessions": 0,
@@ -212,7 +211,10 @@
     "workerLocal": "6/6 passed including deadline and secret-safe logs",
     "backups": "4 actual snapshot restores verified; temporary computes/branches deleted; original routing unchanged",
     "stagingWorker": "Automatic tick succeeded2026-11-12T12:42:09Z;1 expired client+1case+dependent note removed; independent journal/watermark2; anonymous+forged native requests401",
-    "googleLive": "not yet verified",
+    "googleLive": {
+      "staging": "Real callback verified; privately approved pinned identity; two real passkey proofs and logout verified",
+      "production": "Pending; production remains paused and no identity/passkey enrollment completed"
+    },
     "passkeys": "Two active distinct staging factors; both providers performed real step-up; actual logout and guest HTTP401 verified. Cross-device recovery not exercised.",
     "latestStagingAcceptance": "admin-staging-acceptance-20261112/receipt.json"
   },

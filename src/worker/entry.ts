@@ -1,6 +1,7 @@
 import { privateTarget, verifyPrivateBindings } from "../server/operations/target";
 import { Retention } from "../server/retention";
 import { maintenanceHandler } from "./maintenance";
+import { maintenanceHeartbeat } from "./heartbeat";
 
 const environment = process.env.ADMIN_ENVIRONMENT;
 const run = async () => {
@@ -23,4 +24,4 @@ const run = async () => {
   }
 };
 
-export default { fetch: maintenanceHandler(run, `velani-admin-${environment}-retention`) };
+export default { fetch: maintenanceHandler(run, `velani-admin-${environment}-retention`, maintenanceHeartbeat(process.env.ADMIN_MAINTENANCE_HEARTBEAT_URL)) };

@@ -1,0 +1,16 @@
+
+> velani-admin@0.1.0 test
+> node scripts/test-owned.mjs
+
+Owned loopback PostgreSQL; no external database credentials.
+
+ RUN  v5.1.0 /Users/josek0514/.codex/worktrees/velani-admin-activation-20261112
+
+
+ Test Files  20 passed (20)
+      Tests  157 passed (157)
+   Start at  10:59:36
+   Duration  17.37s (tests 86%, import 11%, environment 2%, transform 1%)
+
+    Isolate  20 workers spawned · ~63ms startup each (spawn + environment, per file)
+             at least ~1.20s faster with isolate: false — reuses workers across files instead of one per file
