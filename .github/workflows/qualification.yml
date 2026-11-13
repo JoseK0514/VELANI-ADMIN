@@ -49,7 +49,7 @@ jobs:
           npm run typecheck > .omo/ci/typecheck.log 2>&1
           npm run lint > .omo/ci/lint.log 2>&1
       - name: Run every test against owned loopback databases
-        run: npm test -- --reporter=json --outputFile=.omo/ci/tests.json > .omo/ci/tests.log 2>&1
+        run: npm test -- --reporter=default --reporter=json --outputFile=.omo/ci/tests.json > .omo/ci/tests.log 2>&1
       - name: Reject skipped tests and changed source
         run: node scripts/ci-source-receipt.mjs verify .omo/ci
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6

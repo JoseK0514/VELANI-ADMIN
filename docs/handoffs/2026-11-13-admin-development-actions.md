@@ -48,6 +48,14 @@ remain in ignored local build files and are not uploaded as source/artifacts.
 Final source/run identities and independent review are recorded in the adjacent
 delivery receipt after execution, not inferred from this preparation.
 
+Initial remote bootstrap: the candidate tag made before the workflow existed
+on the default branch registered no run. Installing the already locally qualified
+CI-only increment on the new development default enabled actual development
+run 43436240871 and candidate run 43436242871. Both preserved reports showing
+157 passed assertions but a nonzero test-process exit. They are failed runs,
+not qualification. The next candidate retains both default and JSON reporter
+output to diagnose that Linux-only exit without weakening any assertion.
+
 ## Directors, controls and remaining gates
 
 Engineering: preserve the accepted source and add reproducible isolated CI.
