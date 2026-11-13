@@ -1,0 +1,62 @@
+name: Private admin qualification
+
+on:
+  push:
+    branches: [development]
+    tags: ['candidate/admin/**']
+  pull_request:
+    branches: [development]
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    name: Owned PostgreSQL, build and complete source evidence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Select isolated PostgreSQL binaries
+        run: |
+          for candidate in /usr/lib/postgresql/17/bin /usr/lib/postgresql/16/bin; do
+            if test -x "$candidate/initdb"; then
+              echo "ADMIN_TEST_PG_BIN=$candidate" >> "$GITHUB_ENV"
+              exit 0
+            fi
+          done
+          echo 'PostgreSQL binaries are missing' >&2
+          exit 1
+      - name: Capture clean immutable source
+        run: |
+          mkdir -p .omo/ci
+          node scripts/ci-source-receipt.mjs capture .omo/ci
+      - name: Verify evidence rejection controls
+        run: node --test scripts/ci-source-receipt.check.mjs > .omo/ci/evidence-checks.log 2>&1
+      - name: Build with no application credentials or migrations
+        run: npm run build > .omo/ci/build.log 2>&1
+      - name: Typecheck and lint
+        run: |
+          npm run typecheck > .omo/ci/typecheck.log 2>&1
+          npm run lint > .omo/ci/lint.log 2>&1
+      - name: Run every test against owned loopback databases
+        run: npm test -- --reporter=json --outputFile=.omo/ci/tests.json > .omo/ci/tests.log 2>&1
+      - name: Reject skipped tests and changed source
+        run: node scripts/ci-source-receipt.mjs verify .omo/ci
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: admin-qualification-${{ github.sha }}
+          path: .omo/ci/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
