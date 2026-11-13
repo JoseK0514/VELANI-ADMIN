@@ -89,4 +89,17 @@ No new request to publish Shopify, activate NEVORA signup/billing, merge main, p
 
 ## Review closeout
 
+November13 finite-alert update: a configured heartbeat now also requires
+`ADMIN_MAINTENANCE_HEARTBEAT_FROM`, `ADMIN_MAINTENANCE_HEARTBEAT_UNTIL` and
+`ADMIN_MAINTENANCE_HEARTBEAT_APPROVAL_ID`, in that worker's store only. Use the
+new qualified worker source, not the historical c528949 archive, when installing
+those fields. Current hosted c528949-compatible workers have no heartbeat URL
+and retain their established behavior. For finite test authority, the receiver
+must use an independently verified explicit-year bounded OnCalendar schedule,
+with its final expectation plus grace before expiry, and reports/reminders off.
+Do not use the earlier unbounded Simple receiver proposal. Sender expiry alone
+does not expire missing-run notification authority. The updated
+[monitoring contract](../admin-maintenance-monitoring.md) owns the complete gate.
+No new receiver has been armed or message sent merely by preparing this change.
+
 One fresh-context review accepted the bounded hosted evidence and found two Important preparation issues: the old local development tip and an unspecified monitoring integration. Both were addressed: local development fast-forwarded, and the worker adapter/runbook passed RED→GREEN plus the full157-test suite. Two stale inventory fields were corrected. The reviewer did not independently rerun hosted/provider tests or the new worker fix; see `admin-staging-acceptance-20261112/review-resolution.md`. Production activation, notification delivery, cross-device recovery and hosted mobile remain outside the completed claim.

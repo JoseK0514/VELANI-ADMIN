@@ -24,4 +24,10 @@ const run = async () => {
   }
 };
 
-export default { fetch: maintenanceHandler(run, `velani-admin-${environment}-retention`, maintenanceHeartbeat(process.env.ADMIN_MAINTENANCE_HEARTBEAT_URL)) };
+export default { fetch: maintenanceHandler(run, `velani-admin-${environment}-retention`, maintenanceHeartbeat(
+  process.env.ADMIN_MAINTENANCE_HEARTBEAT_URL, undefined, {
+    validFrom: process.env.ADMIN_MAINTENANCE_HEARTBEAT_FROM,
+    validUntil: process.env.ADMIN_MAINTENANCE_HEARTBEAT_UNTIL,
+    approvalId: process.env.ADMIN_MAINTENANCE_HEARTBEAT_APPROVAL_ID,
+  },
+)) };
