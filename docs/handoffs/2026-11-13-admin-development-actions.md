@@ -29,7 +29,7 @@ a disposable loopback PostgreSQL cluster. PostgreSQL binaries are explicitly
 selected from the runner; production credentials are never installed in Actions.
 The real Next transport check runs the compiled application closed.
 
-All 20 existing test files must execute exactly once with no skipped, pending,
+All discovered test files must execute exactly once with no skipped, pending,
 todo or failed assertions. The verifier compares assertion totals, requires
 clean tracked source, hashes every tracked file before and after the checks,
 and records exact SHA/tree/run/attempt/ref/event plus the raw report digest.
@@ -39,7 +39,8 @@ The workflow actions are pinned to full official upstream commit SHAs.
 Artifacts retain raw logs/report/source hashes for 14 days. Candidate-tag and
 actual development runs are distinct evidence; neither is hosted acceptance.
 
-Local fresh checks: 157/157 actual owned tests, zero failed/skipped/todo;
+Local fresh checks after the cleanup regression: 158/158 actual owned tests
+across 21 files, zero failed/skipped/todo;
 all 12 evidence-control tests; build, types and lint passed. Complete existing
 Git history was scanned before private upload: three generic-key findings were
 reviewed as one guest request UUID and two document SHA-256 hashes. No credential
@@ -55,6 +56,15 @@ run 43436240871 and candidate run 43436242871. Both preserved reports showing
 157 passed assertions but a nonzero test-process exit. They are failed runs,
 not qualification. The next candidate retains both default and JSON reporter
 output to diagnose that Linux-only exit without weakening any assertion.
+
+Diagnostic candidate 3c597bc / run 43436777897 confirmed 21 uncaught PostgreSQL
+57P01 errors from fixture teardown despite 157 passed assertions. The cause was
+`DROP DATABASE ... WITH (FORCE)` racing the still-closing TCP clients after
+`pg.Pool.end()`. A new actual-database regression failed locally with the
+administrator-termination error. Fixture cleanup now observes real connection
+drain for a bounded two seconds, refuses leaks, and drops without FORCE. It
+does not ignore errors or modify any business assertion. The regression and
+the full 158-test suite pass locally; remote requalification is still required.
 
 ## Directors, controls and remaining gates
 
