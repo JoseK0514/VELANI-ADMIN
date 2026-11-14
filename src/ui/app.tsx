@@ -156,7 +156,16 @@ function GateScreen({
 
 type NavItem = { href: string; text: string; icon: Icon };
 const NAV: { heading: string | null; items: NavItem[] }[] = [
-  { heading: null, items: [{ href: "/overview", text: "Overview", icon: SquaresFour }] },
+  { heading: null, items: [{ href: "/overview", text: "Overview", icon: SquaresFour }, { href: "/business/today", text: "Today", icon: ClockCounterClockwise }] },
+  { heading: "Business", items: [
+    { href: "/business/intake", text: "Inquiries and pipeline", icon: Tray },
+    { href: "/business/finance", text: "Money", icon: Briefcase },
+    { href: "/business/delivery", text: "Delivery", icon: Kanban },
+    { href: "/business/lifecycle", text: "Customer health", icon: Buildings },
+    { href: "/business/costs", text: "Costs and budgets", icon: ClipboardText },
+    { href: "/business/insights", text: "Insights", icon: SquaresFour },
+    { href: "/business/coverage", text: "Source coverage", icon: PlugsConnected },
+  ] },
   {
     heading: "NEVORA",
     items: [

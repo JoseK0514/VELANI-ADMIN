@@ -12,12 +12,14 @@ export function adminGrants(web: string, maintenance: string): string[] {
     "notes",
     "commands",
     "limits",
+    "business_records",
   ];
   return [
     `GRANT USAGE ON SCHEMA admin TO ${web},${maintenance}`,
     `GRANT SELECT ON ALL TABLES IN SCHEMA admin TO ${maintenance}`,
     `GRANT SELECT ON admin.authorization_state,admin.schema_migrations,admin.deployment_binding,admin.actors,admin.credentials,admin.sessions,admin.pending_logins,admin.challenges,admin.classifications,admin.retention_holds,admin.restore_barrier,admin.maintenance_state,admin.audit TO ${web}`,
     `GRANT SELECT,INSERT,UPDATE ON ${business.map((t) => "admin." + t).join(",")} TO ${web}`,
+    `GRANT SELECT ON admin.business_feeds,admin.business_observations TO ${web}`,
     `GRANT INSERT ON admin.audit,admin.sessions,admin.pending_logins,admin.challenges,admin.credentials TO ${web}`,
     `GRANT UPDATE(revoked_at,idle_expires_at,factor_at) ON admin.sessions TO ${web}`,
     `GRANT UPDATE(used_at) ON admin.challenges TO ${web}`,
@@ -28,6 +30,7 @@ export function adminGrants(web: string, maintenance: string): string[] {
     `GRANT INSERT ON admin.audit,admin.deletions TO ${maintenance}`,
     `GRANT DELETE ON admin.retention_holds,admin.clients,admin.cases,admin.commands,admin.audit,admin.limits,admin.challenges,admin.pending_logins,admin.sessions TO ${maintenance}`,
     `GRANT UPDATE ON admin.restore_barrier,admin.maintenance_state TO ${maintenance}`,
+    `GRANT DELETE ON admin.business_records,admin.business_feeds TO ${maintenance}`,
   ];
 }
 export function journalGrants(reader: string, writer: string): string[] {

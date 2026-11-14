@@ -142,6 +142,8 @@ export class Retention {
         await c.query(
           "DELETE FROM admin.commands WHERE created_at<statement_timestamp()-interval '365 days'",
         );
+        await c.query("DELETE FROM admin.business_records WHERE expires_at<=statement_timestamp()");
+        await c.query("DELETE FROM admin.business_feeds WHERE valid_until<statement_timestamp()-interval '90 days'");
         for (const table of [
           "limits",
           "challenges",

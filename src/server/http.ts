@@ -16,6 +16,7 @@ import { ReadService } from "./reads";
 import { CommandService, type Target } from "./commands/execute";
 import type { CommandKind } from "./commands/validation";
 import { Retention } from "./retention";
+import { BusinessService } from "./business/service";
 export type Dependencies = {
   config: AdminConfig;
   pool: Pool;
@@ -23,7 +24,6 @@ export type Dependencies = {
   auth: AuthService;
   sources: Sources;
 };
-const prefix = "/api/admin/v1/";
 export const privateHeaders = {
   "cache-control": "private, no-store, max-age=0",
   pragma: "no-cache",
@@ -129,10 +129,12 @@ export function createHandler({
   journal,
   auth,
   sources,
-}: Dependencies) {
+}: Dependencies, businessApi = false) {
+  const prefix = businessApi ? "/api/admin/v2/" : "/api/admin/v1/";
   const retention = new Retention(pool, journal),
     reads = new ReadService(pool, config, sources, retention.guard),
-    commands = new CommandService(pool, config, sources, retention.guard);
+    commands = new CommandService(pool, config, sources, retention.guard),
+    business = new BusinessService(pool, config, sources, retention.guard);
   const cookiePrefix =
     config.environment === "test"
       ? "velani_admin_test_"
@@ -189,6 +191,7 @@ export function createHandler({
         if (!url.pathname.startsWith(prefix))
           throw new AdminError(404, "not_found");
         path = url.pathname.slice(prefix.length);
+        if (businessApi && !path.startsWith("business/")) throw new AdminError(404, "not_found");
         if (!["GET", "POST", "PATCH"].includes(request.method))
           throw new AdminError(405, "method_not_allowed");
         const origin = request.headers.get("origin"),
@@ -305,6 +308,19 @@ export function createHandler({
           !equal(request.headers.get("x-csrf-token") ?? "", actor.csrf)
         )
           throw new AdminError(403, "csrf_denied");
+        if (businessApi) {
+          const route = path.slice("business/".length);
+          if (request.method === "GET") {
+            await limit("read:" + actor.id, 60);
+            return json(await business.read(actor, route, query));
+          }
+          if (Object.keys(query).length) throw new AdminError(400, "invalid_filter");
+          const target = route.match(/^records(?:\/([0-9a-f-]{36}))?$/i);
+          if (!target || (request.method === "POST" ? !!target[1] : request.method !== "PATCH" || !target[1])) throw new AdminError(404, "not_found");
+          await limit("write:" + actor.id, 10);
+          const receipt = await business.command(actor, await body(request), target[1]);
+          return json({ state: "saved", receipt }, !target[1] && !receipt.replayed ? 201 : 200);
+        }
         if (path === "session" && request.method === "GET") {
           await limit("read:" + actor.id, 60);
           if (Object.keys(query).length)

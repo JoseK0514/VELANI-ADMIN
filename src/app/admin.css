@@ -893,3 +893,15 @@ a.tile:hover {
     scroll-behavior: auto !important;
   }
 }
+
+/* Business views use the accepted admin tokens and responsive table system. */
+.business-link { color: var(--teal); background: transparent; border: 0; padding: 0; font: inherit; text-align: left; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.business-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 4px; }
+.business-source { color: var(--ink-2); font-size: .875rem; overflow-wrap: anywhere; }
+.business-tiles { margin-block: 1rem; }
+.business-plan { padding: 1.25rem; margin-block: 1rem; overflow-wrap: anywhere; }
+.business-plan p { white-space: pre-wrap; }
+.business-plan dl { display: grid; grid-template-columns: minmax(9rem, 1fr) 2fr; gap: .5rem 1rem; }
+.business-plan dd { margin: 0; }
+.table td code { overflow-wrap: anywhere; word-break: break-word; }
+@media (max-width: 600px) { .business-plan dl { grid-template-columns: 1fr; } }
