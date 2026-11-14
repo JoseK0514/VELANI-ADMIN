@@ -69,6 +69,7 @@ it("applies explicit migrations atomically with checksums and replays without re
       "0003_stable_creation_time.sql",
       "0004_deployment_binding.sql",
       "0005_authorization_epoch.sql",
+      "0006_business_management.sql",
     ]);
   } finally {
     await db.close();

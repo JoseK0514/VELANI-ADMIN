@@ -2,7 +2,7 @@ import { classify, type UiState } from "./contract";
 
 export type ApiRequest = {
   method: "GET" | "POST" | "PATCH";
-  /** Path below /api/admin/v1/, without a leading slash. */
+  /** Path without a leading slash; business/* uses v2, other paths keep v1. */
   path: string;
   body?: unknown;
   csrf?: string;
@@ -21,7 +21,7 @@ export const httpTransport: Transport = async ({ method, path, body, csrf }) => 
   const headers: Record<string, string> = { accept: "application/json" };
   if (method !== "GET") headers["content-type"] = "application/json";
   if (csrf) headers["x-csrf-token"] = csrf;
-  const response = await fetch(API_PREFIX + path, {
+  const response = await fetch((path.startsWith("business/") ? "/api/admin/v2/" : API_PREFIX) + path, {
     method,
     headers,
     credentials: "same-origin",

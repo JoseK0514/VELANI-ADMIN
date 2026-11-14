@@ -33,6 +33,7 @@ import {
   type Row,
 } from "./parts";
 import { useAdmin } from "./shared";
+import { BusinessView, TodayPreview } from "./business";
 
 const LANG: Record<string, string> = { en: "English", es: "Spanish" };
 const lang = (v: unknown) => LANG[String(v)] ?? label(v);
@@ -470,6 +471,7 @@ function Overview() {
   return (
     <>
       <PageHead title="Overview" lede="Counts from NEVORA, Velani and the internal records. A value that could not be read is shown as Unknown." />
+      <TodayPreview />
       {read.state.status === "loading" ? <Loading what="overview" /> : null}
       {read.state.status === "done" && !envelope ? (
         <Problem state={read.state.result} onRetry={read.retry} />
@@ -596,6 +598,7 @@ const DETAILS: [RegExp, (id: string) => ReactNode][] = [
 
 export function View({ pathname }: { pathname: string }) {
   const path = pathname.replace(/\/+$/, "") || "/";
+  if (/^\/business\/(today|intake|delivery|finance|lifecycle|costs|insights|coverage|customers\/[0-9a-f-]{36})$/i.test(path)) return <BusinessView pathname={path} />;
   if (path === "/" || path === "/login" || path === "/overview") return <Overview />;
   if (path === "/integrations") return <Integrations />;
   if (LISTS[path]) return <ListView key={path} config={LISTS[path]} />;

@@ -1,0 +1,10 @@
+import { handleBusinessRequest } from "../../../../../server/runtime";
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 10;
+export const GET = handleBusinessRequest;
+export const POST = handleBusinessRequest;
+export const PATCH = handleBusinessRequest;
+export const PUT = handleBusinessRequest;
+export const DELETE = handleBusinessRequest;
+export const OPTIONS = handleBusinessRequest;

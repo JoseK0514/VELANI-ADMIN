@@ -8,6 +8,7 @@ export const migrations = [
   "0003_stable_creation_time.sql",
   "0004_deployment_binding.sql",
   "0005_authorization_epoch.sql",
+  "0006_business_management.sql",
 ] as const;
 export function database(url: string, max = 3) {
   const pool = new Pool({

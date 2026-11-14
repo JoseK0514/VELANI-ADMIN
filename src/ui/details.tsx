@@ -659,6 +659,7 @@ export function ClientDetail({ id }: { id: string }) {
             }}
           />
         ) : null}
+        <p><Link className="btn outline" href={`/business/customers/${id}`}>Business summary: work, cases and money</Link></p>
         <Section title="Client">
           <Facts
             items={[

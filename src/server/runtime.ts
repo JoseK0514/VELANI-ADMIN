@@ -77,7 +77,7 @@ export async function verifyBinding(d: Dependencies) {
   )
     throw new AdminError(503, "deployment_binding_mismatch");
 }
-export async function handleRequest(request: Request) {
+async function handleVersionedRequest(request: Request, businessApi: boolean) {
   const requestId = randomUUID();
   const failure = (code: string) =>
     Response.json(
@@ -92,7 +92,7 @@ export async function handleRequest(request: Request) {
     try {
       const d = runtime();
       await verifyBinding(d);
-      return await createHandler(d)(request);
+      return await createHandler(d, businessApi)(request);
     } catch (e) {
       return failure(e instanceof AdminError ? e.code : "service_unavailable");
     }
@@ -108,6 +108,8 @@ export async function handleRequest(request: Request) {
     clearTimeout(timer!);
   }
 }
+export const handleRequest = (request: Request) => handleVersionedRequest(request, false);
+export const handleBusinessRequest = (request: Request) => handleVersionedRequest(request, true);
 export async function ready() {
   try {
     const d = runtime();

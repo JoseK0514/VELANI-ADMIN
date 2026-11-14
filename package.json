@@ -18,7 +18,10 @@
     "lint": "eslint src test scripts",
     "migrate": "tsx scripts/migrate.ts",
     "operator": "tsx scripts/operator.ts",
-    "maintenance": "tsx scripts/maintenance.ts"
+    "maintenance": "tsx scripts/maintenance.ts",
+    "business:publish": "tsx scripts/publish-business-feed.ts",
+    "business:sync-stripe": "tsx scripts/sync-business-stripe.ts",
+    "test:e2e:business": "node test/e2e/business.e2e.mjs"
   },
   "dependencies": {
     "@neon/functions": "0.11.0",
