@@ -19,6 +19,8 @@ const id = (value: unknown) =>
     : value && typeof value === "object"
       ? String(obj(value).id ?? "")
       : "";
+const hasDiscount = (value: unknown) =>
+  value != null && (!Array.isArray(value) || value.length > 0);
 const timestamp = (value: unknown) =>
   typeof value === "number" && Number.isFinite(value)
     ? new Date(value * 1000).toISOString()
@@ -130,6 +132,7 @@ export async function collectStripeFeed(
         status: invoice.status ?? "draft",
         totalMinor: invoice.total,
         paidMinor: invoice.amount_paid,
+        remainingMinor: invoice.amount_remaining,
         dueAt: timestamp(invoice.due_date),
         occurredAt: timestamp(invoice.created),
       });
@@ -139,6 +142,13 @@ export async function collectStripeFeed(
         throw Error("reporting_mode_mismatch");
       const client = parent(subscription.customer);
       if (!client) continue;
+      if (
+        hasDiscount(subscription.discounts) ||
+        hasDiscount(subscription.discount)
+      ) {
+        complete = false;
+        continue;
+      }
       const lineItems = obj(subscription.items),
         lines = Array.isArray(lineItems.data) ? lineItems.data.map(obj) : [];
       if (lineItems.has_more || !lines.length) {
@@ -154,6 +164,9 @@ export async function collectStripeFeed(
           !usd(price) ||
           recurring.interval !== "month" ||
           recurring.interval_count !== 1 ||
+          (recurring.usage_type !== undefined &&
+            recurring.usage_type !== "licensed") ||
+          hasDiscount(line.discounts) ||
           typeof price.unit_amount !== "number" ||
           !Number.isSafeInteger(price.unit_amount) ||
           !Number.isInteger(line.quantity)

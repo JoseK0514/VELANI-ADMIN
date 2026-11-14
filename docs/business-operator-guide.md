@@ -62,7 +62,7 @@ use short observation windows. Replays are exact; conflicting/older snapshots fa
 atomically. The UI labels imported facts **operator recorded**.
 
 Finance inputs require `historyFrom`/`historyThrough` (UTC dates) and USD-only
-invoice/subscription/payment/refund facts. Money amounts are integer cents, not
+invoice/subscription/payment/refund facts. Invoice facts require totalMinor, paidMinor and the source-authoritative remainingMinor (including credits). Money amounts are integer cents, not
 floating dollars. Client/project IDs must already exist and be within retention.
 Missing currency support, mapping, pagination or history means partial coverage;
 summary money stays unknown. USD is the only qualified currency in this delivery;
@@ -74,7 +74,7 @@ ADMIN_REPORTING_FINANCE_ACCOUNT_ID, and0600 JSON array of
 `{customerId,clientId,product}` (`product` velani|nevora). This adapter only sends GET
 to Stripe's fixed origin, verifies the merchant and test/live mode, and publishes
 minimal source facts as **provider verified**. Its API version matches NEVORA's
-2026-10-28.endive. Pages are bounded; unsupported monthly terms/unmapped customers
+2026-10-28.endive. Pages are bounded; unsupported, discounted or metered recurring terms/unmapped customers
 make coverage partial. Payments/refunds cover the last90days by provider record
 creation date; MRR and invoice balances are current, not historical snapshots.
 Live reads require production plus ADMIN_REPORTING_LIVE_READS_APPROVED=true;
@@ -97,7 +97,7 @@ Worker evidence expires after15minutes even when its feed remains valid.
 
 Money names its account, environment, observation time, history dates and USD units.
 NEVORA MRR sums current active monthly subscription contracts; excludes trials and
-past-due. It is not collected cash or access proof. Receivables are remaining open
+past-due. It is not collected cash or access proof. Receivables use the source remaining balance after credit adjustments on open
 invoice balances including tax, excluding draft/void/uncollectible invoices.
 Captured successful charges less successful refunds are payment totals, grouped by
 provider record creation date, including tax; they are not bank payouts or revenue.
@@ -114,7 +114,7 @@ are events, not a certified churn rate. Lifetime retention remains unknown: no
 separate historical store or retention extension was approved/created.
 
 Costs are recorded bills/calculations and support minutes, attributed by product and
-optional project. Headroom is monthly recorded budgets minus selected-period costs,
+optional project. Headroom is recorded monthly budgets minus all costs from the first selected month’s start through the report end,
 not a provider spending limit. Net payments less costs stays unknown until finance
 is qualified and all three cost centers (Velani/NEVORA/shared) are reviewed for the
 selected single month. Shared costs are not silently allocated between businesses.

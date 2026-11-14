@@ -8,7 +8,9 @@ const text = (max: number) =>
     .max(max)
     .refine((s) => !/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(s));
 const note = z.string().trim().max(2000).default("");
-const date = z.iso.datetime({ offset: true });
+const date = z.iso
+  .datetime({ offset: true })
+  .transform((value) => new Date(value).toISOString());
 const optionalDate = date.nullable().default(null);
 const currency = z.literal("USD").default("USD");
 const product = z.enum(["velani", "nevora", "shared"]);
@@ -121,11 +123,11 @@ export const financialSchema = z.discriminatedUnion("kind", [
       status: z.enum(["draft", "open", "paid", "void", "uncollectible"]),
       totalMinor: money,
       paidMinor: money,
+      remainingMinor: money,
       dueAt: optionalDate,
       occurredAt: date,
     })
-    .strict()
-    .refine((x) => x.paidMinor <= x.totalMinor),
+    .strict(),
   z
     .object({
       ...base,

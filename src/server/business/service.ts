@@ -370,11 +370,15 @@ export class BusinessService {
           )
         ).rows[0];
         if (!r) throw new AdminError(404, "not_found");
+        await c.query(
+          "INSERT INTO admin.audit(actor_id,action,entity_type,entity_id,result) VALUES($1,'detail_viewed','business_record',$2,'allowed')",
+          [actor.id, r.id],
+        );
         return wrap(r, false);
       }
       const projects = (
         await c.query(
-          `SELECT p.id,p.client_id AS "clientId",p.name,p.stage,p.target_date AS "targetDate",p.created_at AS "createdAt" FROM admin.projects p JOIN admin.clients c ON c.id=p.client_id WHERE ${visible("c")} AND ($1::uuid IS NULL OR p.client_id=$1) ORDER BY p.created_at DESC LIMIT 1001`,
+          `SELECT p.id,p.client_id AS "clientId",p.name,p.stage,to_char(p.target_date,'YYYY-MM-DD') AS "targetDate",p.created_at AS "createdAt" FROM admin.projects p JOIN admin.clients c ON c.id=p.client_id WHERE ${visible("c")} AND ($1::uuid IS NULL OR p.client_id=$1) ORDER BY p.created_at DESC LIMIT 1001`,
           [customerId],
         )
       ).rows;
@@ -415,9 +419,15 @@ export class BusinessService {
         } catch {
           /* Absence closes health qualification. */
         }
+        await c.query(
+          "INSERT INTO admin.audit(actor_id,action,entity_type,entity_id,result) VALUES($1,'detail_viewed','business_customer',$2,'allowed')",
+          [actor.id, id],
+        );
         return wrap(
           {
             client,
+            from,
+            to,
             contacts,
             records: records.filter((r) => r.clientId === id),
             projects: projects.filter((p) => p.clientId === id),
@@ -485,6 +495,14 @@ export class BusinessService {
             (sum, r) => sum + Number(r.data.amountMinor),
             0,
           );
+        const budgetSpendMinor = records
+          .filter(
+            (r) =>
+              r.kind === "expense" &&
+              text(r.data.occurredAt).slice(0, 7) >= from.slice(0, 7) &&
+              text(r.data.occurredAt).slice(0, 10) <= to,
+          )
+          .reduce((sum, r) => sum + Number(r.data.amountMinor), 0);
         const reviewed =
           ["velani", "nevora", "shared"].every((p) =>
             budgets.some(
@@ -499,7 +517,11 @@ export class BusinessService {
             budgets,
             spendMinor,
             budgetMinor: budgets.length ? budgetMinor : null,
-            headroomMinor: budgets.length ? budgetMinor - spendMinor : null,
+            budgetSpendMinor,
+            headroomMinor:
+              budgets.length && !truncated
+                ? budgetMinor - budgetSpendMinor
+                : null,
             contributionMinor:
               money && reviewed && !partial
                 ? money.netCashMinor - spendMinor
@@ -510,7 +532,7 @@ export class BusinessService {
               0,
             ),
             basis:
-              "Operator-recorded costs. Headroom uses recorded expenses, not a provider spending limit. Contribution is selected-period net cash less recorded costs; not accounting profit.",
+              "Operator-recorded costs. Monthly budget headroom deducts all recorded costs from the first selected month's start through the report end, including costs before the report start. It is not a provider spending limit. Contribution is selected-period net cash less recorded costs; not accounting profit.",
           },
           partial || !reviewed || !money,
         );
@@ -766,6 +788,20 @@ export class BusinessService {
       for (const h of qualifiedHealth) {
         if (
           h.qualified &&
+          h.stage === "trial" &&
+          h.trialEndsAt &&
+          Date.parse(text(h.trialEndsAt)) <= Date.now() + 7 * 86400_000 &&
+          !items.some((x) => x.id === text(h.sourceId) + ":trial")
+        )
+          add(
+            text(h.sourceId) + ":trial",
+            text(h.origin),
+            "Trial ends within seven days; qualified aggregate observation",
+            text(h.trialEndsAt),
+            "/business/lifecycle",
+          );
+        if (
+          h.qualified &&
           ["registered", "provisioning", "setup"].includes(text(h.stage)) &&
           Date.parse(text(h.stageSince)) < Date.now() - 2 * 86400_000
         )
@@ -794,7 +830,7 @@ export class BusinessService {
             f.status === "open" &&
             f.dueAt &&
             Date.parse(text(f.dueAt)) < Date.now() &&
-            Number(f.totalMinor) > Number(f.paidMinor)
+            Number(f.remainingMinor) > 0
           )
             add(
               text(f.sourceId),
@@ -869,7 +905,13 @@ export class BusinessService {
           sourceCoverage: sourceData.coverage,
           note: "Dates are recorded commitments; no mail or payment is sent by this view. Missing coverage is not an empty queue.",
         },
-        partial || sourceData.coverage !== "complete" || items.length > 250,
+        partial ||
+          sourceData.coverage !== "complete" ||
+          items.length > 250 ||
+          feeds.finance.state !== "ready" ||
+          feeds.finance.coverage !== "complete" ||
+          feeds.health.state !== "ready" ||
+          feeds.health.coverage !== "complete",
       );
     });
   }

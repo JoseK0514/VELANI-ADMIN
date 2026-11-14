@@ -312,6 +312,7 @@ export function createHandler({
           const route = path.slice("business/".length);
           if (request.method === "GET") {
             await limit("read:" + actor.id, 60);
+            if (/^(customers|records)\/[0-9a-f-]{36}$/i.test(route)) await limit("detail:" + actor.id, 20);
             return json(await business.read(actor, route, query));
           }
           if (Object.keys(query).length) throw new AdminError(400, "invalid_filter");

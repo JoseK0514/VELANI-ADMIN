@@ -85,6 +85,13 @@ try {
       }),
       page = await context.newPage();
     page.setDefaultTimeout(15000);
+    const hubSource = {
+      id: crypto.randomUUID(),
+      reference: "HUB-FICTIONAL",
+      createdAt:
+        new Date(Date.now() - 86400000).toISOString().slice(0, 10) +
+        "T12:34:56.789Z",
+    };
     const records = [],
       sends = [],
       errors = [];
@@ -208,7 +215,7 @@ try {
       } else if (path === "business/intake")
         body = read({
           records: records.filter((r) => r.kind === "inquiry"),
-          sourceRequests: [],
+          sourceRequests: [hubSource],
           feeds: {},
         });
       else if (path === "business/records") body = read({ items: records });
@@ -309,7 +316,7 @@ try {
             displayName: "Fictional cafe",
             state: "active",
           },
-          records,
+          records: records.filter((r) => r.clientId === CLIENT),
           projects,
           cases: [],
           finance,
@@ -359,6 +366,12 @@ try {
       .waitFor();
     await sidebar("Today");
     await page.waitForURL("**/business/today");
+    assert.equal(
+      await page
+        .getByRole("button", { name: "Retry the same save", exact: true })
+        .count(),
+      0,
+    );
     await sidebar("Inquiries and pipeline");
     await page.waitForURL("**/business/intake");
     await page.getByRole("button", { name: /^Review/ }).click();
@@ -453,6 +466,29 @@ try {
     financeReady = true;
     await page.reload();
     await page.getByText("$19.00", { exact: true }).waitFor();
+    await open("intake", "Inquiries and pipeline");
+    await page
+      .getByRole("button", { name: "Track inquiry", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Save record", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "HUB-FICTIONAL", exact: true })
+      .waitFor();
+    assert.equal(
+      sends.at(-1).command.payload.data.receivedAt,
+      hubSource.createdAt,
+      "source tracking preserves seconds and milliseconds exactly",
+    );
+    assert.equal(
+      sends.at(-1).command.payload.data.reference,
+      hubSource.reference,
+    );
+    assert.equal(
+      sends.at(-1).command.payload.data.sourceRequestId,
+      hubSource.id,
+    );
     const checks = [
       ["today", "Today"],
       ["intake", "Inquiries and pipeline"],

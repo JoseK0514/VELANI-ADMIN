@@ -32,10 +32,7 @@ export function summarizeMoney(
     )
       result.mrrMinor += number(item.monthlyMinor);
     if (item.kind === "invoice" && item.status === "open") {
-      const outstanding = Math.max(
-        0,
-        number(item.totalMinor) - number(item.paidMinor),
-      );
+      const outstanding = number(item.remainingMinor);
       result.receivablesMinor += outstanding;
       if (
         typeof item.dueAt === "string" &&

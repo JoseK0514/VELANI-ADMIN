@@ -21,6 +21,7 @@ const fixtures: Record<string, unknown> = {
         currency: "usd",
         total: 10000,
         amount_paid: 2000,
+        amount_remaining: 3000,
         status: "open",
         created: now - 100,
         due_date: now - 10,
@@ -102,6 +103,9 @@ it("reads the bound merchant using only GET and publishes minimal financial fact
   const p = provider(),
     result = await collectStripeFeed(config, p.fetcher);
   expect(result.coverage).toBe("complete");
+  expect(result.items.find((x) => x.kind === "invoice")).toMatchObject({
+    remainingMinor: 3000,
+  });
   expect(result.items).toHaveLength(4);
   expect(result.items).toEqual(
     expect.arrayContaining([
@@ -168,4 +172,39 @@ it("rejects mixed provider test/live observations", async () => {
   await expect(collectStripeFeed(config, p.fetcher)).rejects.toThrow(
     "reporting_mode_mismatch",
   );
+});
+it("keeps discounted and metered contracts partial instead of calling their list price MRR", async () => {
+  const monthly = (
+    fixtures.subscriptions as { data: Record<string, unknown>[] }
+  ).data[0];
+  for (const subscription of [
+    { ...monthly, discounts: ["di_owned"] },
+    {
+      ...monthly,
+      items: {
+        data: [
+          {
+            price: {
+              currency: "usd",
+              unit_amount: 1900,
+              recurring: {
+                interval: "month",
+                interval_count: 1,
+                usage_type: "metered",
+              },
+            },
+            quantity: 1,
+          },
+        ],
+        has_more: false,
+      },
+    },
+  ]) {
+    const p = provider({
+      subscriptions: { data: [subscription], has_more: false },
+    });
+    expect((await collectStripeFeed(config, p.fetcher)).coverage).toBe(
+      "partial",
+    );
+  }
 });

@@ -77,6 +77,165 @@ const feed = (items: unknown[], over = {}) => ({
 });
 
 describe("private business management", () => {
+  it("deducts earlier costs in a budget month when a report starts partway through that month", async () => {
+    const f = await fixture();
+    try {
+      const d = new Date();
+      d.setUTCDate(1);
+      d.setUTCMonth(d.getUTCMonth() - 1);
+      const month = d.toISOString().slice(0, 7);
+      await f.service.command(
+        f.actor,
+        input(
+          {
+            title: "Earlier bill",
+            product: "velani",
+            category: "hosting",
+            amountMinor: 500,
+            occurredAt: month + "-03T12:00:00Z",
+            evidenceReference: "Owned",
+          },
+          "expense",
+        ),
+      );
+      await f.service.command(
+        f.actor,
+        input(
+          {
+            title: "Month budget",
+            product: "velani",
+            month,
+            amountMinor: 2000,
+          },
+          "budget",
+        ),
+      );
+      expect(
+        (
+          await f.service.read(f.actor, "costs", {
+            from: month + "-15",
+            to: month + "-28",
+          })
+        ).data,
+      ).toMatchObject({ spendMinor: 0, headroomMinor: 1500 });
+    } finally {
+      await f.close();
+    }
+  });
+  it("audits customer details and shares the existing detail rate bucket with v1", async () => {
+    const f = await fixture();
+    try {
+      const one = createHandler({
+        config: f.config,
+        pool: f.db.pool,
+        journal: f.journal.pool,
+        auth: f.auth,
+        sources,
+      });
+      const two = createHandler(
+        {
+          config: f.config,
+          pool: f.db.pool,
+          journal: f.journal.pool,
+          auth: f.auth,
+          sources,
+        },
+        true,
+      );
+      const headers = {
+        cookie: "velani_admin_test_session=" + f.session.token,
+      };
+      expect(
+        (
+          await one(
+            new Request(
+              f.config.origin + "/api/admin/v1/clients/" + f.clientId,
+              { headers },
+            ),
+          )
+        ).status,
+      ).toBe(200);
+      for (let i = 0; i < 19; i++)
+        expect(
+          (
+            await two(
+              new Request(
+                f.config.origin +
+                  "/api/admin/v2/business/customers/" +
+                  f.clientId,
+                { headers },
+              ),
+            )
+          ).status,
+        ).toBe(200);
+      expect(
+        (
+          await f.db.pool.query(
+            "SELECT count(*) FROM admin.audit WHERE actor_id=$1 AND action='detail_viewed' AND entity_type='business_customer' AND entity_id=$2",
+            [f.actor.id, f.clientId],
+          )
+        ).rows[0].count,
+      ).toBe("19");
+      expect(
+        (
+          await two(
+            new Request(
+              f.config.origin +
+                "/api/admin/v2/business/customers/" +
+                f.clientId,
+              { headers },
+            ),
+          )
+        ).status,
+      ).toBe(429);
+    } finally {
+      await f.close();
+    }
+  });
+  it("groups offset timestamps on the actual UTC reporting date for intake and costs", async () => {
+    const f = await fixture();
+    try {
+      const yesterday = new Date(Date.now() - 86400000)
+          .toISOString()
+          .slice(0, 10),
+        dayBefore = new Date(Date.now() - 2 * 86400000)
+          .toISOString()
+          .slice(0, 10);
+      const at = dayBefore + "T23:30:00-05:00";
+      await f.service.command(f.actor, input(inquiry({ receivedAt: at })));
+      await f.service.command(
+        f.actor,
+        input(
+          {
+            title: "Offset bill",
+            product: "velani",
+            category: "hosting",
+            amountMinor: 100,
+            occurredAt: at,
+            evidenceReference: "Owned",
+          },
+          "expense",
+        ),
+      );
+      const insight = (
+        await f.service.read(f.actor, "insights", {
+          from: yesterday,
+          to: yesterday,
+        })
+      ).data as { daily: { inquiries: number }[] };
+      expect(insight.daily[0].inquiries).toBe(1);
+      expect(
+        (
+          await f.service.read(f.actor, "costs", {
+            from: yesterday,
+            to: yesterday,
+          })
+        ).data,
+      ).toMatchObject({ spendMinor: 100 });
+    } finally {
+      await f.close();
+    }
+  });
   it("publishes health only for the linked incarnation and closes qualification when the source revision changes", async () => {
     const w: Item = {
       id: randomUUID(),
@@ -144,6 +303,25 @@ describe("private business management", () => {
       expect(
         today.items.some((x) => x.reason.includes("Onboarding stage")),
       ).toBe(true);
+      const trialEndsAt = new Date(Date.now() + 86400000).toISOString();
+      await publishFeed(
+        f.db.pool,
+        binding,
+        feed(
+          [{ ...item, stage: "trial", trialEndsAt, workerState: "healthy" }],
+          {
+            system: "health",
+            accountId: "control_owned",
+            observedAt: new Date(Date.now() + 1).toISOString(),
+          },
+        ),
+      );
+      const trials = (await f.service.read(f.actor, "today")).data as {
+        items: { id: string; dueAt: string }[];
+      };
+      expect(trials.items.filter((x) => x.id === w.id + ":trial")).toEqual([
+        expect.objectContaining({ dueAt: trialEndsAt }),
+      ]);
       w.revision = "4";
       expect((await f.service.read(f.actor, "lifecycle")).data).toMatchObject({
         observations: [

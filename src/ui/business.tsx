@@ -87,14 +87,7 @@ const fields: Record<Kind, FieldSpec[]> = {
       label: "Source channel",
       type: "select",
       required: true,
-      options: choices([
-        "shopify",
-        "email",
-        "phone",
-        "rondo",
-        "other",
-        "client_hub",
-      ]),
+      options: choices(["shopify", "email", "phone", "rondo", "other"]),
     },
     {
       name: "reference",
@@ -103,12 +96,6 @@ const fields: Record<Kind, FieldSpec[]> = {
       required: true,
       max: 160,
       hint: "A stable mailbox, Shopify or source reference. Do not paste the message.",
-    },
-    {
-      name: "sourceRequestId",
-      label: "Client-hub request ID",
-      type: "text",
-      hint: "Required only when logging an existing client-hub request.",
     },
     {
       name: "service",
@@ -324,6 +311,7 @@ function FeedStatus({ data }: { data: Row }) {
 function Editor({
   kind,
   record,
+  sourceRequest,
   scope,
   onSaved,
   onClose,
@@ -331,12 +319,23 @@ function Editor({
 }: {
   kind: Kind;
   record?: RecordRow;
+  sourceRequest?: Row;
   scope: string;
   onSaved: () => void;
   onClose: () => void;
   onReload: () => Promise<void>;
 }) {
-  const data = record?.data ?? {},
+  const data =
+      record?.data ??
+      (sourceRequest
+        ? {
+            channel: "client_hub",
+            sourceRequestId: sourceRequest.id,
+            reference: sourceRequest.reference,
+            receivedAt: sourceRequest.createdAt,
+            title: sourceRequest.reference,
+          }
+        : {}),
     initial: Values = {};
   for (const f of fields[kind]) {
     const v = data[f.name];
@@ -354,7 +353,7 @@ function Editor({
               : (f.options?.[0]?.[0] ?? "");
   }
   if (!record && kind === "inquiry") {
-    initial.receivedAt = dateInput(new Date().toISOString());
+    initial.receivedAt = dateInput(data.receivedAt ?? new Date().toISOString());
     initial.service = "velani";
     initial.stage = "new";
   }
@@ -403,7 +402,10 @@ function Editor({
       formKey={record?.id ?? kind}
       title={`${record ? "Edit" : "New"} ${names[kind].toLowerCase()}`}
       submit="Save record"
-      fields={[...parentFields, ...kindFields(kind, !!record)]}
+      fields={[
+        ...parentFields,
+        ...kindFields(kind, !!record || !!sourceRequest),
+      ]}
       initial={initial}
       intro={
         <p className="muted">
@@ -411,6 +413,14 @@ function Editor({
           observation; it sends no email. Amounts are USD. Source references and
           receipt times cannot be changed. An unassigned inquiry can be linked
           once to its client and project.
+          {sourceRequest ? (
+            <>
+              {" "}
+              Source {value(sourceRequest.reference)}, received{" "}
+              {value(sourceRequest.createdAt)}. The original source timestamp is
+              preserved exactly.
+            </>
+          ) : null}
         </p>
       }
       onCancel={onClose}
@@ -418,8 +428,8 @@ function Editor({
       onReload={onReload}
       build={(values) => {
         const errors: Record<string, string> = {},
-          next: Record<string, unknown> = { ...(record?.data ?? {}) };
-        for (const f of kindFields(kind, !!record)) {
+          next: Record<string, unknown> = { ...data };
+        for (const f of kindFields(kind, !!record || !!sourceRequest)) {
           const v = values[f.name];
           if (f.name.endsWith("Minor")) {
             const s = String(v ?? "").trim();
@@ -544,6 +554,9 @@ export function BusinessView({ pathname }: { pathname: string }) {
   const [period, setPeriod] = useState({ from, to }),
     [editing, setEditing] = useState<RecordRow | null>(null),
     [creating, setCreating] = useState<Kind | null>(null);
+  const [sourceRequest, setSourceRequest] = useState<Row | undefined>(
+    undefined,
+  );
   const periodPage = ["finance", "costs", "insights"].includes(page);
   const apiPath = page === "delivery" ? "records" : route;
   const read = useRead(
@@ -586,6 +599,7 @@ export function BusinessView({ pathname }: { pathname: string }) {
   const saved = () => {
     setEditing(null);
     setCreating(null);
+    setSourceRequest(undefined);
     void read.reload();
   };
   const selectPending = (form: string) => {
@@ -671,6 +685,7 @@ export function BusinessView({ pathname }: { pathname: string }) {
             <Editor
               kind={editing?.kind ?? creating!}
               record={editing ?? undefined}
+              sourceRequest={sourceRequest}
               scope={"business/" + page}
               onSaved={saved}
               onReload={async () => {
@@ -679,6 +694,7 @@ export function BusinessView({ pathname }: { pathname: string }) {
               onClose={() => {
                 setEditing(null);
                 setCreating(null);
+                setSourceRequest(undefined);
               }}
             />
           ) : (
@@ -793,6 +809,28 @@ export function BusinessView({ pathname }: { pathname: string }) {
                       render: (r) => <code>{value(r.id)}</code>,
                     },
                     { name: "Received", render: (r) => when(r.createdAt) },
+                    {
+                      name: "Triage",
+                      render: (r) => (
+                        <button
+                          className="btn outline small"
+                          disabled={
+                            !admin.canWrite ||
+                            !!editing ||
+                            !!creating ||
+                            allRecords.some(
+                              (record) => record.data.sourceRequestId === r.id,
+                            )
+                          }
+                          onClick={() => {
+                            setSourceRequest(r);
+                            setCreating("inquiry");
+                          }}
+                        >
+                          Track inquiry
+                        </button>
+                      ),
+                    },
                   ]}
                 />
               </Section>
@@ -933,6 +971,13 @@ export function BusinessView({ pathname }: { pathname: string }) {
                         : r.setupComplete
                           ? "Complete"
                           : "Needs work",
+                  },
+                  {
+                    name: "Trial ends",
+                    render: (r) =>
+                      r.qualified
+                        ? when(r.trialEndsAt, "Not recorded")
+                        : "Unknown",
                   },
                   {
                     name: "First use",
@@ -1155,6 +1200,11 @@ function Money({ data }: { data: Row }) {
         ]}
       />
       <p className="muted">
+        {data.from && data.to ? (
+          <>
+            Period: {value(data.from)} through {value(data.to)} UTC.{" "}
+          </>
+        ) : null}
         USD. MRR and invoice balances are current observations; payment totals
         use the selected UTC dates. Payments include collected tax and are
         grouped by provider record creation date. They are not accounting
@@ -1183,6 +1233,11 @@ function Money({ data }: { data: Row }) {
             name: "Amount",
             render: (r) =>
               currency(r.monthlyMinor ?? r.totalMinor ?? r.amountMinor),
+          },
+          {
+            name: "Remaining invoice balance",
+            render: (r) =>
+              r.kind === "invoice" ? currency(r.remainingMinor) : "—",
           },
           {
             name: "Client",
@@ -1229,7 +1284,7 @@ function Customer({ data }: { data: Row }) {
               ),
             },
             { name: "Stage", render: (r) => label(r.stage) },
-            { name: "Target", render: (r) => when(r.targetDate) },
+            { name: "Target date", render: (r) => value(r.targetDate) },
           ]}
         />
       </Section>
@@ -1285,7 +1340,14 @@ function Customer({ data }: { data: Row }) {
         />
       </Section>
       <Section title="Financial observations">
-        <Money data={{ items: data.finance, metrics: data.financialMetrics }} />
+        <Money
+          data={{
+            items: data.finance,
+            metrics: data.financialMetrics,
+            from: data.from,
+            to: data.to,
+          }}
+        />
       </Section>
       <Section title="Workplace observations">
         <Table
@@ -1300,6 +1362,11 @@ function Customer({ data }: { data: Row }) {
               ),
             },
             { name: "Observed stage", render: (r) => label(r.stage) },
+            {
+              name: "Trial ends",
+              render: (r) =>
+                r.qualified ? when(r.trialEndsAt, "Not recorded") : "Unknown",
+            },
             {
               name: "First use",
               render: (r) => when(r.firstUsedAt, "Unknown"),

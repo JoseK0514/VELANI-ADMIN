@@ -13,6 +13,27 @@ describe("approved seven-day Eastern response calendar", () => {
   });
 });
 describe("source-bound financial definitions", () => {
+  it("uses the provider's remaining invoice balance after credit adjustments", () => {
+    expect(
+      summarizeMoney(
+        [
+          {
+            kind: "invoice",
+            product: "velani",
+            currency: "USD",
+            totalMinor: 10000,
+            paidMinor: 2000,
+            remainingMinor: 3000,
+            status: "open",
+            dueAt: "2026-11-01T00:00:00Z",
+          },
+        ],
+        "2026-11-01",
+        "2026-11-30",
+        new Date("2026-11-13T12:00:00Z"),
+      ),
+    ).toMatchObject({ receivablesMinor: 3000, overdueMinor: 3000 });
+  });
   it("keeps MRR, invoice receivables and net cash separate, including partial payments and refunds", () => {
     const result = summarizeMoney(
       [
@@ -36,6 +57,7 @@ describe("source-bound financial definitions", () => {
           currency: "USD",
           totalMinor: 100000,
           paidMinor: 20000,
+          remainingMinor: 80000,
           status: "open",
           dueAt: "2026-11-01T00:00:00Z",
         },
