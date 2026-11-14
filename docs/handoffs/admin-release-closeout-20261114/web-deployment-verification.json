@@ -1,0 +1,38 @@
+{
+  "runtimeSource": "c9946e98af9df0d5f181fe214db495045bba1e4a",
+  "tree": "dbc70abb3176ca4772e4c92239cdf84180fce55c",
+  "staging": {
+    "project": "prj_98nylk5UDAg2bEvrBydfjxlKIKJd",
+    "deployment": "dpl_2XnBrWLZrEKfNjbLxfXCKzQzSh7A",
+    "alias": "admin-staging.thevelani.com",
+    "state": "READY",
+    "SSO": "all",
+    "appEnabled": true,
+    "writesEnabled": false,
+    "normalBrowserSignInPageObserved": true,
+    "guestSessionApiCode": "authentication_required",
+    "guestRequestId": "8c0994da-6beb-4a11-bb22-5d220487c951",
+    "httpStatusNotReadFromNativeBrowser": true,
+    "googleOrPasskeyCeremonyPerformed": false
+  },
+  "production": {
+    "project": "prj_c6aunTwnTZVBglfKUGTtPXhvmrJu",
+    "paused": true,
+    "httpStatus": 503,
+    "bodyCode": "DEPLOYMENT_PAUSED",
+    "appEnabled": false,
+    "writesEnabled": false,
+    "actualHistoricalAliasDeployment": "dpl_9mGg67DdBPcpbL58TW4drFaopSkr",
+    "historicalAliasSourceMetadata": "c60a7e619e705aa61da780774bf4d8f6b9d3f360",
+    "historicalAliasDirty": true,
+    "unpromotedExactB18ReadyBuild": "dpl_CUvrtbhnY17Q5sBygvN3qnVUXfvG",
+    "currentMatchingWebInstalled": false,
+    "unpausePerformed": false
+  },
+  "team": {
+    "id": "team_Lzbw410WwXGWHTuUXuamRI1N",
+    "plan": "hobby",
+    "billingStatus": "active",
+    "upgradePurchased": false
+  }
+}

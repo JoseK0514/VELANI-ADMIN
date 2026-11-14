@@ -1,0 +1,150 @@
+{
+  "approvalId": "4108495f-8577-4915-9be2-694fb452256c",
+  "recipient": "support@thevelani.com",
+  "adminAllocatedEffects": 8,
+  "adminInboxVerified": 8,
+  "retries": 0,
+  "missedRunDown": [
+    {
+      "slot": "chat3-admin-staging-missed-run-outage",
+      "check": "velani-admin-staging-missed-run-drill",
+      "state": "up -> down",
+      "eventTimeDisplayedPR": "2026-11-14 01:17",
+      "expectedAtUTC": "2026-11-14T04:17:00Z",
+      "graceSeconds": 3600,
+      "deadlineUTC": "2026-11-14T05:17:00Z",
+      "observedAt": "2026-11-14T05:18:54.287Z",
+      "lastPingWasInitialSuccessOnly": true
+    },
+    {
+      "slot": "chat3-admin-production-missed-run-outage",
+      "check": "velani-admin-production-missed-run-drill",
+      "state": "up -> down",
+      "eventTimeDisplayedPR": "2026-11-14 01:17",
+      "expectedAtUTC": "2026-11-14T04:17:00Z",
+      "graceSeconds": 3600,
+      "deadlineUTC": "2026-11-14T05:17:00Z",
+      "observedAt": "2026-11-14T05:19:44.638Z",
+      "lastPingWasInitialSuccessOnly": true
+    }
+  ],
+  "recoveryAndPause": [
+    {
+      "check": "velani-admin-staging-missed-run-drill",
+      "upObservedAt": "2026-11-14T05:29:31.968Z",
+      "recoveryDisplayed": "2026-11-14 01:28 America/Puerto_Rico",
+      "pausedObserved": true
+    },
+    {
+      "check": "velani-admin-production-missed-run-drill",
+      "upObservedAt": "2026-11-14T05:28:27.609Z",
+      "recoveryDisplayed": "2026-11-14 01:28 America/Puerto_Rico",
+      "pausedObserved": true
+    }
+  ],
+  "signalReceipts": [
+    {
+      "slot": "chat3-admin-production-failure-outage",
+      "check": "velani-admin-production-failure-drill",
+      "triggerAt": "2026-11-14T03:55:07.913130+00:00",
+      "action": "failure",
+      "recipient": "support@thevelani.com",
+      "outcome": "receiver-http-accepted-delivery-unverified",
+      "provider": "Healthchecks.io",
+      "retries": 0,
+      "httpStatus": 200,
+      "responseAt": "2026-11-14T03:55:08.630116+00:00"
+    },
+    {
+      "slot": "chat3-admin-production-failure-recovery",
+      "check": "velani-admin-production-failure-drill",
+      "triggerAt": "2026-11-14T04:00:41.447706+00:00",
+      "action": "recovery",
+      "recipient": "support@thevelani.com",
+      "outcome": "receiver-http-accepted-delivery-unverified",
+      "provider": "Healthchecks.io",
+      "retries": 0,
+      "httpStatus": 200,
+      "responseAt": "2026-11-14T04:00:42.110360+00:00"
+    },
+    {
+      "slot": "chat3-admin-production-missed-run-outage",
+      "check": "velani-admin-production-missed-run-drill",
+      "triggerAt": "2026-11-14T03:56:21.878245+00:00",
+      "action": "initial-success",
+      "recipient": "support@thevelani.com",
+      "outcome": "receiver-http-accepted-delivery-unverified",
+      "provider": "Healthchecks.io",
+      "retries": 0,
+      "httpStatus": 200,
+      "responseAt": "2026-11-14T03:56:22.533389+00:00"
+    },
+    {
+      "slot": "chat3-admin-production-missed-run-recovery",
+      "check": "velani-admin-production-missed-run-drill",
+      "triggerAt": "2026-11-14T05:28:02.844042+00:00",
+      "action": "recovery",
+      "recipient": "support@thevelani.com",
+      "outcome": "receiver-http-accepted-delivery-unverified",
+      "provider": "Healthchecks.io",
+      "retries": 0,
+      "httpStatus": 200,
+      "responseAt": "2026-11-14T05:28:03.489491+00:00"
+    },
+    {
+      "slot": "chat3-admin-staging-failure-outage",
+      "check": "velani-admin-staging-failure-drill",
+      "triggerAt": "2026-11-14T03:54:00.155615+00:00",
+      "action": "failure",
+      "recipient": "support@thevelani.com",
+      "outcome": "receiver-http-accepted-delivery-unverified",
+      "provider": "Healthchecks.io",
+      "retries": 0,
+      "httpStatus": 200,
+      "responseAt": "2026-11-14T03:54:00.871935+00:00"
+    },
+    {
+      "slot": "chat3-admin-staging-failure-recovery",
+      "check": "velani-admin-staging-failure-drill",
+      "triggerAt": "2026-11-14T04:00:40.664503+00:00",
+      "action": "recovery",
+      "recipient": "support@thevelani.com",
+      "outcome": "receiver-http-accepted-delivery-unverified",
+      "provider": "Healthchecks.io",
+      "retries": 0,
+      "httpStatus": 200,
+      "responseAt": "2026-11-14T04:00:41.361672+00:00"
+    },
+    {
+      "slot": "chat3-admin-staging-missed-run-outage",
+      "check": "velani-admin-staging-missed-run-drill",
+      "triggerAt": "2026-11-14T03:55:56.304377+00:00",
+      "action": "initial-success",
+      "recipient": "support@thevelani.com",
+      "outcome": "receiver-http-accepted-delivery-unverified",
+      "provider": "Healthchecks.io",
+      "retries": 0,
+      "httpStatus": 200,
+      "responseAt": "2026-11-14T03:55:56.975887+00:00"
+    },
+    {
+      "slot": "chat3-admin-staging-missed-run-recovery",
+      "check": "velani-admin-staging-missed-run-drill",
+      "triggerAt": "2026-11-14T05:28:02.083037+00:00",
+      "action": "recovery",
+      "recipient": "support@thevelani.com",
+      "outcome": "receiver-http-accepted-delivery-unverified",
+      "provider": "Healthchecks.io",
+      "retries": 0,
+      "httpStatus": 200,
+      "responseAt": "2026-11-14T05:28:02.769804+00:00"
+    }
+  ],
+  "limits": [
+    "Production-labelled drill is disposable, not production business execution",
+    "Initial healthy missed-run pings are not outage notifications",
+    "All eight effects consume their original reservations; no Admin slots remain",
+    "Chat2 alone writes shared authorization ledger"
+  ],
+  "verifiedAt": "2026-11-14T05:31:18.239046+00:00"
+}

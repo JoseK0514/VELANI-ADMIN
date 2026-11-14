@@ -1,0 +1,90 @@
+[
+  {
+    "slot": "chat3-admin-staging-failure-outage",
+    "subject": "DOWN | velani-admin-staging-failure-drill",
+    "from": "healthchecks.io@healthchecks.io",
+    "to": "support@thevelani.com",
+    "displayedDate": "2026-11-13 23:54 America/Puerto_Rico",
+    "mailboxThread": "FMfcgzQjgqTbNXvFCdnhbRsTzDrrhMhN",
+    "verifiedAt": "2026-11-14T04:00:03.145Z",
+    "proof": "actual Gmail message and recipient detail"
+  },
+  {
+    "slot": "chat3-admin-production-failure-outage",
+    "subject": "DOWN | velani-admin-production-failure-drill",
+    "from": "healthchecks.io@healthchecks.io",
+    "to": "support@thevelani.com",
+    "displayedDate": "2026-11-13 23:55 America/Puerto_Rico",
+    "mailboxThread": "FMfcgzQjgqTbNXvFMXBlhQHWztTDQtlc",
+    "verifiedAt": "2026-11-14T04:00:28.780Z",
+    "proof": "actual Gmail message and recipient detail"
+  },
+  {
+    "slot": "chat3-admin-staging-failure-recovery",
+    "subject": "UP | velani-admin-staging-failure-drill",
+    "from": "healthchecks.io@healthchecks.io",
+    "to": "support@thevelani.com",
+    "displayedDate": "2026-11-14 00:00 America/Puerto_Rico",
+    "mailboxThread": "FMfcgzQjgqTbNXvpvmssDLwhCQvbmhQZ",
+    "verifiedAt": "2026-11-14T04:03:36.821Z",
+    "proof": "actual Gmail message and recipient detail"
+  },
+  {
+    "slot": "chat3-admin-production-failure-recovery",
+    "subject": "UP | velani-admin-production-failure-drill",
+    "from": "healthchecks.io@healthchecks.io",
+    "to": "support@thevelani.com",
+    "displayedDate": "2026-11-14 00:00 America/Puerto_Rico",
+    "mailboxThread": "FMfcgzQjgqTbNXvpvmksnrgmTsGNmNfr",
+    "verifiedAt": "2026-11-14T04:03:39.745Z",
+    "proof": "actual Gmail message and recipient detail"
+  },
+  {
+    "slot": "chat3-admin-staging-missed-run-outage",
+    "subject": "DOWN | velani-admin-staging-missed-run-drill",
+    "from": "healthchecks.io@healthchecks.io",
+    "to": "support@thevelani.com",
+    "smtpMessageId": "<179463342012.1170176.6847469512966273860@healthchecks.io>",
+    "displayedDate": "2026-11-14 01:17 America/Puerto_Rico",
+    "mailboxThread": "FMfcgzQjgqTbNgkBtKVKNdzkZbCTwhQg",
+    "authentication": "SPF/DKIM/DMARC PASS",
+    "verifiedAt": "2026-11-14T05:22:35.202Z",
+    "proof": "actual original Gmail message and recipient/SMTP details"
+  },
+  {
+    "slot": "chat3-admin-production-missed-run-outage",
+    "subject": "DOWN | velani-admin-production-missed-run-drill",
+    "from": "healthchecks.io@healthchecks.io",
+    "to": "support@thevelani.com",
+    "smtpMessageId": "<179463342010.1201497.12858920341239773838@healthchecks.io>",
+    "displayedDate": "2026-11-14 01:17 America/Puerto_Rico",
+    "mailboxThread": "FMfcgzQjgqTbNgkBtJlMDGFbhNzBwflW",
+    "authentication": "SPF/DKIM/DMARC PASS",
+    "verifiedAt": "2026-11-14T05:27:45.252Z",
+    "proof": "actual original Gmail message and recipient/SMTP details"
+  },
+  {
+    "slot": "chat3-admin-staging-missed-run-recovery",
+    "subject": "UP | velani-admin-staging-missed-run-drill",
+    "from": "healthchecks.io@healthchecks.io",
+    "to": "support@thevelani.com",
+    "smtpMessageId": "<179463408333.1170176.9283192793694499023@healthchecks.io>",
+    "displayedDate": "2026-11-14 01:28 America/Puerto_Rico",
+    "mailboxThread": "FMfcgzQjgqTbWmWRqbbhHLvSNbnRRmQZ",
+    "authentication": "SPF/DKIM/DMARC PASS",
+    "verifiedAt": "2026-11-14T05:30:03.094Z",
+    "proof": "actual original Gmail message and recipient/SMTP details"
+  },
+  {
+    "slot": "chat3-admin-production-missed-run-recovery",
+    "subject": "UP | velani-admin-production-missed-run-drill",
+    "from": "healthchecks.io@healthchecks.io",
+    "to": "support@thevelani.com",
+    "smtpMessageId": "<179463408540.1201497.6957149007028364299@healthchecks.io>",
+    "displayedDate": "2026-11-14 01:28 America/Puerto_Rico",
+    "mailboxThread": "FMfcgzQjgqTbWmWRrfxzSrvJtFDWlqCR",
+    "authentication": "SPF/DKIM/DMARC PASS",
+    "verifiedAt": "2026-11-14T05:30:13.883Z",
+    "proof": "actual original Gmail message and recipient/SMTP details"
+  }
+]

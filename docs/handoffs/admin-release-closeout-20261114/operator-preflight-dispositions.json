@@ -1,0 +1,58 @@
+{
+  "scope": "operator/tooling setup failures; no application assertion was removed or weakened",
+  "credentialPreflight": {
+    "attempts": [
+      {
+        "startedAt": "2026-11-14T04:04:51.265Z",
+        "finishedAt": "2026-11-14T04:04:52.332Z"
+      },
+      {
+        "startedAt": "2026-11-14T04:05:23.906Z",
+        "finishedAt": "2026-11-14T04:05:24.905Z"
+      },
+      {
+        "startedAt": "2026-11-14T04:05:37.970Z",
+        "finishedAt": "2026-11-14T04:05:38.878Z"
+      }
+    ],
+    "result": "failed in preflight before any role/store mutation",
+    "cause": "assumed neondb_owner role does not exist on these dedicated branches",
+    "diagnosis": "role inventory identified existing velani_admin_schema_owner and velani_admin_journal_owner",
+    "correction": "selected and verified those actual private operators before performing the bounded rotation",
+    "subsequentReceipts": [
+      "credential-rotation-staging.json",
+      "credential-rotation-production.json"
+    ],
+    "failuresRetainedInToolTranscript": true
+  },
+  "connectorFallbacks": [
+    {
+      "service": "Vercel",
+      "result": "connector404 for exact intended team/project",
+      "resolution": "existing authenticated CLI in same explicit team/project; no permission change"
+    },
+    {
+      "service": "Gmail business account",
+      "result": "requires reauthentication",
+      "resolution": "existing signed-in native business Inbox; no reconnect needed, native receipts retained"
+    }
+  ],
+  "neonCliAuthentication": {
+    "initialResult": "existing DEFAULT OAuth session/refresh expired",
+    "resolution": "routine existing-profile sign-in; stored and displayed scopes compared identical",
+    "newApiKeyOrScopeCreated": false,
+    "credentialsCopiedOrPrinted": false
+  },
+  "receiverUi": {
+    "initialObservationTimeout": "form values had applied; kernel reset before observation",
+    "resolution": "re-read actual form values before single Save; six unique Admin checks verified",
+    "duplicateCheckCreated": false
+  },
+  "calendarParser": {
+    "normalPipInstall": "systemPython3.9 cannot install package metadata requiring>=3.11",
+    "applicationDependencyChanged": false,
+    "initialResolution": "unmodified official oncalendar1.2 wheel source executed directly for the independent iterator assertion; exact source hash and Python3.9 runtime retained; hosted parser separately accepted the expression",
+    "finalResolution": "Official oncalendar1.2 installed normally on task-isolated Python3.13.18; all39matches/finalgrace/noannual boundary assertions passed again; supported current proof is calendar-boundary.json. New task-only bin link was removed; no system interpreter/PATH/application dependency change."
+  },
+  "noFailedTestSuppression": true
+}

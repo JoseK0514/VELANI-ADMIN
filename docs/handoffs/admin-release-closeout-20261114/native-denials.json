@@ -1,0 +1,39 @@
+{
+  "source": "c9946e98af9df0d5f181fe214db495045bba1e4a",
+  "afterFiniteConfiguration": true,
+  "signedTriggerImpersonation": false,
+  "checks": [
+    {
+      "environment": "staging",
+      "configuredVersion": 7,
+      "forgedHeaders": false,
+      "status": 401,
+      "observedAt": "2026-11-14T04:39:16.121112+00:00",
+      "businessActionPerformed": false
+    },
+    {
+      "environment": "staging",
+      "configuredVersion": 7,
+      "forgedHeaders": true,
+      "status": 401,
+      "observedAt": "2026-11-14T04:39:17.293532+00:00",
+      "businessActionPerformed": false
+    },
+    {
+      "environment": "production",
+      "configuredVersion": 5,
+      "forgedHeaders": false,
+      "status": 401,
+      "observedAt": "2026-11-14T04:39:17.852930+00:00",
+      "businessActionPerformed": false
+    },
+    {
+      "environment": "production",
+      "configuredVersion": 5,
+      "forgedHeaders": true,
+      "status": 401,
+      "observedAt": "2026-11-14T04:39:18.679245+00:00",
+      "businessActionPerformed": false
+    }
+  ]
+}

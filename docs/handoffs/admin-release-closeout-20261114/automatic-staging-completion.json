@@ -1,0 +1,18 @@
+{
+  "source": "c9946e98af9df0d5f181fe214db495045bba1e4a",
+  "workerVersion": 7,
+  "environment": "staging",
+  "receiver": "velani-admin-staging-retention",
+  "automaticReceiverPingAt": "2026-11-14T04:17:37.289608Z",
+  "receiverEvent": "new -> up",
+  "requestMethod": "POST",
+  "userAgent": "node",
+  "manualPingSentToThisReceiver": false,
+  "notifications": "OFF during success-only observation to preserve allocated mail envelope",
+  "finalReceiver": "sticky paused",
+  "databaseLastSuccessAt": "2026-11-14T04:17:37.021Z",
+  "removedClients": 0,
+  "removedCases": 0,
+  "productionAutomaticExecution": false,
+  "checkedAt": "2026-11-14T04:20:03.276Z"
+}

@@ -1,0 +1,43 @@
+{
+  "source": "c9946e98af9df0d5f181fe214db495045bba1e4a",
+  "environment": "staging",
+  "project": "empty-mountain-07008969",
+  "branch": "br-royal-leaf-bc9ahq9h",
+  "startedAt": "2026-11-14T04:09:03.604Z",
+  "before": {
+    "clients": "1",
+    "active_factors": "2",
+    "authorization": {
+      "singleton": true,
+      "epoch": 3
+    },
+    "migrations": [
+      "0001_admin.sql",
+      "0002_identity_review.sql",
+      "0003_stable_creation_time.sql",
+      "0004_deployment_binding.sql",
+      "0005_authorization_epoch.sql"
+    ]
+  },
+  "after": {
+    "clients": "1",
+    "active_factors": "2",
+    "authorization": {
+      "singleton": true,
+      "epoch": 3
+    },
+    "migrations": [
+      "0001_admin.sql",
+      "0002_identity_review.sql",
+      "0003_stable_creation_time.sql",
+      "0004_deployment_binding.sql",
+      "0005_authorization_epoch.sql",
+      "0006_business_management.sql"
+    ]
+  },
+  "state": "six immutable migrations and exact current admin grants applied",
+  "sourceViewsChanged": false,
+  "journalChanged": false,
+  "businessWritesEnabled": false,
+  "finishedAt": "2026-11-14T04:09:06.837Z"
+}

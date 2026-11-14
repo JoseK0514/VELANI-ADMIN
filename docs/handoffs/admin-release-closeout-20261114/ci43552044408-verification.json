@@ -1,0 +1,22 @@
+{
+  "sha": "c9946e98af9df0d5f181fe214db495045bba1e4a",
+  "tree": "dbc70abb3176ca4772e4c92239cdf84180fce55c",
+  "files": 339,
+  "tests": {
+    "files": 25,
+    "passed": 189
+  },
+  "run": {
+    "id": "43552044408",
+    "attempt": "1",
+    "ref": "refs/heads/development",
+    "event": "push"
+  },
+  "artifactId": 14096077758,
+  "qualificationHash": "41d3fc0bdc4067a97401a6c009542ecf961f6bcddbc935d76fee335342e46763",
+  "sourceHash": "cd548eb858c77bbb44744f28f95359c8877cafbc350993ed0c6bf9225cb33542",
+  "reportHash": "c89ca53878ff25fecb46b5699cde4bf8662315d4d0257136d1f7e86d8e9c6099",
+  "fullSourceAndTestReportVerified": true,
+  "testsRerunByChat3": false,
+  "artifactPath": "/Users/josek0514/.codex/worktrees/velani-admin-release-closeout-20261113/.omo/closeout-ci43552044408/admin-qualification-c9946e98af9df0d5f181fe214db495045bba1e4a"
+}

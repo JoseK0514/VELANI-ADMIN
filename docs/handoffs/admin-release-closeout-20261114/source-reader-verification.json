@@ -1,0 +1,190 @@
+{
+  "checkedAt": "2026-11-14T03:44:03.907Z",
+  "mode": "six actual restricted connections, metadata only, no source grant or schema writes",
+  "checks": [
+    {
+      "key": "staging-control",
+      "rows": [
+        {
+          "db": "velani_admin_acceptance_control",
+          "role": "velani_admin_control_reader",
+          "elevated": false,
+          "memberships": false,
+          "binding": [
+            {
+              "system": "control",
+              "environment": "staging",
+              "project_id": "empty-mountain-07008969",
+              "branch_id": "br-royal-leaf-bc9ahq9h",
+              "version": 1
+            }
+          ],
+          "exposed_base_relations": null,
+          "executable_definers": null,
+          "projection_read_only": true
+        }
+      ]
+    },
+    {
+      "key": "staging-catalog",
+      "rows": [
+        {
+          "db": "velani_admin_acceptance_catalog",
+          "role": "velani_admin_catalog_reader",
+          "elevated": false,
+          "memberships": false,
+          "binding": [
+            {
+              "system": "catalog",
+              "environment": "staging",
+              "project_id": "empty-mountain-07008969",
+              "branch_id": "br-royal-leaf-bc9ahq9h",
+              "version": 1
+            }
+          ],
+          "exposed_base_relations": null,
+          "executable_definers": null,
+          "projection_read_only": true
+        }
+      ]
+    },
+    {
+      "key": "staging-velani",
+      "rows": [
+        {
+          "db": "velani_admin_acceptance_velani",
+          "role": "velani_admin_velani_reader",
+          "elevated": false,
+          "memberships": false,
+          "binding": [
+            {
+              "system": "velani",
+              "environment": "staging",
+              "project_id": "empty-mountain-07008969",
+              "branch_id": "br-royal-leaf-bc9ahq9h",
+              "version": 1
+            }
+          ],
+          "exposed_base_relations": null,
+          "executable_definers": null,
+          "projection_read_only": true
+        }
+      ]
+    },
+    {
+      "key": "production-control",
+      "rows": [
+        {
+          "db": "nevora_onboarding_control",
+          "role": "velani_admin_control_reader",
+          "elevated": false,
+          "memberships": false,
+          "binding": [
+            {
+              "system": "control",
+              "environment": "production",
+              "project_id": "broad-wildflower-15946455",
+              "branch_id": "br-aged-poetry-bbiszwjc",
+              "version": 1
+            }
+          ],
+          "exposed_base_relations": null,
+          "executable_definers": null,
+          "projection_read_only": true
+        }
+      ]
+    },
+    {
+      "key": "production-catalog",
+      "rows": [
+        {
+          "db": "nevora_commerce_catalog",
+          "role": "velani_admin_catalog_reader",
+          "elevated": false,
+          "memberships": false,
+          "binding": [
+            {
+              "system": "catalog",
+              "environment": "production",
+              "project_id": "young-cloud-57498411",
+              "branch_id": "br-royal-credit-bbczjvcw",
+              "version": 1
+            }
+          ],
+          "exposed_base_relations": null,
+          "executable_definers": null,
+          "projection_read_only": true
+        }
+      ]
+    },
+    {
+      "key": "production-velani",
+      "rows": [
+        {
+          "db": "velani_ai",
+          "role": "velani_admin_velani_reader",
+          "elevated": false,
+          "memberships": false,
+          "binding": [
+            {
+              "system": "velani",
+              "environment": "production",
+              "project_id": "wild-leaf-57992989",
+              "branch_id": "br-snowy-brook-bcc6b3zm",
+              "version": 1
+            }
+          ],
+          "exposed_base_relations": null,
+          "executable_definers": null,
+          "projection_read_only": true
+        }
+      ]
+    }
+  ],
+  "negativeSelectChecks": [
+    {
+      "key": "staging-control",
+      "query": "SELECT 1 FROM owning base table WHERE false",
+      "expectedDenied": true,
+      "sqlstate": "42501",
+      "response": "NeonDbError: permission denied for schema nevora_onboarding\nSQLSTATE: 42501\nPOSITION: 15"
+    },
+    {
+      "key": "staging-catalog",
+      "query": "SELECT 1 FROM owning base table WHERE false",
+      "expectedDenied": true,
+      "sqlstate": "42501",
+      "response": "NeonDbError: permission denied for schema commerce\nSQLSTATE: 42501\nPOSITION: 15"
+    },
+    {
+      "key": "staging-velani",
+      "query": "SELECT 1 FROM owning base table WHERE false",
+      "expectedDenied": true,
+      "sqlstate": "42501",
+      "response": "NeonDbError: permission denied for table client_hub_requests\nSQLSTATE: 42501"
+    },
+    {
+      "key": "production-control",
+      "query": "SELECT 1 FROM owning base table WHERE false",
+      "expectedDenied": true,
+      "sqlstate": "42501",
+      "response": "NeonDbError: permission denied for schema nevora_onboarding\nSQLSTATE: 42501\nPOSITION: 15"
+    },
+    {
+      "key": "production-catalog",
+      "query": "SELECT 1 FROM owning base table WHERE false",
+      "expectedDenied": true,
+      "sqlstate": "42501",
+      "response": "NeonDbError: permission denied for schema commerce\nSQLSTATE: 42501\nPOSITION: 15"
+    },
+    {
+      "key": "production-velani",
+      "query": "SELECT 1 FROM owning base table WHERE false",
+      "expectedDenied": true,
+      "sqlstate": "42501",
+      "response": "NeonDbError: permission denied for table client_hub_requests\nSQLSTATE: 42501"
+    }
+  ],
+  "noSourceGrantsOrSchemasChanged": true,
+  "noSourceRowsRead": true
+}

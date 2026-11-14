@@ -1,0 +1,19 @@
+{
+  "runtimeSource": "c9946e98af9df0d5f181fe214db495045bba1e4a",
+  "sourceTree": "dbc70abb3176ca4772e4c92239cdf84180fce55c",
+  "artifacts": [
+    {
+      "path": "/Users/josek0514/.codex/visualizations/2026/11/13/01a1d4ed-9859-7432-b7a0-8d64b483d3bb/admin-release-closeout/velani-admin-source-c9946e9.tar.gz",
+      "bytes": 13501634,
+      "sha256": "9af5fe118507b991b488fea7e262da2a4688c4795cacdf008c0fd2df16854702"
+    },
+    {
+      "path": "/Users/josek0514/.codex/visualizations/2026/11/13/01a1d4ed-9859-7432-b7a0-8d64b483d3bb/admin-release-closeout/adminretention-c9946e9.zip",
+      "bytes": 31046,
+      "sha256": "33d38987076ebbabb3c1991fa8eea2f91872056af96e537fa0b36bb371796ca2"
+    }
+  ],
+  "providerConfig": "approved existing per-environment Vercel/Neon stores; values not exported",
+  "productionWebInstallation": "HELD by explicit pause/release boundary; do not use historical alias as this release",
+  "activationPerformed": false
+}

@@ -1,0 +1,9 @@
+{
+  "retiredAt": "2026-11-14T05:31:18.239626+00:00",
+  "localPrivatePingTransferRemoved": true,
+  "dedicatedWorkerSecretsRemainInMatchingApprovedStores": true,
+  "messageAndProbeReceiptsRetained": true,
+  "allFourDisposableChecks": "sticky paused after accepted down/up",
+  "realReceivers": "sticky paused; staging retention still scheduled, production trigger disabled",
+  "noCheckOrEventDeletion": true
+}

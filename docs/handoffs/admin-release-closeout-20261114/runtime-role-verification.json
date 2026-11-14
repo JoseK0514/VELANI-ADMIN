@@ -1,0 +1,319 @@
+{
+  "observedAt": "2026-11-14T04:25:59.687Z",
+  "source": "c9946e98af9df0d5f181fe214db495045bba1e4a",
+  "mode": "actual restricted-role connections, metadata only, no test records or grants changed",
+  "checks": [
+    {
+      "key": "staging-web",
+      "project": "empty-mountain-07008969",
+      "branch": "br-royal-leaf-bc9ahq9h",
+      "role": "velani_admin_web",
+      "db": "velani_admin",
+      "elevated": false,
+      "memberships": false,
+      "database_create": false,
+      "database_temp": false,
+      "schema_create": false,
+      "authorization_write": false,
+      "rights": [
+        {
+          "table": "audit",
+          "select": true,
+          "insert": true,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "business_feeds",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "business_observations",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "business_records",
+          "select": true,
+          "insert": true,
+          "update": true,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "deletions",
+          "select": false,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        }
+      ]
+    },
+    {
+      "key": "staging-maintenance",
+      "project": "empty-mountain-07008969",
+      "branch": "br-royal-leaf-bc9ahq9h",
+      "role": "velani_admin_maintenance",
+      "db": "velani_admin",
+      "elevated": false,
+      "memberships": false,
+      "database_create": false,
+      "database_temp": false,
+      "schema_create": false,
+      "authorization_write": false,
+      "rights": [
+        {
+          "table": "audit",
+          "select": true,
+          "insert": true,
+          "update": false,
+          "delete": true,
+          "truncate": false
+        },
+        {
+          "table": "business_feeds",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": true,
+          "truncate": false
+        },
+        {
+          "table": "business_observations",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "business_records",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": true,
+          "truncate": false
+        },
+        {
+          "table": "deletions",
+          "select": true,
+          "insert": true,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        }
+      ]
+    },
+    {
+      "key": "staging-journal-read",
+      "project": "proud-heart-87708393",
+      "branch": "br-sparkling-breeze-bb03i3bj",
+      "role": "velani_admin_journal_read",
+      "db": "velani_admin_journal",
+      "elevated": false,
+      "memberships": false,
+      "database_create": false,
+      "database_temp": false,
+      "schema_create": false,
+      "authorization_write": false,
+      "rights": [
+        {
+          "table": "deletions",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        }
+      ]
+    },
+    {
+      "key": "staging-journal-write",
+      "project": "proud-heart-87708393",
+      "branch": "br-sparkling-breeze-bb03i3bj",
+      "role": "velani_admin_journal_write",
+      "db": "velani_admin_journal",
+      "elevated": false,
+      "memberships": false,
+      "database_create": false,
+      "database_temp": false,
+      "schema_create": false,
+      "authorization_write": false,
+      "rights": [
+        {
+          "table": "deletions",
+          "select": true,
+          "insert": true,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        }
+      ]
+    },
+    {
+      "key": "production-web",
+      "project": "frosty-rain-97705509",
+      "branch": "br-jolly-pine-bbhpie8b",
+      "role": "velani_admin_web",
+      "db": "velani_admin",
+      "elevated": false,
+      "memberships": false,
+      "database_create": false,
+      "database_temp": false,
+      "schema_create": false,
+      "authorization_write": false,
+      "rights": [
+        {
+          "table": "audit",
+          "select": true,
+          "insert": true,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "business_feeds",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "business_observations",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "business_records",
+          "select": true,
+          "insert": true,
+          "update": true,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "deletions",
+          "select": false,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        }
+      ]
+    },
+    {
+      "key": "production-maintenance",
+      "project": "frosty-rain-97705509",
+      "branch": "br-jolly-pine-bbhpie8b",
+      "role": "velani_admin_maintenance",
+      "db": "velani_admin",
+      "elevated": false,
+      "memberships": false,
+      "database_create": false,
+      "database_temp": false,
+      "schema_create": false,
+      "authorization_write": false,
+      "rights": [
+        {
+          "table": "audit",
+          "select": true,
+          "insert": true,
+          "update": false,
+          "delete": true,
+          "truncate": false
+        },
+        {
+          "table": "business_feeds",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": true,
+          "truncate": false
+        },
+        {
+          "table": "business_observations",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        },
+        {
+          "table": "business_records",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": true,
+          "truncate": false
+        },
+        {
+          "table": "deletions",
+          "select": true,
+          "insert": true,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        }
+      ]
+    },
+    {
+      "key": "production-journal-read",
+      "project": "gentle-lab-30905964",
+      "branch": "br-snowy-rice-bb09nuyv",
+      "role": "velani_admin_journal_read",
+      "db": "velani_admin_journal",
+      "elevated": false,
+      "memberships": false,
+      "database_create": false,
+      "database_temp": false,
+      "schema_create": false,
+      "authorization_write": false,
+      "rights": [
+        {
+          "table": "deletions",
+          "select": true,
+          "insert": false,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        }
+      ]
+    },
+    {
+      "key": "production-journal-write",
+      "project": "gentle-lab-30905964",
+      "branch": "br-snowy-rice-bb09nuyv",
+      "role": "velani_admin_journal_write",
+      "db": "velani_admin_journal",
+      "elevated": false,
+      "memberships": false,
+      "database_create": false,
+      "database_temp": false,
+      "schema_create": false,
+      "authorization_write": false,
+      "rights": [
+        {
+          "table": "deletions",
+          "select": true,
+          "insert": true,
+          "update": false,
+          "delete": false,
+          "truncate": false
+        }
+      ]
+    }
+  ]
+}
